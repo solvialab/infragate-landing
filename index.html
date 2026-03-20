@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Infragate | OCI</title>
-  <meta name="description" content="The only enterprise self-service OKE provisioning platform built exclusively for Oracle Cloud. Coming soon.">
+  <title>Infragate — Self-service OKE provisioning for Oracle Cloud</title>
+  <meta name="description" content="The only enterprise self-service OKE provisioning platform built exclusively for Oracle Cloud. Deploy, govern, and manage Kubernetes clusters from one portal.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='6' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -15,16 +15,25 @@
       --navy:      #0D1B35;
       --navy-2:    #111F3E;
       --navy-3:    #162548;
+      --navy-4:    #1A2D55;
       --indigo:    #4F6AF5;
       --indigo-lt: #7B93FF;
+      --indigo-dim:rgba(79,106,245,.08);
       --gold:      #C9A84C;
       --gold-lt:   #E8C97A;
-      --gold-dim:  rgba(201,168,76,.12);
+      --gold-dim:  rgba(201,168,76,.10);
+      --green:     #34D399;
+      --green-dim: rgba(52,211,153,.10);
+      --red:       #F87171;
+      --red-dim:   rgba(248,113,113,.10);
+      --cyan:      #22D3EE;
+      --cyan-dim:  rgba(34,211,238,.10);
       --white:     #FFFFFF;
       --text:      rgba(255,255,255,.93);
-      --text-2:    rgba(255,255,255,.52);
-      --text-3:    rgba(255,255,255,.22);
+      --text-2:    rgba(255,255,255,.55);
+      --text-3:    rgba(255,255,255,.25);
       --border:    rgba(255,255,255,.07);
+      --border-2:  rgba(255,255,255,.12);
       --border-gold: rgba(201,168,76,.2);
     }
 
@@ -45,19 +54,19 @@
 
     .noise {
       position: fixed; inset: 0; z-index: 1;
-      pointer-events: none; opacity: .032;
+      pointer-events: none; opacity: .028;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
       background-size: 180px;
     }
 
-    /*  Nav  */
+    /* ── Nav ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 22px 56px;
+      padding: 20px 56px;
       border-bottom: 1px solid var(--border);
-      background: rgba(13,27,53,.85);
-      backdrop-filter: blur(20px);
+      background: rgba(13,27,53,.88);
+      backdrop-filter: blur(24px);
     }
 
     .nav-logo {
@@ -77,21 +86,24 @@
       padding: 5px 12px; border-radius: 2px;
     }
 
-    .nav-contact {
-      font-size: 13px; font-weight: 600; color: var(--text-2);
-      text-decoration: none; letter-spacing: .01em; transition: color .2s;
+    .nav-link {
+      font-size: 13px; font-weight: 500; color: var(--text-2);
+      text-decoration: none; transition: color .2s;
     }
-    .nav-contact:hover { color: var(--white); }
+    .nav-link:hover { color: var(--white); }
 
-    /* ── Page ── */
-    .page {
-      position: relative; z-index: 2;
-      min-height: 100vh; display: flex; flex-direction: column;
+    /* ── Sections ── */
+    .page { position: relative; z-index: 2; }
+
+    section {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 56px;
     }
 
+    /* ── Hero ── */
     .hero-wrap {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      padding: 140px 56px 80px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 160px 56px 80px;
     }
 
     .hero {
@@ -100,35 +112,31 @@
       text-align: center;
     }
 
-    /* ── Eyebrow ── */
     .eyebrow {
       display: inline-flex; align-items: center; gap: 10px;
-      margin-bottom: 44px;
+      margin-bottom: 40px;
       opacity: 0; animation: rise .9s .1s ease forwards;
     }
-
     .eyebrow-line {
       width: 32px; height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold));
     }
     .eyebrow-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
-
     .eyebrow-text {
-      font-size: 11px; font-weight: 700; letter-spacing: .18em;
+      font-size: 13px; font-weight: 700; letter-spacing: .18em;
       text-transform: uppercase; color: var(--gold);
     }
 
-    /* ── Headlines ── */
     .hero-title {
-      font-size: clamp(46px, 7vw, 86px);
-      font-weight: 800; line-height: 1.06; letter-spacing: -.03em;
+      font-size: clamp(40px, 6.5vw, 78px);
+      font-weight: 800; line-height: 1.06; letter-spacing: -.035em;
       color: var(--white); margin-bottom: 8px;
       opacity: 0; animation: rise .9s .2s ease forwards;
     }
 
     .hero-title-2 {
-      font-size: clamp(46px, 7vw, 86px);
-      font-weight: 300; line-height: 1.06; letter-spacing: -.03em;
+      font-size: clamp(40px, 6.5vw, 78px);
+      font-weight: 300; line-height: 1.06; letter-spacing: -.035em;
       font-style: italic; margin-bottom: 40px;
       opacity: 0; animation: rise .9s .3s ease forwards;
       background: linear-gradient(135deg, var(--gold-lt) 0%, var(--gold) 50%, var(--indigo-lt) 100%);
@@ -139,143 +147,277 @@
     .hero-divider {
       width: 1px; height: 48px;
       background: linear-gradient(180deg, var(--border-gold), transparent);
-      margin: 0 auto 36px;
+      margin: 0 auto 32px;
       opacity: 0; animation: rise .9s .35s ease forwards;
     }
 
     .hero-sub {
       font-size: 17px; font-weight: 400; line-height: 1.75; color: var(--text-2);
-      max-width: 560px; margin: 0 auto 56px;
+      max-width: 580px; margin: 0 auto 48px;
       opacity: 0; animation: rise .9s .4s ease forwards;
     }
 
-    /* ── Form ── */
-    .form-outer {
-      width: 100%; max-width: 500px;
-      opacity: 0; animation: rise .9s .5s ease forwards;
+    /* ── CTA ── */
+    .cta-row {
+      display: flex; gap: 14px; align-items: center;
+      opacity: 0; animation: rise .9s .48s ease forwards;
+      margin-bottom: 16px;
     }
 
-    .form-wrap {
-      display: flex;
-      border: 1px solid var(--border-gold);
-      border-radius: 4px; overflow: hidden;
-      background: rgba(201,168,76,.04);
-      transition: border-color .3s, box-shadow .3s;
-    }
-
-    .form-wrap:focus-within {
-      border-color: rgba(201,168,76,.5);
-      box-shadow: 0 0 0 3px rgba(201,168,76,.08), 0 8px 32px rgba(0,0,0,.3);
-    }
-
-    .email-input {
-      flex: 1; padding: 15px 20px;
-      background: transparent; border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px; font-weight: 500; color: var(--white); outline: none;
-    }
-    .email-input::placeholder { color: var(--text-3); }
-
-    .btn-notify {
-      padding: 15px 28px;
+    .btn-cta {
+      padding: 15px 32px;
       background: linear-gradient(135deg, var(--gold) 0%, #B8932E 100%);
-      border: none; cursor: pointer;
+      border: none; border-radius: 4px; cursor: pointer;
       font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 800;
-      letter-spacing: .08em; text-transform: uppercase;
+      font-size: 14px; font-weight: 800;
+      letter-spacing: .06em; text-transform: uppercase;
       color: var(--navy); white-space: nowrap;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
       transition: filter .2s, transform .15s;
     }
-    .btn-notify:hover { filter: brightness(1.12); }
-    .btn-notify:active { transform: scale(.98); }
+    .btn-cta:hover { filter: brightness(1.12); }
+    .btn-cta:active { transform: scale(.98); }
 
-    .form-note { margin-top: 14px; font-size: 12px; color: var(--text-3); letter-spacing: .02em; }
+    .btn-outline {
+      padding: 15px 28px;
+      background: transparent;
+      border: 1px solid var(--border-2); border-radius: 4px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      color: var(--text-2); white-space: nowrap;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .btn-outline:hover { border-color: var(--border-gold); color: var(--white); background: rgba(255,255,255,.03); }
 
+    /* ── Email form (below CTA) ── */
+    .form-outer {
+      width: 100%; max-width: 480px;
+      opacity: 0; animation: rise .9s .55s ease forwards;
+    }
+    .form-wrap {
+      display: flex;
+      border: 1px solid var(--border-2);
+      border-radius: 4px; overflow: hidden;
+      background: rgba(255,255,255,.02);
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .form-wrap:focus-within {
+      border-color: rgba(201,168,76,.4);
+      box-shadow: 0 0 0 3px rgba(201,168,76,.06), 0 8px 32px rgba(0,0,0,.3);
+    }
+    .email-input {
+      flex: 1; padding: 13px 18px;
+      background: transparent; border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500; color: var(--white); outline: none;
+    }
+    .email-input::placeholder { color: var(--text-3); }
+    .btn-notify {
+      padding: 13px 22px;
+      background: rgba(201,168,76,.15);
+      border: none; border-left: 1px solid var(--border); cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gold-lt); white-space: nowrap;
+      transition: background .2s;
+    }
+    .btn-notify:hover { background: rgba(201,168,76,.25); }
+    .form-note { margin-top: 10px; font-size: 11px; color: var(--text-3); letter-spacing: .02em; }
     .success-msg {
       display: none; font-size: 14px; font-weight: 600;
       color: var(--gold-lt); letter-spacing: .02em; margin-top: 16px;
     }
 
+    .social-row {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      margin-top: 18px;
+      opacity: 0; animation: rise .9s .6s ease forwards;
+    }
+    .social-label {
+      font-size: 10px; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--text-3);
+      margin-right: 4px;
+    }
+    .social-btn {
+      width: 34px; height: 34px;
+      border: 1px solid var(--border); border-radius: 3px;
+      background: rgba(255,255,255,.03);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-2); text-decoration: none;
+      transition: background .2s, color .2s, border-color .2s, transform .15s;
+    }
+    .social-btn:hover {
+      background: var(--gold-dim); color: var(--gold-lt);
+      border-color: var(--border-gold); transform: translateY(-2px);
+    }
+
     /* ── Stats ── */
     .stats {
-      display: flex; margin-top: 72px; width: 100%;
+      display: flex; margin-top: 64px; width: 100%;
       border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
       opacity: 0; animation: rise .9s .65s ease forwards;
     }
-
     .stat {
-      flex: 1; padding: 28px 20px;
+      flex: 1; padding: 24px 16px;
       border-right: 1px solid var(--border); text-align: center;
       transition: background .3s;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
     }
     .stat:last-child { border-right: none; }
-    .stat:hover { background: rgba(201,168,76,.04); }
-
+    .stat:hover { background: rgba(201,168,76,.03); }
+    .stat-ico {
+      width: 36px; height: 36px; border-radius: 4px;
+      background: rgba(255,255,255,.03); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2px;
+    }
     .stat-val {
       font-size: 26px; font-weight: 800; letter-spacing: -.03em;
-      color: var(--white); margin-bottom: 6px;
+      color: var(--white);
     }
     .stat-val span {
       background: linear-gradient(135deg, var(--gold-lt), var(--gold));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
     .stat-label {
-      font-size: 11px; font-weight: 600;
-      letter-spacing: .08em; text-transform: uppercase; color: var(--text-3);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase; color: var(--text-3);
       line-height: 1.5;
     }
 
-    /* ── Pillars ── */
-    .pillars-title {
-      font-size: 11px; font-weight: 700; letter-spacing: .15em;
-      text-transform: uppercase; color: var(--text-3);
-      margin: 80px 0 28px;
-      opacity: 0; animation: rise .9s .75s ease forwards;
+    /* ── How it works ── */
+    .how-section { padding: 100px 56px 80px; }
+    .how-inner { max-width: 780px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 13px; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+      letter-spacing: -.025em; color: var(--white);
+      text-align: center; margin-bottom: 56px;
     }
 
-    .pillars {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      width: 100%; border: 1px solid var(--border);
-      border-radius: 4px; overflow: hidden;
-      opacity: 0; animation: rise .9s .85s ease forwards;
+    .how-steps { display: flex; flex-direction: column; gap: 0; }
+    .how-step {
+      display: flex; gap: 24px; align-items: flex-start;
+      position: relative; padding-bottom: 40px;
+    }
+    .how-step:last-child { padding-bottom: 0; }
+    .how-step:not(:last-child)::after {
+      content: ''; position: absolute;
+      left: 23px; top: 52px; bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, var(--border-gold), var(--border));
+    }
+    .how-num {
+      width: 48px; height: 48px; border-radius: 4px;
+      border: 1px solid var(--border-gold);
+      background: var(--gold-dim);
+      color: var(--gold-lt); font-size: 18px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; position: relative; z-index: 1;
+    }
+    .how-body { padding-top: 4px; }
+    .how-body h3 {
+      font-size: 16px; font-weight: 700; color: var(--white);
+      margin-bottom: 8px; letter-spacing: -.01em;
+    }
+    .how-body p {
+      font-size: 14px; color: var(--text-2); line-height: 1.75;
+    }
+    .how-tag {
+      display: inline-block; margin-top: 10px;
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 2px;
+    }
+    .how-tag.tf { background: var(--indigo-dim); color: var(--indigo-lt); border: 1px solid rgba(79,106,245,.15); }
+    .how-tag.cost { background: var(--green-dim); color: var(--green); border: 1px solid rgba(52,211,153,.15); }
+    .how-tag.ttl { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(34,211,238,.15); }
+
+    /* ── Feature grid ── */
+    .features-section { padding: 0 56px 100px; }
+    .features-grid {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
     }
 
-    .pillar {
-      padding: 30px 22px;
-      background: rgba(255,255,255,.02);
+    .feature {
+      padding: 36px 28px;
+      background: rgba(255,255,255,.015);
       border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; align-items: center; text-align: center;
+      border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column;
       transition: background .3s; position: relative; overflow: hidden;
     }
-    .pillar::before {
+    .feature::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,.25), transparent);
       opacity: 0; transition: opacity .3s;
     }
-    .pillar:hover { background: rgba(201,168,76,.04); }
-    .pillar:hover::before { opacity: 1; }
-    .pillar:last-child { border-right: none; }
+    .feature:hover { background: rgba(201,168,76,.03); }
+    .feature:hover::before { opacity: 1; }
+    .feature:nth-child(3n) { border-right: none; }
+    .feature:nth-last-child(-n+3) { border-bottom: none; }
 
-    .pillar-ico {
-      width: 42px; height: 42px; border: 1px solid var(--border-gold);
-      border-radius: 3px; display: flex; align-items: center; justify-content: center;
-      font-size: 18px; margin-bottom: 16px; background: var(--gold-dim);
+    .feature-ico {
+      width: 44px; height: 44px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
     }
 
-    .pillar-title {
-      font-size: 13px; font-weight: 800; letter-spacing: -.01em;
+    .feature h3 {
+      font-size: 14px; font-weight: 800; letter-spacing: -.01em;
       color: var(--white); margin-bottom: 8px;
     }
+    .feature p { font-size: 13px; line-height: 1.7; color: var(--text-2); }
 
-    .pillar-desc { font-size: 12px; line-height: 1.65; color: var(--text-2); }
+    /* ── Built for section ── */
+    .built-section { padding: 0 56px 100px; }
+    .built-grid {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+    }
+    .built-card {
+      padding: 36px 32px;
+      background: var(--navy);
+      transition: background .3s;
+    }
+    .built-card:hover { background: var(--navy-2); }
+    .built-card h3 {
+      font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .built-card h3 span {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; padding: 3px 8px; border-radius: 2px;
+    }
+    .built-card p { font-size: 13px; line-height: 1.7; color: var(--text-2); }
+    .built-card ul {
+      list-style: none; margin-top: 12px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .built-card ul li {
+      font-size: 12px; color: var(--text-2); line-height: 1.6;
+      padding-left: 16px; position: relative;
+    }
+    .built-card ul li::before {
+      content: ''; position: absolute; left: 0; top: 8px;
+      width: 6px; height: 1px; background: var(--gold);
+    }
 
     /* ── Footer ── */
     footer {
       position: relative; z-index: 2;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 28px 56px;
+      padding: 24px 56px;
       border-top: 1px solid var(--border);
       font-size: 12px; color: var(--text-3); letter-spacing: .03em;
     }
@@ -289,42 +431,39 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Scroll-triggered animation */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
     /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature:nth-child(3n) { border-right: 1px solid var(--border); }
+      .feature:nth-child(2n) { border-right: none; }
+      .feature:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
+      .feature:nth-last-child(-n+2) { border-bottom: none; }
+    }
     @media (max-width: 768px) {
       nav { padding: 18px 24px; }
       .hero-wrap { padding: 120px 24px 60px; }
-      .pillars { grid-template-columns: repeat(2, 1fr); }
+      section, .how-section, .features-section, .built-section { padding-left: 24px; padding-right: 24px; }
       .stats { flex-wrap: wrap; }
-      .stat { flex: 1 1 50%; border-bottom: 1px solid var(--border); }
+      .stat { flex: 1 1 33%; border-bottom: 1px solid var(--border); }
+      .stat:nth-last-child(-n+2) { border-bottom: none; }
+      .stat-ico { width: 32px; height: 32px; }
+      .stat-val { font-size: 22px; }
+      .built-grid { grid-template-columns: 1fr; }
+      .cta-row { flex-direction: column; width: 100%; max-width: 400px; }
+      .btn-cta, .btn-outline { width: 100%; justify-content: center; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
     }
     @media (max-width: 480px) {
-      .pillars { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
+      .feature:last-child { border-bottom: none !important; }
       .form-wrap { flex-direction: column; }
-      .stat { flex: 1 1 100%; }
-    }
-
-    /* ── Social row ── */
-    .social-row {
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-      margin-top: 20px;
-    }
-    .social-label {
-      font-size: 11px; font-weight: 600; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--text-3);
-      margin-right: 4px;
-    }
-    .social-btn {
-      width: 36px; height: 36px;
-      border: 1px solid var(--border-gold); border-radius: 3px;
-      background: var(--gold-dim);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--gold); text-decoration: none;
-      transition: background .2s, color .2s, border-color .2s, transform .15s;
-    }
-    .social-btn:hover {
-      background: rgba(201,168,76,.2); color: var(--gold-lt);
-      border-color: rgba(201,168,76,.4); transform: translateY(-2px);
+      .btn-notify { border-left: none; border-top: 1px solid var(--border); }
+      .stat { flex: 1 1 100%; border-right: none; }
     }
   </style>
 </head>
@@ -344,30 +483,38 @@
     Infragate
   </a>
   <div class="nav-right">
-    <a class="nav-contact" href="mailto:hello@infragate.cloud">hello@infragate.cloud</a>
+    <a class="nav-link" href="#how-it-works">How it works</a>
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="mailto:hello@infragate.cloud">Contact</a>
     <span class="nav-badge">Coming Soon</span>
   </div>
 </nav>
 
 <div class="page">
+
+  <!-- ══ HERO ══ -->
   <div class="hero-wrap">
     <div class="hero">
-
       <div class="eyebrow">
         <div class="eyebrow-line"></div>
         <span class="eyebrow-text">First of its kind on Oracle Cloud</span>
         <div class="eyebrow-line r"></div>
       </div>
 
-      <h1 class="hero-title">Enterprise OKE Provisioning.</h1>
-      <h2 class="hero-title-2">Days to minutes.</h2>
+      <h1 class="hero-title">Your team deploys clusters.</h1>
+      <h2 class="hero-title-2">Infragate handles the rest.</h2>
       <div class="hero-divider"></div>
 
       <p class="hero-sub">
-        The only self-service Oracle Kubernetes Engine provisioning platform built exclusively for enterprise teams on OCI — Terraform-automated, fully audit-logged and role-based.
+        Engineers pick a template and click deploy. Platform teams keep control with resource limits, cost tracking, destroy protection, and auto-expiry. One portal. Zero tickets.
       </p>
 
-      <div class="form-outer">
+      <div class="cta-row">
+        <a class="btn-cta" href="#notify">Get Early Access</a>
+        <a class="btn-outline" href="#how-it-works">See how it works</a>
+      </div>
+
+      <div class="form-outer" id="notify">
         <form name="notify" method="POST" data-netlify="true" onsubmit="handleNotify(event)">
           <input type="hidden" name="form-name" value="notify">
           <div class="form-wrap" id="form-wrap">
@@ -376,72 +523,184 @@
           </div>
         </form>
         <p class="form-note" id="form-note">Be the first to know when Infragate launches. No spam, ever.</p>
-        <div class="success-msg" id="success-msg">✦ &nbsp;You're on the list — we'll be in touch.</div>
+        <div class="success-msg" id="success-msg">You're on the list — we'll be in touch.</div>
         <div class="social-row">
           <span class="social-label">Follow us</span>
           <a class="social-btn" href="https://x.com/infragatek8s" target="_blank" aria-label="X / Twitter">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
           <a class="social-btn" href="https://www.instagram.com/infragatek8s/" target="_blank" aria-label="Instagram">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
         </div>
       </div>
 
       <div class="stats">
         <div class="stat">
-          <div class="stat-val"><span>&lt; 5</span> min</div>
-          <div class="stat-label">Cluster provisioning time</div>
+          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="stat-val"><span>5</span> min</div>
+          <div class="stat-label">From click to running cluster</div>
         </div>
         <div class="stat">
+          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="stat-val"><span>0</span></div>
+          <div class="stat-label">CLI commands or Terraform files</div>
+        </div>
+        <div class="stat">
+          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
           <div class="stat-val"><span>100%</span></div>
-          <div class="stat-label">OCI-native — nothing leaves your tenancy</div>
+          <div class="stat-label">Inside your OCI tenancy</div>
         </div>
         <div class="stat">
-          <div class="stat-val"><span>0</span> tickets</div>
-          <div class="stat-label">Infrastructure requests required</div>
+          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          <div class="stat-val"><span>N</span> pools</div>
+          <div class="stat-label">Per cluster, independently scaled</div>
         </div>
         <div class="stat">
+          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
           <div class="stat-val"><span>1st</span></div>
-          <div class="stat-label">Platform of its kind on Oracle Cloud</div>
+          <div class="stat-label">Self-service OKE platform on OCI</div>
         </div>
       </div>
-
-      <p class="pillars-title">Built for enterprise. Designed for control.</p>
-
-      <div class="pillars">
-        <div class="pillar">
-          <div class="pillar-ico">☸</div>
-          <div class="pillar-title">Self-service OKE</div>
-          <div class="pillar-desc">Deploy, scale and destroy OKE clusters without raising a single infrastructure ticket.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-ico">⚙</div>
-          <div class="pillar-title">Terraform-automated</div>
-          <div class="pillar-desc">Every cluster provisioned and torn down via Terraform. Reproducible, auditable, clean.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-ico">🔒</div>
-          <div class="pillar-title">Enterprise governed</div>
-          <div class="pillar-desc">Role-based access, full audit log and resource limits. Your ops team stays in control.</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-ico">🏛</div>
-          <div class="pillar-title">OCI-native</div>
-          <div class="pillar-desc">Nothing leaves your tenancy. Credentials, state and cluster data stay inside your OCI account.</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
+  <!-- ══ HOW IT WORKS ══ -->
+  <div class="how-section reveal" id="how-it-works" style="scroll-margin-top:20px">
+    <div class="how-inner">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">From zero to running cluster in three steps</h2>
+
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <div class="how-body">
+            <h3>Choose a template or go custom</h3>
+            <p>Admins pre-define approved configurations — K8s version, VM shape, node pools, tier. Engineers select one and the form locks to those values. Power users can go custom within their resource limits.</p>
+            <span class="how-tag tf">Template lock mode</span>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <div class="how-body">
+            <h3>Watch Terraform provision live</h3>
+            <p>Click deploy and watch every Terraform step stream to your browser in real time. VCN, subnets, security lists, node pools, kubeconfig — all created automatically. Cost estimate shown before you commit.</p>
+            <span class="how-tag tf">Live SSE streaming</span>
+            <span class="how-tag cost">Cost preview</span>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <div class="how-body">
+            <h3>Scale, monitor, or let it expire</h3>
+            <p>Scale node pools on demand. Track per-cluster costs. Set TTL for automatic cleanup so dev clusters don't run forever. Protected production clusters can't be destroyed without admin override.</p>
+            <span class="how-tag ttl">TTL auto-expiry</span>
+            <span class="how-tag cost">FinOps</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FEATURES ══ -->
+  <div class="features-section reveal" id="features" style="scroll-margin-top:80px">
+    <div class="section-label">Platform capabilities</div>
+    <h2 class="section-title">Everything your platform team needs</h2>
+
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-ico" style="background:var(--gold-dim);border:1px solid var(--border-gold)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <h3>FinOps from day one</h3>
+        <p>Live cost estimates on every surface — deploy form, cluster cards, detail page, admin panel. Pricing uses OCI Pay-As-You-Go rates with optional contract overrides.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ico" style="background:var(--green-dim);border:1px solid rgba(52,211,153,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3>Guardrails, not gatekeepers</h3>
+        <p>Per-user resource limits, destroy protection on production clusters, TTL auto-expiry on dev clusters, RBAC-restricted templates. Engineers move fast, safely.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ico" style="background:var(--indigo-dim);border:1px solid rgba(79,106,245,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-lt)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        </div>
+        <h3>Full audit trail</h3>
+        <p>Every deploy, scale, and destroy is logged with user, timestamp, duration, and status. Admin panel shows all clusters across all users.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ico" style="background:var(--cyan-dim);border:1px solid rgba(34,211,238,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Template-driven provisioning</h3>
+        <p>Admin-defined templates encode K8s version, shape, pools, tier, TTL, and protection. Selecting a template locks the deploy form — no accidental misconfiguration.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ico" style="background:var(--red-dim);border:1px solid rgba(248,113,113,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        </div>
+        <h3>Destroy protection</h3>
+        <p>Protected clusters cannot be destroyed by regular users. Admins can override with force-destroy. TTL auto-expiry ensures dev clusters don't run forever.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ico" style="background:var(--gold-dim);border:1px solid var(--border-gold)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <h3>Any OIDC provider</h3>
+        <p>Works with Keycloak, Azure AD, Okta, Google Workspace, or any OIDC-compliant IdP. No vendor lock-in. Auto-provisions users on first login from JWT claims.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BUILT FOR ══ -->
+  <div class="built-section reveal">
+    <div class="section-label">Built for enterprise</div>
+    <h2 class="section-title">Two audiences. One platform.</h2>
+
+    <div class="built-grid">
+      <div class="built-card">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          For engineers
+          <span style="background:var(--indigo-dim);color:var(--indigo-lt);border:1px solid rgba(79,106,245,.15)">Self-service</span>
+        </h3>
+        <p>No tickets, no CLI, no Terraform knowledge. Just pick a config and deploy.</p>
+        <ul>
+          <li>Select a template or configure custom pools</li>
+          <li>Watch Terraform stream live in the browser</li>
+          <li>Download kubeconfig + SSH keys from the portal</li>
+          <li>Scale node pools up or down on demand</li>
+          <li>See cost estimates before every action</li>
+        </ul>
+      </div>
+      <div class="built-card">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          For platform teams
+          <span style="background:var(--gold-dim);color:var(--gold-lt);border:1px solid var(--border-gold)">Full control</span>
+        </h3>
+        <p>Stay in control without becoming a bottleneck.</p>
+        <ul>
+          <li>Define templates with locked resource configurations</li>
+          <li>Set per-user resource limits and tier restrictions</li>
+          <li>Enable destroy protection on production clusters</li>
+          <li>Set TTL auto-expiry on dev/staging clusters</li>
+          <li>Monitor cost, usage, and audit logs across all users</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
   <footer>
-    <span>© 2026 Infragate. All rights reserved.</span>
+    <span>&copy; 2026 Infragate. All rights reserved.</span>
     <div class="footer-right">
       <a href="mailto:hello@infragate.cloud">hello@infragate.cloud</a>
-      <span>Built for Oracle Cloud Infrastructure</span>
+      <span>Built by Solvia Lab s.r.o.</span>
     </div>
   </footer>
+
 </div>
 
 <script>
@@ -457,14 +716,14 @@ function resize() {
 
 function initParticles() {
   particles = [];
-  const count = Math.floor((W * H) / 20000);
+  const count = Math.floor((W * H) / 22000);
   for (let i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * W, y: Math.random() * H,
       r: Math.random() * 1.2 + 0.2,
-      vx: (Math.random() - .5) * .15,
-      vy: (Math.random() - .5) * .15,
-      o: Math.random() * .35 + .08
+      vx: (Math.random() - .5) * .12,
+      vy: (Math.random() - .5) * .12,
+      o: Math.random() * .3 + .06
     });
   }
 }
@@ -472,15 +731,13 @@ function initParticles() {
 function draw() {
   ctx.clearRect(0, 0, W, H);
 
-  // Indigo glow left
-  const g1 = ctx.createRadialGradient(W*.12, H*.5, 0, W*.12, H*.5, W*.65);
-  g1.addColorStop(0, 'rgba(79,106,245,.10)');
+  const g1 = ctx.createRadialGradient(W*.12, H*.4, 0, W*.12, H*.4, W*.6);
+  g1.addColorStop(0, 'rgba(79,106,245,.08)');
   g1.addColorStop(1, 'rgba(13,27,53,0)');
   ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
 
-  // Gold glow top-right
-  const g2 = ctx.createRadialGradient(W*.88, H*.15, 0, W*.88, H*.15, W*.45);
-  g2.addColorStop(0, 'rgba(201,168,76,.06)');
+  const g2 = ctx.createRadialGradient(W*.85, H*.15, 0, W*.85, H*.15, W*.4);
+  g2.addColorStop(0, 'rgba(201,168,76,.05)');
   g2.addColorStop(1, 'rgba(13,27,53,0)');
   ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
 
@@ -492,17 +749,17 @@ function draw() {
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(201,168,76,${p.o * .5})`;
+    ctx.fillStyle = `rgba(201,168,76,${p.o * .4})`;
     ctx.fill();
 
     for (let j = i+1; j < particles.length; j++) {
       const q = particles[j];
       const dx = p.x - q.x, dy = p.y - q.y;
       const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 110) {
+      if (dist < 100) {
         ctx.beginPath();
         ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
-        ctx.strokeStyle = `rgba(79,106,245,${(1 - dist/110) * .09})`;
+        ctx.strokeStyle = `rgba(79,106,245,${(1 - dist/100) * .07})`;
         ctx.lineWidth = .5; ctx.stroke();
       }
     }
@@ -524,4 +781,36 @@ function handleNotify(e) {
   if (!val || !val.includes('@') || !val.includes('.')) {
     wrap.style.borderColor = 'rgba(239,68,68,.5)';
     wrap.style.boxShadow = '0 0 0 3px rgba(239,68,68,.08)';
-    s
+    setTimeout(() => { wrap.style.borderColor = ''; wrap.style.boxShadow = ''; }, 2000);
+    return;
+  }
+  // Submit to Netlify (form action handled by data-netlify)
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ 'form-name': 'notify', email: val }).toString()
+  }).then(() => {
+    wrap.style.display = 'none';
+    note.style.display = 'none';
+    success.style.display = 'block';
+  }).catch(() => {
+    wrap.style.display = 'none';
+    note.style.display = 'none';
+    success.style.display = 'block';
+  });
+}
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
