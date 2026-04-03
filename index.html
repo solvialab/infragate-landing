@@ -2,815 +2,600 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Infragate — Self-service OKE provisioning for Oracle Cloud</title>
-  <meta name="description" content="The only enterprise self-service OKE provisioning platform built exclusively for Oracle Cloud. Deploy, govern, and manage Kubernetes clusters from one portal.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='6' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Infragate · Enterprise OKE Self-Service Platform</title>
+  <meta name="description" content="Infragate empowers engineering teams to provision production-grade Oracle Kubernetes Engine clusters with one click. Self-service, FinOps, and full lifecycle management.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy:      #0D1B35;
-      --navy-2:    #111F3E;
-      --navy-3:    #162548;
-      --navy-4:    #1A2D55;
-      --indigo:    #4F6AF5;
-      --indigo-lt: #7B93FF;
-      --indigo-dim:rgba(79,106,245,.08);
-      --gold:      #C9A84C;
-      --gold-lt:   #E8C97A;
-      --gold-dim:  rgba(201,168,76,.10);
-      --green:     #34D399;
-      --green-dim: rgba(52,211,153,.10);
-      --red:       #F87171;
-      --red-dim:   rgba(248,113,113,.10);
-      --cyan:      #22D3EE;
-      --cyan-dim:  rgba(34,211,238,.10);
-      --white:     #FFFFFF;
-      --text:      rgba(255,255,255,.93);
-      --text-2:    rgba(255,255,255,.55);
-      --text-3:    rgba(255,255,255,.25);
-      --border:    rgba(255,255,255,.07);
-      --border-2:  rgba(255,255,255,.12);
-      --border-gold: rgba(201,168,76,.2);
-    }
-
+    * { font-family: 'Inter', sans-serif; }
     html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--navy);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    #bg-canvas {
-      position: fixed; inset: 0; z-index: 0;
-      pointer-events: none;
-    }
-
-    .noise {
-      position: fixed; inset: 0; z-index: 1;
-      pointer-events: none; opacity: .028;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-size: 180px;
-    }
-
-    /* ── Nav ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 56px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(13,27,53,.88);
-      backdrop-filter: blur(24px);
-    }
-
-    .nav-logo {
-      display: flex; align-items: center; gap: 12px;
-      font-size: 18px; font-weight: 800; letter-spacing: -.03em;
-      color: var(--white); text-decoration: none;
-    }
-
-    .nav-right { display: flex; align-items: center; gap: 20px; }
-
-    .nav-badge {
-      font-size: 10px; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase;
-      background: var(--gold-dim);
-      border: 1px solid var(--border-gold);
-      color: var(--gold-lt);
-      padding: 5px 12px; border-radius: 2px;
-    }
-
-    .nav-link {
-      font-size: 13px; font-weight: 500; color: var(--text-2);
-      text-decoration: none; transition: color .2s;
-    }
-    .nav-link:hover { color: var(--white); }
-
-    /* ── Sections ── */
-    .page { position: relative; z-index: 2; }
-
-    section {
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 56px;
-    }
-
-    /* ── Hero ── */
-    .hero-wrap {
-      display: flex; align-items: center; justify-content: center;
-      padding: 160px 56px 80px;
-    }
-
-    .hero {
-      max-width: 860px; width: 100%;
-      display: flex; flex-direction: column; align-items: center;
-      text-align: center;
-    }
-
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 10px;
-      margin-bottom: 40px;
-      opacity: 0; animation: rise .9s .1s ease forwards;
-    }
-    .eyebrow-line {
-      width: 32px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold));
-    }
-    .eyebrow-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
-    .eyebrow-text {
-      font-size: 13px; font-weight: 700; letter-spacing: .18em;
-      text-transform: uppercase; color: var(--gold);
-    }
-
-    .hero-title {
-      font-size: clamp(40px, 6.5vw, 78px);
-      font-weight: 800; line-height: 1.06; letter-spacing: -.035em;
-      color: var(--white); margin-bottom: 8px;
-      opacity: 0; animation: rise .9s .2s ease forwards;
-    }
-
-    .hero-title-2 {
-      font-size: clamp(40px, 6.5vw, 78px);
-      font-weight: 300; line-height: 1.06; letter-spacing: -.035em;
-      font-style: italic; margin-bottom: 40px;
-      opacity: 0; animation: rise .9s .3s ease forwards;
-      background: linear-gradient(135deg, var(--gold-lt) 0%, var(--gold) 50%, var(--indigo-lt) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    body { background: #ffffff; }
+    .gradient-text {
+      background: linear-gradient(135deg, #0B2B3F 0%, #1C5D7A 100%);
+      -webkit-background-clip: text;
       background-clip: text;
+      color: transparent;
     }
-
-    .hero-divider {
-      width: 1px; height: 48px;
-      background: linear-gradient(180deg, var(--border-gold), transparent);
-      margin: 0 auto 32px;
-      opacity: 0; animation: rise .9s .35s ease forwards;
+    .gradient-bg-premium {
+      background: linear-gradient(135deg, #0B2B3F 0%, #124E68 100%);
     }
-
-    .hero-sub {
-      font-size: 17px; font-weight: 400; line-height: 1.75; color: var(--text-2);
-      max-width: 580px; margin: 0 auto 48px;
-      opacity: 0; animation: rise .9s .4s ease forwards;
+    .glass-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease;
     }
-
-    /* ── CTA ── */
-    .cta-row {
-      display: flex; gap: 14px; align-items: center;
-      opacity: 0; animation: rise .9s .48s ease forwards;
-      margin-bottom: 16px;
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+      border-color: rgba(28, 93, 122, 0.2);
     }
-
-    .btn-cta {
-      padding: 15px 32px;
-      background: linear-gradient(135deg, var(--gold) 0%, #B8932E 100%);
-      border: none; border-radius: 4px; cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px; font-weight: 800;
-      letter-spacing: .06em; text-transform: uppercase;
-      color: var(--navy); white-space: nowrap;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-      transition: filter .2s, transform .15s;
+    .btn-outline-premium {
+      border: 1px solid #1C5D7A;
+      color: #1C5D7A;
+      transition: all 0.2s;
     }
-    .btn-cta:hover { filter: brightness(1.12); }
-    .btn-cta:active { transform: scale(.98); }
-
-    .btn-outline {
-      padding: 15px 28px;
-      background: transparent;
-      border: 1px solid var(--border-2); border-radius: 4px; cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 600;
-      color: var(--text-2); white-space: nowrap;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-      transition: border-color .2s, color .2s, background .2s;
+    .btn-outline-premium:hover {
+      background: #1C5D7A;
+      color: white;
+      border-color: #1C5D7A;
     }
-    .btn-outline:hover { border-color: var(--border-gold); color: var(--white); background: rgba(255,255,255,.03); }
-
-    /* ── Email form (below CTA) ── */
-    .form-outer {
-      width: 100%; max-width: 480px;
-      opacity: 0; animation: rise .9s .55s ease forwards;
+    .btn-solid-premium {
+      background: #0B2B3F;
+      color: white;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(11,43,63,0.1);
     }
-    .form-wrap {
+    .btn-solid-premium:hover {
+      background: #1C5D7A;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(28,93,122,0.2);
+    }
+    .feature-icon {
+      background: #F0F7FA;
+      border-radius: 1rem;
+      width: 3rem;
+      height: 3rem;
       display: flex;
-      border: 1px solid var(--border-2);
-      border-radius: 4px; overflow: hidden;
-      background: rgba(255,255,255,.02);
-      transition: border-color .3s, box-shadow .3s;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
     }
-    .form-wrap:focus-within {
-      border-color: rgba(201,168,76,.4);
-      box-shadow: 0 0 0 3px rgba(201,168,76,.06), 0 8px 32px rgba(0,0,0,.3);
+    .glass-card:hover .feature-icon {
+      background: #E2F0F5;
+      transform: scale(1.05);
     }
-    .email-input {
-      flex: 1; padding: 13px 18px;
-      background: transparent; border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 500; color: var(--white); outline: none;
-    }
-    .email-input::placeholder { color: var(--text-3); }
-    .btn-notify {
-      padding: 13px 22px;
-      background: rgba(201,168,76,.15);
-      border: none; border-left: 1px solid var(--border); cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase;
-      color: var(--gold-lt); white-space: nowrap;
-      transition: background .2s;
-    }
-    .btn-notify:hover { background: rgba(201,168,76,.25); }
-    .form-note { margin-top: 10px; font-size: 11px; color: var(--text-3); letter-spacing: .02em; }
-    .success-msg {
-      display: none; font-size: 14px; font-weight: 600;
-      color: var(--gold-lt); letter-spacing: .02em; margin-top: 16px;
-    }
-
-    .social-row {
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-      margin-top: 18px;
-      opacity: 0; animation: rise .9s .6s ease forwards;
-    }
-    .social-label {
-      font-size: 10px; font-weight: 600; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--text-3);
-      margin-right: 4px;
-    }
-    .social-btn {
-      width: 34px; height: 34px;
-      border: 1px solid var(--border); border-radius: 3px;
-      background: rgba(255,255,255,.03);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-2); text-decoration: none;
-      transition: background .2s, color .2s, border-color .2s, transform .15s;
-    }
-    .social-btn:hover {
-      background: var(--gold-dim); color: var(--gold-lt);
-      border-color: var(--border-gold); transform: translateY(-2px);
-    }
-
-    /* ── Stats ── */
-    .stats {
-      display: flex; margin-top: 64px; width: 100%;
-      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
-      opacity: 0; animation: rise .9s .65s ease forwards;
-    }
-    .stat {
-      flex: 1; padding: 24px 16px;
-      border-right: 1px solid var(--border); text-align: center;
-      transition: background .3s;
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-    }
-    .stat:last-child { border-right: none; }
-    .stat:hover { background: rgba(201,168,76,.03); }
-    .stat-ico {
-      width: 36px; height: 36px; border-radius: 4px;
-      background: rgba(255,255,255,.03); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 2px;
-    }
-    .stat-val {
-      font-size: 26px; font-weight: 800; letter-spacing: -.03em;
-      color: var(--white);
-    }
-    .stat-val span {
-      background: linear-gradient(135deg, var(--gold-lt), var(--gold));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #0B2B3F, #1C5D7A);
+      -webkit-background-clip: text;
       background-clip: text;
+      color: transparent;
     }
-    .stat-label {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: .06em; text-transform: uppercase; color: var(--text-3);
-      line-height: 1.5;
+    @media (min-width: 768px) {
+      .stat-number { font-size: 2.8rem; }
     }
-
-    /* ── How it works ── */
-    .how-section { padding: 100px 56px 80px; }
-    .how-inner { max-width: 780px; margin: 0 auto; }
-
-    .section-label {
-      font-size: 13px; font-weight: 700; letter-spacing: .18em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
-      text-align: center;
-    }
-    .section-title {
-      font-size: clamp(28px, 4vw, 44px); font-weight: 800;
-      letter-spacing: -.025em; color: var(--white);
-      text-align: center; margin-bottom: 56px;
-    }
-
-    .how-steps { display: flex; flex-direction: column; gap: 0; }
-    .how-step {
-      display: flex; gap: 24px; align-items: flex-start;
-      position: relative; padding-bottom: 40px;
-    }
-    .how-step:last-child { padding-bottom: 0; }
-    .how-step:not(:last-child)::after {
-      content: ''; position: absolute;
-      left: 23px; top: 52px; bottom: 0;
-      width: 1px;
-      background: linear-gradient(180deg, var(--border-gold), var(--border));
-    }
-    .how-num {
-      width: 48px; height: 48px; border-radius: 4px;
-      border: 1px solid var(--border-gold);
-      background: var(--gold-dim);
-      color: var(--gold-lt); font-size: 18px; font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; position: relative; z-index: 1;
-    }
-    .how-body { padding-top: 4px; }
-    .how-body h3 {
-      font-size: 16px; font-weight: 700; color: var(--white);
-      margin-bottom: 8px; letter-spacing: -.01em;
-    }
-    .how-body p {
-      font-size: 14px; color: var(--text-2); line-height: 1.75;
-    }
-    .how-tag {
-      display: inline-block; margin-top: 10px;
-      font-size: 10px; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; padding: 4px 10px; border-radius: 2px;
-    }
-    .how-tag.tf { background: var(--indigo-dim); color: var(--indigo-lt); border: 1px solid rgba(79,106,245,.15); }
-    .how-tag.cost { background: var(--green-dim); color: var(--green); border: 1px solid rgba(52,211,153,.15); }
-    .how-tag.ttl { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(34,211,238,.15); }
-
-    /* ── Feature grid ── */
-    .features-section { padding: 0 56px 100px; }
-    .features-grid {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
-    }
-
-    .feature {
-      padding: 36px 28px;
-      background: rgba(255,255,255,.015);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      transition: background .3s; position: relative; overflow: hidden;
-    }
-    .feature::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,.25), transparent);
-      opacity: 0; transition: opacity .3s;
-    }
-    .feature:hover { background: rgba(201,168,76,.03); }
-    .feature:hover::before { opacity: 1; }
-    .feature:nth-child(3n) { border-right: none; }
-    .feature:nth-last-child(-n+3) { border-bottom: none; }
-
-    .feature-ico {
-      width: 44px; height: 44px; border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 18px;
-    }
-
-    .feature h3 {
-      font-size: 14px; font-weight: 800; letter-spacing: -.01em;
-      color: var(--white); margin-bottom: 8px;
-    }
-    .feature p { font-size: 13px; line-height: 1.7; color: var(--text-2); }
-
-    /* ── Built for section ── */
-    .built-section { padding: 0 56px 100px; }
-    .built-grid {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
-    }
-    .built-card {
-      padding: 36px 32px;
-      background: var(--navy);
-      transition: background .3s;
-    }
-    .built-card:hover { background: var(--navy-2); }
-    .built-card h3 {
-      font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .built-card h3 span {
-      font-size: 10px; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; padding: 3px 8px; border-radius: 2px;
-    }
-    .built-card p { font-size: 13px; line-height: 1.7; color: var(--text-2); }
-    .built-card ul {
-      list-style: none; margin-top: 12px;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .built-card ul li {
-      font-size: 12px; color: var(--text-2); line-height: 1.6;
-      padding-left: 16px; position: relative;
-    }
-    .built-card ul li::before {
-      content: ''; position: absolute; left: 0; top: 8px;
-      width: 6px; height: 1px; background: var(--gold);
-    }
-
-    /* ── Footer ── */
-    footer {
-      position: relative; z-index: 2;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 24px 56px;
-      border-top: 1px solid var(--border);
-      font-size: 12px; color: var(--text-3); letter-spacing: .03em;
-    }
-    footer a { color: var(--text-3); text-decoration: none; transition: color .2s; }
-    footer a:hover { color: var(--gold-lt); }
-    .footer-right { display: flex; gap: 24px; }
-
-    /* ── Animation ── */
-    @keyframes rise {
+    @keyframes fadeSlideUp {
       from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Scroll-triggered animation */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ── Responsive ── */
-    @media (max-width: 1024px) {
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .feature:nth-child(3n) { border-right: 1px solid var(--border); }
-      .feature:nth-child(2n) { border-right: none; }
-      .feature:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
-      .feature:nth-last-child(-n+2) { border-bottom: none; }
+    .animate-fade-up {
+      animation: fadeSlideUp 0.6s ease-out forwards;
     }
-    @media (max-width: 768px) {
-      nav { padding: 18px 24px; }
-      .hero-wrap { padding: 120px 24px 60px; }
-      section, .how-section, .features-section, .built-section { padding-left: 24px; padding-right: 24px; }
-      .stats { flex-wrap: wrap; }
-      .stat { flex: 1 1 33%; border-bottom: 1px solid var(--border); }
-      .stat:nth-last-child(-n+2) { border-bottom: none; }
-      .stat-ico { width: 32px; height: 32px; }
-      .stat-val { font-size: 22px; }
-      .built-grid { grid-template-columns: 1fr; }
-      .cta-row { flex-direction: column; width: 100%; max-width: 400px; }
-      .btn-cta, .btn-outline { width: 100%; justify-content: center; }
-      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .terminal {
+      background: #0F172A;
+      border-radius: 1rem;
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
     }
-    @media (max-width: 480px) {
-      .features-grid { grid-template-columns: 1fr; }
-      .feature { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
-      .feature:last-child { border-bottom: none !important; }
-      .form-wrap { flex-direction: column; }
-      .btn-notify { border-left: none; border-top: 1px solid var(--border); }
-      .stat { flex: 1 1 100%; border-right: none; }
+    /* Active nav item */
+    .nav-item { position: relative; padding-bottom: 2px; }
+    .nav-item.active { color: #1C5D7A; }
+    .nav-item.active::after {
+      content: '';
+      position: absolute; bottom: -19px; left: 0; right: 0;
+      height: 2px;
+      background: #1C5D7A;
+      border-radius: 1px;
+    }
+    .mobile-nav-item.active { color: #1C5D7A; font-weight: 700; }
+    /* Scroll offset for sticky nav */
+    [id] { scroll-margin-top: 72px; }
+    @media (min-width: 768px) {
+      [id] { scroll-margin-top: 84px; }
+    }
+    /* Mobile menu */
+    .mobile-nav {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
+      display: flex;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .mobile-nav.open {
+      max-height: 500px;
+      opacity: 1;
+      padding-top: 0.75rem;
+      padding-bottom: 1rem;
+    }
+    /* Responsive fixes */
+    @media (max-width: 767px) {
+      .stat-number { font-size: 1.6rem; }
+      .terminal { border-radius: 0.75rem; }
+      .terminal .p-4 { padding: 0.75rem; }
+      .terminal .text-sm { font-size: 0.7rem; }
+    }
+    @media (max-width: 639px) {
+      h1 { font-size: 2rem !important; }
+      h2 { font-size: 1.5rem !important; }
+      .py-14 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
     }
   </style>
 </head>
-<body>
+<body class="antialiased">
 
-<canvas id="bg-canvas"></canvas>
-<div class="noise"></div>
-
-<nav>
-  <a class="nav-logo" href="#">
-    <svg width="30" height="30" viewBox="0 0 28 28" fill="none">
-      <rect width="28" height="28" rx="6" fill="#162548"/>
-      <rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.9"/>
-      <rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.9"/>
-      <path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    </svg>
-    Infragate
-  </a>
-  <div class="nav-right">
-    <a class="nav-link" href="#how-it-works">How it works</a>
-    <a class="nav-link" href="#features">Features</a>
-    <a class="nav-link" href="mailto:hello@infragate.cloud">Contact</a>
-    <span class="nav-badge">Coming Soon</span>
+<!-- Navigation -->
+<nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <div class="flex items-center gap-2">
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 md:w-9 md:h-9"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        <span class="font-bold text-xl md:text-2xl tracking-tight text-gray-800">Infragate</span>
+        <span class="hidden md:inline-block ml-3 text-xs font-medium bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full border border-gray-200">OCI Native</span>
+      </div>
+      <div class="hidden lg:flex gap-6 text-sm font-medium text-gray-600" id="desktopNav">
+        <a href="#features" class="nav-item hover:text-[#1C5D7A] transition">Features</a>
+        <a href="#templates" class="nav-item hover:text-[#1C5D7A] transition">Templates</a>
+        <a href="#finops" class="nav-item hover:text-[#1C5D7A] transition">FinOps</a>
+        <a href="#admin" class="nav-item hover:text-[#1C5D7A] transition">Admin</a>
+        <a href="#deploy" class="nav-item hover:text-[#1C5D7A] transition">Deployment</a>
+        <a href="#identity" class="nav-item hover:text-[#1C5D7A] transition">Identity</a>
+      </div>
+      <div class="flex gap-3">
+        <a href="https://github.com/SolviaLab/infragate" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] border border-[#1C5D7A]/30 rounded-full hover:bg-[#EFF6FA] transition"><i class="fas fa-book text-xs"></i> Docs</a>
+        <a href="mailto:hello@infragate.cloud" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-full btn-solid-premium">Request Demo</a>
+        <!-- Mobile/tablet hamburger -->
+        <button id="menuToggle" class="lg:hidden p-2 text-gray-600 hover:text-gray-900" aria-label="Open menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile/tablet menu -->
+    <div id="mobileNav" class="mobile-nav flex-col gap-3 pb-4 lg:hidden">
+      <a href="#features" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Features</a>
+      <a href="#templates" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Templates</a>
+      <a href="#finops" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">FinOps</a>
+      <a href="#admin" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Admin</a>
+      <a href="#deploy" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Deployment</a>
+      <a href="#identity" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Identity</a>
+      <div class="border-t border-gray-100 mt-2 pt-3 flex gap-3">
+        <a href="https://github.com/SolviaLab/infragate" class="flex-1 text-sm font-semibold text-[#1C5D7A] border border-[#1C5D7A]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
+        <a href="mailto:hello@infragate.cloud" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center">Demo</a>
+      </div>
+    </div>
   </div>
 </nav>
 
-<div class="page">
-
-  <!-- ══ HERO ══ -->
-  <div class="hero-wrap">
-    <div class="hero">
-      <div class="eyebrow">
-        <div class="eyebrow-line"></div>
-        <span class="eyebrow-text">First of its kind on Oracle Cloud</span>
-        <div class="eyebrow-line r"></div>
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-8 pb-14 md:pt-12 md:pb-18">
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 -z-10"></div>
+  <div class="absolute top-40 right-0 w-96 h-96 bg-[#1C5D7A]/5 rounded-full blur-3xl -z-10"></div>
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+          Internal Developer Platform for <span class="gradient-text">Oracle Cloud</span>
+        </h1>
+        <p class="text-base sm:text-lg text-gray-600 max-w-xl mt-4 sm:mt-6 leading-relaxed">
+          Infragate is a complete platform for OKE lifecycle management — provisioning, scaling, cost governance, and access control through a single web portal. No Terraform, no CLI, no OCI Console complexity. Runs entirely in your tenancy.
+        </p>
+        <div class="flex flex-wrap gap-3 sm:gap-5 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500">
+          <span><i class="fas fa-check-circle text-emerald-600 mr-1"></i> Live Terraform streaming</span>
+          <span><i class="fas fa-chart-line text-[#1C5D7A] mr-1"></i> Real-time cost preview</span>
+          <span><i class="fas fa-shield-alt text-[#1C5D7A] mr-1"></i> RBAC + destroy protection</span>
+        </div>
       </div>
-
-      <h1 class="hero-title">Your team deploys clusters.</h1>
-      <h2 class="hero-title-2">Infragate handles the rest.</h2>
-      <div class="hero-divider"></div>
-
-      <p class="hero-sub">
-        Engineers pick a template and click deploy. Platform teams keep control with resource limits, cost tracking, destroy protection, and auto-expiry. One portal. Zero tickets.
-      </p>
-
-      <div class="cta-row">
-        <a class="btn-cta" href="#notify">Get Early Access</a>
-        <a class="btn-outline" href="#how-it-works">See how it works</a>
-      </div>
-
-      <div class="form-outer" id="notify">
-        <form name="notify" method="POST" data-netlify="true" onsubmit="handleNotify(event)">
-          <input type="hidden" name="form-name" value="notify">
-          <div class="form-wrap" id="form-wrap">
-            <input class="email-input" type="email" name="email" id="email-input" placeholder="Enter your work email address">
-            <button class="btn-notify" type="submit">Notify Me</button>
+      <div class="relative">
+        <div class="terminal shadow-2xl border border-gray-200 overflow-hidden">
+          <div class="bg-gray-800 px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            <span class="text-gray-400 text-xs ml-2">terraform apply — streaming</span>
           </div>
-        </form>
-        <p class="form-note" id="form-note">Be the first to know when Infragate launches. No spam, ever.</p>
-        <div class="success-msg" id="success-msg">You're on the list — we'll be in touch.</div>
-        <div class="social-row">
-          <span class="social-label">Follow us</span>
-          <a class="social-btn" href="https://x.com/infragatek8s" target="_blank" aria-label="X / Twitter">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a class="social-btn" href="https://www.instagram.com/infragatek8s/" target="_blank" aria-label="Instagram">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </a>
+          <div class="p-4 text-gray-300 text-sm font-mono space-y-1 bg-[#0F172A]">
+            <div><span class="text-green-400">&#10003;</span> oke_cluster.primary: Creating...</div>
+            <div><span class="text-green-400">&#10003;</span> oci_core_vcn.infra: Creation complete (4s)</div>
+            <div><span class="text-blue-400">&#x21BB;</span> oke_node_pool.workers: provisioning</div>
+            <div><span class="text-yellow-400">&#9210;</span> Plan: 12 to add, 0 to change</div>
+            <div class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 12 added.</div>
+            <div class="text-gray-500 text-xs mt-2">infragate.cloud/cluster-prod-01</div>
+          </div>
         </div>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-          <div class="stat-val"><span>5</span> min</div>
-          <div class="stat-label">From click to running cluster</div>
-        </div>
-        <div class="stat">
-          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
-          <div class="stat-val"><span>0</span></div>
-          <div class="stat-label">CLI commands or Terraform files</div>
-        </div>
-        <div class="stat">
-          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div class="stat-val"><span>100%</span></div>
-          <div class="stat-label">Inside your OCI tenancy</div>
-        </div>
-        <div class="stat">
-          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
-          <div class="stat-val"><span>N</span> pools</div>
-          <div class="stat-label">Per cluster, independently scaled</div>
-        </div>
-        <div class="stat">
-          <div class="stat-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <div class="stat-val"><span>1st</span></div>
-          <div class="stat-label">Self-service OKE platform on OCI</div>
-        </div>
+        <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C5D7A]/10 rounded-full blur-2xl -z-10"></div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- ══ HOW IT WORKS ══ -->
-  <div class="how-section reveal" id="how-it-works" style="scroll-margin-top:20px">
-    <div class="how-inner">
-      <div class="section-label">How it works</div>
-      <h2 class="section-title">From zero to running cluster in three steps</h2>
-
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="how-num">1</div>
-          <div class="how-body">
-            <h3>Choose a template or go custom</h3>
-            <p>Admins pre-define approved configurations — K8s version, VM shape, node pools, tier. Engineers select one and the form locks to those values. Power users can go custom within their resource limits.</p>
-            <span class="how-tag tf">Template lock mode</span>
-          </div>
-        </div>
-        <div class="how-step">
-          <div class="how-num">2</div>
-          <div class="how-body">
-            <h3>Watch Terraform provision live</h3>
-            <p>Click deploy and watch every Terraform step stream to your browser in real time. VCN, subnets, security lists, node pools, kubeconfig — all created automatically. Cost estimate shown before you commit.</p>
-            <span class="how-tag tf">Live SSE streaming</span>
-            <span class="how-tag cost">Cost preview</span>
-          </div>
-        </div>
-        <div class="how-step">
-          <div class="how-num">3</div>
-          <div class="how-body">
-            <h3>Scale, monitor, or let it expire</h3>
-            <p>Scale node pools on demand. Track per-cluster costs. Set TTL for automatic cleanup so dev clusters don't run forever. Protected production clusters can't be destroyed without admin override.</p>
-            <span class="how-tag ttl">TTL auto-expiry</span>
-            <span class="how-tag cost">FinOps</span>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- Enterprise trust bar -->
+<div class="border-y border-gray-100 bg-gray-50/50 py-4">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-wrap justify-center md:justify-between gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
+    <span class="flex items-center gap-2"><i class="fas fa-database text-[#1C5D7A]"></i> 100% in-tenancy</span>
+    <span class="flex items-center gap-2"><i class="fas fa-shield-alt text-[#1C5D7A]"></i> Append-only audit logs</span>
+    <span class="flex items-center gap-2"><i class="fas fa-chart-line text-[#1C5D7A]"></i> FinOps cost visibility</span>
+    <span class="flex items-center gap-2"><i class="fas fa-code-branch text-[#1C5D7A]"></i> CI/CD pipelines included</span>
   </div>
-
-  <!-- ══ FEATURES ══ -->
-  <div class="features-section reveal" id="features" style="scroll-margin-top:80px">
-    <div class="section-label">Platform capabilities</div>
-    <h2 class="section-title">Everything your platform team needs</h2>
-
-    <div class="features-grid">
-      <div class="feature">
-        <div class="feature-ico" style="background:var(--gold-dim);border:1px solid var(--border-gold)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-        </div>
-        <h3>FinOps from day one</h3>
-        <p>Live cost estimates on every surface — deploy form, cluster cards, detail page, admin panel. Pricing uses OCI Pay-As-You-Go rates with optional contract overrides.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-ico" style="background:var(--green-dim);border:1px solid rgba(52,211,153,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-        </div>
-        <h3>Guardrails, not gatekeepers</h3>
-        <p>Per-user resource limits, destroy protection on production clusters, TTL auto-expiry on dev clusters, RBAC-restricted templates. Engineers move fast, safely.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-ico" style="background:var(--indigo-dim);border:1px solid rgba(79,106,245,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-lt)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-        </div>
-        <h3>Full audit trail</h3>
-        <p>Every deploy, scale, and destroy is logged with user, timestamp, duration, and status. Admin panel shows all clusters across all users.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-ico" style="background:var(--cyan-dim);border:1px solid rgba(34,211,238,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <h3>Template-driven provisioning</h3>
-        <p>Admin-defined templates encode K8s version, shape, pools, tier, TTL, and protection. Selecting a template locks the deploy form — no accidental misconfiguration.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-ico" style="background:var(--red-dim);border:1px solid rgba(248,113,113,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-        </div>
-        <h3>Destroy protection</h3>
-        <p>Protected clusters cannot be destroyed by regular users. Admins can override with force-destroy. TTL auto-expiry ensures dev clusters don't run forever.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-ico" style="background:var(--gold-dim);border:1px solid var(--border-gold)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-        </div>
-        <h3>Any OIDC provider</h3>
-        <p>Works with Keycloak, Azure AD, Okta, Google Workspace, or any OIDC-compliant IdP. No vendor lock-in. Auto-provisions users on first login from JWT claims.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ BUILT FOR ══ -->
-  <div class="built-section reveal">
-    <div class="section-label">Built for enterprise</div>
-    <h2 class="section-title">Two audiences. One platform.</h2>
-
-    <div class="built-grid">
-      <div class="built-card">
-        <h3>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          For engineers
-          <span style="background:var(--indigo-dim);color:var(--indigo-lt);border:1px solid rgba(79,106,245,.15)">Self-service</span>
-        </h3>
-        <p>No tickets, no CLI, no Terraform knowledge. Just pick a config and deploy.</p>
-        <ul>
-          <li>Select a template or configure custom pools</li>
-          <li>Watch Terraform stream live in the browser</li>
-          <li>Download kubeconfig + SSH keys from the portal</li>
-          <li>Scale node pools up or down on demand</li>
-          <li>See cost estimates before every action</li>
-        </ul>
-      </div>
-      <div class="built-card">
-        <h3>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-lt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          For platform teams
-          <span style="background:var(--gold-dim);color:var(--gold-lt);border:1px solid var(--border-gold)">Full control</span>
-        </h3>
-        <p>Stay in control without becoming a bottleneck.</p>
-        <ul>
-          <li>Define templates with locked resource configurations</li>
-          <li>Set per-user resource limits and tier restrictions</li>
-          <li>Enable destroy protection on production clusters</li>
-          <li>Set TTL auto-expiry on dev/staging clusters</li>
-          <li>Monitor cost, usage, and audit logs across all users</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ FOOTER ══ -->
-  <footer>
-    <span>&copy; 2026 Infragate. All rights reserved.</span>
-    <div class="footer-right">
-      <a href="mailto:hello@infragate.cloud">hello@infragate.cloud</a>
-      <span>Built by Solvia Lab s.r.o.</span>
-    </div>
-  </footer>
-
 </div>
 
+<!-- Features Grid -->
+<section id="features" class="py-14 md:py-18 max-w-7xl mx-auto px-6 lg:px-8">
+  <div class="text-center max-w-2xl mx-auto mb-10">
+    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-[#EFF6FA] px-3 py-1 rounded-full">Platform capabilities</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4">Complete cluster lifecycle<br>at your fingertips</h2>
+    <p class="text-gray-600">From one-click provisioning to multi-pool scaling, TTL expiry, and cost governance — Infragate brings enterprise control to OKE.</p>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-mouse-pointer text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">One-click deploy</h3>
+      <p class="text-gray-500 mt-2">Engineers provision fully managed OKE clusters with automatic compartment, VCN, subnet, security list, and node pool creation — no manual steps.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-layer-group text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">Multi-pool scaling</h3>
+      <p class="text-gray-500 mt-2">Add or remove node pools, adjust OCPU, RAM, and storage per pool from the UI. Change preview shows current vs. new values before applying.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-chart-simple text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">Live cost preview</h3>
+      <p class="text-gray-500 mt-2">Monthly and hourly estimates update live as you configure pools. Cost visible on deploy form, dashboard cards, detail page, and admin panels.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">TTL &amp; destroy protection</h3>
+      <p class="text-gray-500 mt-2">Set time-to-live in hours with color-coded countdown badges (green &gt;24h, orange &lt;24h, red &lt;4h). Protected clusters require admin force-destroy override.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-network-wired text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">CIDR pool management</h3>
+      <p class="text-gray-500 mt-2">Admin-managed /24 ranges — each cluster consumes one on deploy and releases on destroy. No overlaps, automatic allocation.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-key text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">Kubeconfig + SSH keys</h3>
+      <p class="text-gray-500 mt-2">Download kubeconfig (OCI exec plugin) and Terraform-generated SSH private key directly from the cluster detail page.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-terminal text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">Live Terraform streaming</h3>
+      <p class="text-gray-500 mt-2">Watch <code class="text-xs bg-gray-100 px-1 rounded">terraform init</code>, <code class="text-xs bg-gray-100 px-1 rounded">plan</code>, and <code class="text-xs bg-gray-100 px-1 rounded">apply</code> output stream in real time via SSE during deploy, scale, and destroy.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">Bring your own infra</h3>
+      <p class="text-gray-500 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6">
+      <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A]"></i></div>
+      <h3 class="text-xl font-bold">Resource limits</h3>
+      <p class="text-gray-500 mt-2">Two-tier limit system: global defaults + per-user overrides. Covers clusters, pools, nodes, OCPU, RAM, storage, and tier. Visual feedback when limits are reached.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Templates + RBAC section -->
+<section id="templates" class="bg-gray-50 py-14 md:py-18">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-white px-3 py-1 rounded-full border border-gray-200">Cluster templates &amp; RBAC</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-5 mb-5">Golden paths with role-based gating</h2>
+        <p class="text-gray-600 mb-6">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields — users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations.</p>
+        <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <span class="font-bold text-gray-800">Template: PROD — HA</span>
+            <span class="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-full border border-amber-200">requires: production</span>
+          </div>
+          <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-500">
+            <span><i class="fas fa-lock text-[#1C5D7A]"></i> Destroy protection</span>
+            <span><i class="fas fa-clock text-[#1C5D7A]"></i> TTL: 720h</span>
+            <span><i class="fas fa-server text-[#1C5D7A]"></i> VM.Standard3.Flex</span>
+            <span><i class="fas fa-layer-group text-[#1C5D7A]"></i> 3 node pools</span>
+          </div>
+          <p class="text-xs text-gray-400 mt-3"><i class="fas fa-eye-slash"></i> Users without the <code class="bg-gray-100 px-1 rounded">production</code> role never see this template — clean UI, no error messages.</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
+        <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
+          <i class="fas fa-id-badge text-[#1C5D7A] text-xl"></i>
+          <span class="font-semibold">OIDC role mapping (Keycloak / Azure AD / Okta)</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A]">DEV — Small</span>
+            <div class="text-xs text-gray-500 mt-1">No role required &rarr; all users</div>
+          </div>
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A]">TEST — Medium</span>
+            <div class="text-xs text-gray-500 mt-1">Role: <code class="bg-white px-1 rounded">testing</code> &rarr; QA team</div>
+          </div>
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A]">UAT — Large</span>
+            <div class="text-xs text-gray-500 mt-1">Role: <code class="bg-white px-1 rounded">uat</code> &rarr; release managers</div>
+          </div>
+          <div class="bg-gray-50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A]">PROD — HA</span>
+            <div class="text-xs text-gray-500 mt-1">Role: <code class="bg-white px-1 rounded">production</code> &rarr; SRE only</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FinOps Section -->
+<section id="finops" class="py-14 md:py-18 max-w-7xl mx-auto px-6 lg:px-8">
+  <div class="text-center mb-10">
+    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-[#EFF6FA] px-3 py-1 rounded-full">FinOps native</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4">Cost visibility &amp; governance</h2>
+    <p class="text-gray-600 max-w-2xl mx-auto mt-3">Real-time cost previews, cluster-level breakdowns, and global spend dashboards — no surprises. Both server-side and client-side cost engines produce identical results.</p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+    <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm">
+      <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-dollar-sign text-lg text-[#1C5D7A]"></i>
+      </div>
+      <h3 class="font-bold text-lg">Deploy cost summary</h3>
+      <p class="text-gray-500 text-sm mt-2">Hourly &amp; monthly cost updates live as you configure node pools, shape, and tier. Also shown in the deploy plan confirm modal.</p>
+      <div class="mt-3 bg-gray-50 p-3 rounded-lg text-sm font-mono text-gray-600">$0.025/OCPU&middot;hr + $0.0015/GB RAM</div>
+    </div>
+    <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm">
+      <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-chart-pie text-lg text-[#1C5D7A]"></i>
+      </div>
+      <h3 class="font-bold text-lg">Cluster cost cards</h3>
+      <p class="text-gray-500 text-sm mt-2">Dashboard cards show estimated monthly cost per cluster. Detail page shows full breakdown: per-pool cost, control plane cost, total with hourly rate.</p>
+    </div>
+    <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm">
+      <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-chart-line text-lg text-[#1C5D7A]"></i>
+      </div>
+      <h3 class="font-bold text-lg">Admin spend overview</h3>
+      <p class="text-gray-500 text-sm mt-2">Total monthly spend across all active clusters in the admin stats bar. Shape-specific rate overrides supported for custom OCI enterprise contracts.</p>
+    </div>
+  </div>
+  <div class="mt-10 bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div>
+      <i class="fas fa-calculator text-[#1C5D7A] text-xl mr-2"></i>
+      <span class="font-semibold">Identical server-side &amp; client-side cost engine</span>
+      <p class="text-sm text-gray-500 mt-1">OCI Pay-As-You-Go rates + admin overrides for custom enterprise contracts.</p>
+    </div>
+    <div class="text-sm font-semibold text-gray-700 bg-white px-4 py-2 rounded-lg border border-gray-200 text-center">Basic CP: <span class="text-emerald-600">$0</span> &middot; Enhanced CP: <span class="text-[#1C5D7A]">$0.10/hr</span></div>
+  </div>
+</section>
+
+<!-- Admin Panel Section -->
+<section id="admin" class="bg-gray-50 py-14 md:py-18">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <span class="bg-white text-[#1C5D7A] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 uppercase tracking-wider">Admin &amp; governance</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4">Five dedicated admin panels</h2>
+      <p class="text-gray-600 mt-2">Global oversight, resource limits, configuration, templates, and audit logs — all changes take effect immediately.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
+        <i class="fas fa-globe text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-2">All Clusters</h4>
+        <p class="text-xs text-gray-500 mt-1">Every cluster across all users with status, owner, CIDR, K8s version, tier, resources, cost, and age. Stats bar with total spend.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
+        <i class="fas fa-users text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-2">Users &amp; Limits</h4>
+        <p class="text-xs text-gray-500 mt-1">Per-user overrides for any combination of limits and tier. Reset to global defaults with one click. Override badges visible.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
+        <i class="fas fa-sliders text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-2">Configuration</h4>
+        <p class="text-xs text-gray-500 mt-1">CIDR pool, VM shapes, K8s versions, node images (with enable/disable), global resource limits. No restart needed.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
+        <i class="fas fa-layer-group text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-2">Cluster Templates</h4>
+        <p class="text-xs text-gray-500 mt-1">Template table with live cost preview in add/edit modal. Enable/disable toggle and permanent delete.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
+        <i class="fas fa-clock-rotate-left text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-2">Audit Log</h4>
+        <p class="text-xs text-gray-500 mt-1">Append-only record of every deploy, scale, destroy. Filterable by user, operation, and status.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deployment Options -->
+<section id="deploy" class="py-14 md:py-18 max-w-7xl mx-auto px-6 lg:px-8">
+  <div class="grid lg:grid-cols-2 gap-12 items-center">
+    <div>
+      <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-[#EFF6FA] px-3 py-1 rounded-full">Deployment flexibility</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-5">OCI Marketplace, Helm, or any Kubernetes</h2>
+      <ul class="space-y-3 text-gray-600">
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>OCI Resource Manager Stack</strong> — one-click "Launch Stack" with guided form. Creates new OKE cluster or deploys into existing infrastructure.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>Helm chart</strong> — single chart with configurable values, ingress-nginx with OCI load balancer annotations. Supports <code class="text-xs bg-gray-100 px-1 rounded">imagePullSecrets</code> for private registries.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>CI/CD pipelines</strong> — GitHub Actions (GHCR) &amp; GitLab CI (GitLab CR) included. Images tagged <code class="text-xs bg-gray-100 px-1 rounded">dev-latest</code> and <code class="text-xs bg-gray-100 px-1 rounded">latest</code>.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>Single VM (k3s) on OCI Always Free</strong> — ARM-compatible, control-plane tolerations for single-node scheduling.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>Any OIDC provider</strong> — bundled Keycloak, or connect Azure AD, Okta, Google Workspace. PKCE flow, no client secrets in frontend.</span></li>
+      </ul>
+      <div class="flex flex-wrap gap-3 mt-8">
+        <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium"><i class="fab fa-docker text-gray-500 mr-1"></i> Docker Compose local dev</span>
+        <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium"><i class="fas fa-vial text-gray-500 mr-1"></i> 87 automated tests</span>
+        <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium"><i class="fas fa-cloud-arrow-up text-gray-500 mr-1"></i> GHCR / GitLab CR / OCIR</span>
+      </div>
+    </div>
+    <div class="bg-gray-900 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl overflow-hidden">
+      <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+        <span class="font-mono text-cyan-300 text-xs sm:text-sm break-all">helm install infragate ./chart \</span>
+        <i class="fas fa-anchor text-2xl text-gray-600"></i>
+      </div>
+      <div class="mt-4 font-mono text-xs text-gray-400 space-y-1 break-all leading-relaxed">
+        <div>&nbsp;&nbsp;--set oci.region=us-ashburn-1 \</div>
+        <div>&nbsp;&nbsp;--set oci.compartmentId=ocid1.compartment... \</div>
+        <div>&nbsp;&nbsp;--set oidc.providerUrl=https://keycloak.example.com \</div>
+        <div>&nbsp;&nbsp;--set storage.blockVolume.enabled=true</div>
+      </div>
+      <div class="mt-5 bg-gray-800/50 p-3 rounded-lg text-emerald-300 text-xs">
+        <i class="fas fa-check-circle mr-1"></i> Supports private registries, imagePullSecrets, OCI Block Volume, and OCI flexible LB
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Identity & Security -->
+<section id="identity" class="bg-gray-50 py-14 md:py-18">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <span class="bg-white text-[#1C5D7A] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 uppercase tracking-wider">Identity &amp; security</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4">Enterprise-grade access control</h2>
+      <p class="text-gray-600 mt-2">Zero external dependencies. No data leaves your tenancy. No SaaS control plane.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+        <i class="fas fa-id-card text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-3">Any OIDC Provider</h4>
+        <p class="text-xs text-gray-500 mt-1">Keycloak (bundled), Azure AD, Okta, Google Workspace — any OIDC-compliant IdP.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+        <i class="fas fa-fingerprint text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-3">PKCE Auth Flow</h4>
+        <p class="text-xs text-gray-500 mt-1">Authorization Code + PKCE. No client secrets stored in the frontend. Auto token refresh.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+        <i class="fas fa-user-check text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-3">Auto-provisioning</h4>
+        <p class="text-xs text-gray-500 mt-1">No user directory needed. Users auto-provisioned on first login from JWT <code class="bg-gray-100 px-1 rounded">sub</code> claim.</p>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+        <i class="fas fa-bolt text-[#1C5D7A] text-xl"></i>
+        <h4 class="font-bold mt-3">Cached OIDC Discovery</h4>
+        <p class="text-xs text-gray-500 mt-1">Well-known config cached in sessionStorage + nginx proxy layer. Zero network round-trips on load.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="border-y border-gray-100 bg-white py-10">
+  <div class="max-w-6xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+    <div>
+      <div class="stat-number">&lt;10 min</div>
+      <div class="text-sm text-gray-500">Cluster provisioning</div>
+    </div>
+    <div>
+      <div class="stat-number">87+</div>
+      <div class="text-sm text-gray-500">Automated tests</div>
+    </div>
+    <div>
+      <div class="stat-number">$0</div>
+      <div class="text-sm text-gray-500">Software license</div>
+    </div>
+    <div>
+      <div class="stat-number">100%</div>
+      <div class="text-sm text-gray-500">In-tenancy</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- CTA -->
+<section class="py-14 md:py-18 px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto gradient-bg-premium rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 text-center shadow-2xl">
+    <h2 class="text-3xl md:text-4xl font-bold text-white">Ready to simplify OKE operations?</h2>
+    <p class="text-gray-200 mt-4 text-lg max-w-xl mx-auto">Give your engineers self-service superpowers, reduce cloud complexity, and gain FinOps visibility — all within your tenancy.</p>
+    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-8">
+      <a href="https://github.com/SolviaLab/infragate" class="bg-white text-[#0B2B3F] px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto">
+        <i class="fab fa-github"></i> View on GitHub
+      </a>
+      <a href="mailto:hello@infragate.cloud" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 transition shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto">
+        <i class="fas fa-envelope"></i> Request Demo
+      </a>
+    </div>
+    <p class="text-gray-300 text-sm mt-8">Built by <a href="https://solvialab.tech" class="text-white hover:underline">Solvia Lab s.r.o.</a> &middot; <a href="https://infragate.cloud" class="text-white hover:underline">infragate.cloud</a> &middot; <a href="mailto:hello@infragate.cloud" class="text-white hover:underline">hello@infragate.cloud</a></p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-gray-200 py-8">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        <span class="font-bold text-sm text-gray-800">Infragate</span>
+      </div>
+      <span class="text-gray-400 text-sm">&copy; 2026 Solvia Lab s.r.o.</span>
+    </div>
+    <div class="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6 text-sm text-gray-400">
+      <a href="https://github.com/SolviaLab/infragate" class="hover:text-gray-600 transition">GitHub</a>
+      <a href="https://github.com/SolviaLab/infragate" class="hover:text-gray-600 transition">Documentation</a>
+      <a href="mailto:hello@infragate.cloud" class="hover:text-gray-600 transition">Support</a>
+      <a href="https://solvialab.tech" class="hover:text-gray-600 transition">Solvia Lab</a>
+    </div>
+  </div>
+</footer>
+
 <script>
-// Animated particle background
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, particles = [];
-
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-
-function initParticles() {
-  particles = [];
-  const count = Math.floor((W * H) / 22000);
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 1.2 + 0.2,
-      vx: (Math.random() - .5) * .12,
-      vy: (Math.random() - .5) * .12,
-      o: Math.random() * .3 + .06
+  // Mobile menu toggle
+  document.getElementById('menuToggle').addEventListener('click', function() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  });
+  // Close mobile menu on link click
+  document.querySelectorAll('#mobileNav a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.getElementById('mobileNav').classList.remove('open');
     });
-  }
-}
-
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-
-  const g1 = ctx.createRadialGradient(W*.12, H*.4, 0, W*.12, H*.4, W*.6);
-  g1.addColorStop(0, 'rgba(79,106,245,.08)');
-  g1.addColorStop(1, 'rgba(13,27,53,0)');
-  ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
-
-  const g2 = ctx.createRadialGradient(W*.85, H*.15, 0, W*.85, H*.15, W*.4);
-  g2.addColorStop(0, 'rgba(201,168,76,.05)');
-  g2.addColorStop(1, 'rgba(13,27,53,0)');
-  ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
-
-  for (let i = 0; i < particles.length; i++) {
-    const p = particles[i];
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(201,168,76,${p.o * .4})`;
-    ctx.fill();
-
-    for (let j = i+1; j < particles.length; j++) {
-      const q = particles[j];
-      const dx = p.x - q.x, dy = p.y - q.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 100) {
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
-        ctx.strokeStyle = `rgba(79,106,245,${(1 - dist/100) * .07})`;
-        ctx.lineWidth = .5; ctx.stroke();
+  });
+  // Smooth scroll with offset for fixed header
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    anchor.addEventListener('click', function(e) {
+      var href = this.getAttribute('href');
+      if (href === '#' || href === '') return;
+      var target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        var offset = window.innerWidth >= 768 ? 84 : 72;
+        var pos = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: pos, behavior: 'smooth' });
       }
-    }
-  }
-  requestAnimationFrame(draw);
-}
-
-resize(); initParticles(); draw();
-window.addEventListener('resize', () => { resize(); initParticles(); });
-
-// Form
-function handleNotify(e) {
-  if (e) e.preventDefault();
-  const input = document.getElementById('email-input');
-  const success = document.getElementById('success-msg');
-  const note = document.getElementById('form-note');
-  const wrap = document.getElementById('form-wrap');
-  const val = input.value.trim();
-  if (!val || !val.includes('@') || !val.includes('.')) {
-    wrap.style.borderColor = 'rgba(239,68,68,.5)';
-    wrap.style.boxShadow = '0 0 0 3px rgba(239,68,68,.08)';
-    setTimeout(() => { wrap.style.borderColor = ''; wrap.style.boxShadow = ''; }, 2000);
-    return;
-  }
-  // Submit to Netlify (form action handled by data-netlify)
-  fetch('/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ 'form-name': 'notify', email: val }).toString()
-  }).then(() => {
-    wrap.style.display = 'none';
-    note.style.display = 'none';
-    success.style.display = 'block';
-  }).catch(() => {
-    wrap.style.display = 'none';
-    note.style.display = 'none';
-    success.style.display = 'block';
+    });
   });
-}
+  // Active nav highlight on scroll
+  var navSections = ['features','templates','finops','admin','deploy','identity'];
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var id = entry.target.id;
+        document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(function(link) {
+          var href = link.getAttribute('href');
+          if (href === '#' + id) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '-80px 0px -50% 0px' });
 
-// Scroll reveal
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
+  navSections.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) observer.observe(el);
   });
-}, { threshold: 0.12 });
-reveals.forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
