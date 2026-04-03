@@ -3,23 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Infragate · Enterprise OKE Self-Service Platform</title>
+  <title>Infragate | IDP for OCI</title>
   <meta name="description" content="Infragate empowers engineering teams to provision production-grade Oracle Kubernetes Engine clusters with one click. Self-service, FinOps, and full lifecycle management.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+    // Apply theme before paint to prevent flash
+    (function() {
+      var stored = localStorage.getItem('infragate-theme');
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * { font-family: 'Inter', sans-serif; }
     html { scroll-behavior: smooth; }
-    body { background: #ffffff; }
+    body { background: #ffffff; transition: background-color 0.3s ease, color 0.3s ease; }
+    .dark body { background: #0B1120; }
     .gradient-text {
       background: linear-gradient(135deg, #0B2B3F 0%, #1C5D7A 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
+    .dark .gradient-text {
+      background: linear-gradient(135deg, #5BB8D8 0%, #7DD3FC 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
     .gradient-bg-premium {
       background: linear-gradient(135deg, #0B2B3F 0%, #124E68 100%);
+    }
+    .dark .gradient-bg-premium {
+      background: linear-gradient(135deg, #0E2A3D 0%, #164E68 100%);
     }
     .glass-card {
       background: rgba(255, 255, 255, 0.96);
@@ -27,10 +47,18 @@
       border: 1px solid rgba(0, 0, 0, 0.05);
       transition: all 0.25s ease;
     }
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
     .glass-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
       border-color: rgba(28, 93, 122, 0.2);
+    }
+    .dark .glass-card:hover {
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+      border-color: rgba(91, 184, 216, 0.3);
     }
     .btn-outline-premium {
       border: 1px solid #1C5D7A;
@@ -53,6 +81,12 @@
       transform: translateY(-1px);
       box-shadow: 0 8px 20px rgba(28,93,122,0.2);
     }
+    .dark .btn-solid-premium {
+      background: #1C5D7A;
+    }
+    .dark .btn-solid-premium:hover {
+      background: #2980A8;
+    }
     .feature-icon {
       background: #F0F7FA;
       border-radius: 1rem;
@@ -63,9 +97,15 @@
       justify-content: center;
       transition: 0.2s;
     }
+    .dark .feature-icon {
+      background: rgba(28, 93, 122, 0.2);
+    }
     .glass-card:hover .feature-icon {
       background: #E2F0F5;
       transform: scale(1.05);
+    }
+    .dark .glass-card:hover .feature-icon {
+      background: rgba(28, 93, 122, 0.35);
     }
     .stat-number {
       font-size: 2.2rem;
@@ -74,6 +114,11 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+    }
+    .dark .stat-number {
+      background: linear-gradient(135deg, #5BB8D8, #7DD3FC);
+      -webkit-background-clip: text;
+      background-clip: text;
     }
     @media (min-width: 768px) {
       .stat-number { font-size: 2.8rem; }
@@ -96,6 +141,7 @@
     /* Active nav item */
     .nav-item { position: relative; padding-bottom: 2px; }
     .nav-item.active { color: #1C5D7A; }
+    .dark .nav-item.active { color: #5BB8D8; }
     .nav-item.active::after {
       content: '';
       position: absolute; bottom: -19px; left: 0; right: 0;
@@ -103,11 +149,13 @@
       background: #1C5D7A;
       border-radius: 1px;
     }
+    .dark .nav-item.active::after { background: #5BB8D8; }
     .mobile-nav-item.active { color: #1C5D7A; font-weight: 700; }
+    .dark .mobile-nav-item.active { color: #5BB8D8; }
     /* Scroll offset for sticky nav */
-    [id] { scroll-margin-top: 72px; }
+    [id] { scroll-margin-top: 80px; }
     @media (min-width: 768px) {
-      [id] { scroll-margin-top: 84px; }
+      [id] { scroll-margin-top: 90px; }
     }
     /* Mobile menu */
     .mobile-nav {
@@ -137,47 +185,206 @@
       h2 { font-size: 1.5rem !important; }
       .py-14 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
     }
+    /* Demo modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 1.25rem;
+      max-width: 520px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.25s ease;
+    }
+    .dark .modal-content {
+      background: #1E293B;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.625rem;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      background: white;
+      color: #1f2937;
+    }
+    .dark .modal-content input,
+    .dark .modal-content textarea {
+      background: #0F172A;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    .modal-content input:focus,
+    .modal-content textarea:focus {
+      border-color: #1C5D7A;
+      box-shadow: 0 0 0 3px rgba(28,93,122,0.1);
+    }
+    .dark .modal-content input:focus,
+    .dark .modal-content textarea:focus {
+      border-color: #5BB8D8;
+      box-shadow: 0 0 0 3px rgba(91,184,216,0.15);
+    }
+    .modal-content label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.375rem;
+    }
+    .dark .modal-content label { color: #cbd5e1; }
+    /* Workflow animation */
+    .flow-step { opacity: 0.4; }
+    .flow-step.active { opacity: 1; }
+    /* Theme toggle */
+    .theme-toggle {
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: #6b7280;
+    }
+    .theme-toggle:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    .dark .theme-toggle:hover {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    .theme-toggle .fa-sun { display: none; }
+    .dark .theme-toggle .fa-sun { display: inline; }
+    .dark .theme-toggle .fa-moon { display: none; }
+    /* Smooth transitions for theme switch */
+    *, *::before, *::after {
+      transition-property: background-color, border-color, color, box-shadow;
+      transition-duration: 0.2s;
+      transition-timing-function: ease;
+    }
+    /* Exclude animations from theme transition */
+    .flow-step, .flow-step *, .terminal *, #terraformOutput * {
+      transition-property: opacity, transform, border-color, background, color;
+    }
   </style>
 </head>
-<body class="antialiased">
+<body class="antialiased dark:text-gray-100">
+
+<!-- Demo Request Modal -->
+<div id="demoModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Request a Demo</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
+      </div>
+      <button id="modalClose" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="demoForm" class="space-y-4" action="https://formsubmit.co/hello@infragate.cloud" method="POST">
+      <input type="hidden" name="_subject" value="Infragate Demo Request">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <div>
+        <label for="demo-name">Full Name <span class="text-red-400">*</span></label>
+        <input type="text" id="demo-name" name="name" required placeholder="John Smith">
+      </div>
+      <div>
+        <label for="demo-company">Company <span class="text-red-400">*</span></label>
+        <input type="text" id="demo-company" name="company" required placeholder="Acme Corp">
+      </div>
+      <div>
+        <label for="demo-email">Work Email <span class="text-red-400">*</span></label>
+        <input type="email" id="demo-email" name="email" required placeholder="john@acme.com">
+      </div>
+      <div>
+        <label for="demo-title">Job Title</label>
+        <input type="text" id="demo-title" name="title" placeholder="Platform Engineer">
+      </div>
+      <div>
+        <label for="demo-message">Tell us about your use case</label>
+        <textarea id="demo-message" name="message" rows="3" placeholder="How many clusters do you manage? What's your current workflow?"></textarea>
+      </div>
+      <button type="submit" class="w-full btn-solid-premium px-6 py-3 text-sm font-semibold rounded-xl">
+        <i class="fas fa-paper-plane mr-1.5"></i> Submit Request
+      </button>
+      <p class="text-xs text-gray-400 text-center">We respect your privacy. No spam, ever.</p>
+    </form>
+  </div>
+</div>
 
 <!-- Navigation -->
-<nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+<nav class="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800 shadow-sm">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <div class="flex justify-between items-center h-16 md:h-20">
       <div class="flex items-center gap-2">
         <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 md:w-9 md:h-9"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
-        <span class="font-bold text-xl md:text-2xl tracking-tight text-gray-800">Infragate</span>
-        <span class="hidden md:inline-block ml-3 text-xs font-medium bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full border border-gray-200">OCI Native</span>
+        <span class="font-bold text-xl md:text-2xl tracking-tight text-gray-800 dark:text-white">Infragate</span>
+        <span class="hidden md:inline-block ml-3 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700">OCI Native</span>
       </div>
-      <div class="hidden lg:flex gap-6 text-sm font-medium text-gray-600" id="desktopNav">
-        <a href="#features" class="nav-item hover:text-[#1C5D7A] transition">Features</a>
-        <a href="#templates" class="nav-item hover:text-[#1C5D7A] transition">Templates</a>
-        <a href="#finops" class="nav-item hover:text-[#1C5D7A] transition">FinOps</a>
-        <a href="#admin" class="nav-item hover:text-[#1C5D7A] transition">Admin</a>
-        <a href="#deploy" class="nav-item hover:text-[#1C5D7A] transition">Deployment</a>
-        <a href="#identity" class="nav-item hover:text-[#1C5D7A] transition">Identity</a>
+      <div class="hidden lg:flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-400" id="desktopNav">
+        <a href="#features" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Features</a>
+        <a href="#templates" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Templates</a>
+        <a href="#finops" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">FinOps</a>
+        <a href="#admin" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Admin</a>
+        <a href="#deploy" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Deployment</a>
+        <a href="#identity" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Identity</a>
       </div>
-      <div class="flex gap-3">
-        <a href="https://github.com/SolviaLab/infragate" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] border border-[#1C5D7A]/30 rounded-full hover:bg-[#EFF6FA] transition"><i class="fas fa-book text-xs"></i> Docs</a>
-        <a href="mailto:hello@infragate.cloud" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-full btn-solid-premium">Request Demo</a>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+          <i class="fas fa-moon text-sm"></i>
+          <i class="fas fa-sun text-sm"></i>
+        </button>
+        <a href="https://github.com/SolviaLab/infragate" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition"><i class="fas fa-book text-xs"></i> Docs</a>
+        <button onclick="openDemoModal()" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-full btn-solid-premium cursor-pointer">Request a Demo</button>
         <!-- Mobile/tablet hamburger -->
-        <button id="menuToggle" class="lg:hidden p-2 text-gray-600 hover:text-gray-900" aria-label="Open menu">
+        <button id="menuToggle" class="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" aria-label="Open menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
     </div>
     <!-- Mobile/tablet menu -->
     <div id="mobileNav" class="mobile-nav flex-col gap-3 pb-4 lg:hidden">
-      <a href="#features" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Features</a>
-      <a href="#templates" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Templates</a>
-      <a href="#finops" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">FinOps</a>
-      <a href="#admin" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Admin</a>
-      <a href="#deploy" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Deployment</a>
-      <a href="#identity" class="mobile-nav-item text-sm font-medium text-gray-600 hover:text-[#1C5D7A] py-2">Identity</a>
-      <div class="border-t border-gray-100 mt-2 pt-3 flex gap-3">
-        <a href="https://github.com/SolviaLab/infragate" class="flex-1 text-sm font-semibold text-[#1C5D7A] border border-[#1C5D7A]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
-        <a href="mailto:hello@infragate.cloud" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center">Demo</a>
+      <a href="#features" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Features</a>
+      <a href="#templates" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Templates</a>
+      <a href="#finops" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">FinOps</a>
+      <a href="#admin" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Admin</a>
+      <a href="#deploy" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Deployment</a>
+      <a href="#identity" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Identity</a>
+      <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
+        <a href="https://github.com/SolviaLab/infragate" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
+        <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center cursor-pointer">Request a Demo</button>
       </div>
     </div>
   </div>
@@ -185,38 +392,36 @@
 
 <!-- Hero Section -->
 <section class="relative overflow-hidden pt-8 pb-14 md:pt-12 md:pb-18">
-  <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 -z-10"></div>
-  <div class="absolute top-40 right-0 w-96 h-96 bg-[#1C5D7A]/5 rounded-full blur-3xl -z-10"></div>
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-[#0B1120] dark:to-gray-900 -z-10"></div>
+  <div class="absolute top-40 right-0 w-96 h-96 bg-[#1C5D7A]/5 dark:bg-[#1C5D7A]/10 rounded-full blur-3xl -z-10"></div>
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white">
           Internal Developer Platform for <span class="gradient-text">Oracle Cloud</span>
         </h1>
-        <p class="text-base sm:text-lg text-gray-600 max-w-xl mt-4 sm:mt-6 leading-relaxed">
-          Infragate is a complete platform for OKE lifecycle management — provisioning, scaling, cost governance, and access control through a single web portal. No Terraform, no CLI, no OCI Console complexity. Runs entirely in your tenancy.
+        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed">
+          Infragate is a complete platform for OKE clusters lifecycle management — provisioning, scaling, cost governance, and access control through a single web portal. No Terraform, no CLI, no OCI Console complexity. Runs entirely in your tenancy.
         </p>
-        <div class="flex flex-wrap gap-3 sm:gap-5 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500">
-          <span><i class="fas fa-check-circle text-emerald-600 mr-1"></i> Live Terraform streaming</span>
-          <span><i class="fas fa-chart-line text-[#1C5D7A] mr-1"></i> Real-time cost preview</span>
-          <span><i class="fas fa-shield-alt text-[#1C5D7A] mr-1"></i> RBAC + destroy protection</span>
+        <div class="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+          <span><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mr-1"></i> Live Terraform streaming</span>
+          <span><i class="fas fa-chart-line text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Real-time cost preview</span>
+          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> RBAC + destroy protection</span>
+          <span><i class="fas fa-database text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> 100% in-tenancy</span>
+          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Append-only audit logs</span>
+          <span><i class="fas fa-chart-line text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> FinOps cost visibility</span>
+          <span><i class="fas fa-code-branch text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> CI/CD pipelines included</span>
         </div>
       </div>
       <div class="relative">
-        <div class="terminal shadow-2xl border border-gray-200 overflow-hidden">
+        <div class="terminal shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div class="bg-gray-800 px-4 py-2 flex items-center gap-2 border-b border-gray-700">
             <div class="w-3 h-3 rounded-full bg-red-500"></div>
             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
             <div class="w-3 h-3 rounded-full bg-green-500"></div>
             <span class="text-gray-400 text-xs ml-2">terraform apply — streaming</span>
           </div>
-          <div class="p-4 text-gray-300 text-sm font-mono space-y-1 bg-[#0F172A]">
-            <div><span class="text-green-400">&#10003;</span> oke_cluster.primary: Creating...</div>
-            <div><span class="text-green-400">&#10003;</span> oci_core_vcn.infra: Creation complete (4s)</div>
-            <div><span class="text-blue-400">&#x21BB;</span> oke_node_pool.workers: provisioning</div>
-            <div><span class="text-yellow-400">&#9210;</span> Plan: 12 to add, 0 to change</div>
-            <div class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 12 added.</div>
-            <div class="text-gray-500 text-xs mt-2">infragate.cloud/cluster-prod-01</div>
+          <div id="terraformOutput" class="p-4 text-gray-300 text-sm font-mono space-y-1 bg-[#0F172A] min-h-[154px]">
           </div>
         </div>
         <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C5D7A]/10 rounded-full blur-2xl -z-10"></div>
@@ -225,115 +430,105 @@
   </div>
 </section>
 
-<!-- Enterprise trust bar -->
-<div class="border-y border-gray-100 bg-gray-50/50 py-4">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-wrap justify-center md:justify-between gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
-    <span class="flex items-center gap-2"><i class="fas fa-database text-[#1C5D7A]"></i> 100% in-tenancy</span>
-    <span class="flex items-center gap-2"><i class="fas fa-shield-alt text-[#1C5D7A]"></i> Append-only audit logs</span>
-    <span class="flex items-center gap-2"><i class="fas fa-chart-line text-[#1C5D7A]"></i> FinOps cost visibility</span>
-    <span class="flex items-center gap-2"><i class="fas fa-code-branch text-[#1C5D7A]"></i> CI/CD pipelines included</span>
-  </div>
-</div>
-
 <!-- Features Grid -->
 <section id="features" class="py-14 md:py-18 max-w-7xl mx-auto px-6 lg:px-8">
   <div class="text-center max-w-2xl mx-auto mb-10">
-    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-[#EFF6FA] px-3 py-1 rounded-full">Platform capabilities</span>
-    <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4">Complete cluster lifecycle<br>at your fingertips</h2>
-    <p class="text-gray-600">From one-click provisioning to multi-pool scaling, TTL expiry, and cost governance — Infragate brings enterprise control to OKE.</p>
+    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full">Platform capabilities</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4 text-gray-900 dark:text-white">Complete cluster lifecycle<br>at your fingertips</h2>
+    <p class="text-gray-600 dark:text-gray-400">From one-click provisioning to multi-pool scaling, TTL expiry, and cost governance — Infragate brings enterprise control to OKE.</p>
   </div>
   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-mouse-pointer text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">One-click deploy</h3>
-      <p class="text-gray-500 mt-2">Engineers provision fully managed OKE clusters with automatic compartment, VCN, subnet, security list, and node pool creation — no manual steps.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-mouse-pointer text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">One-click deploy</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Engineers provision fully managed OKE clusters with automatic compartment, VCN, subnet, security list, and node pool creation — no manual steps.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-layer-group text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">Multi-pool scaling</h3>
-      <p class="text-gray-500 mt-2">Add or remove node pools, adjust OCPU, RAM, and storage per pool from the UI. Change preview shows current vs. new values before applying.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-layer-group text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Multi-pool scaling</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Add or remove node pools, adjust OCPU, RAM, and storage per pool from the UI. Change preview shows current vs. new values before applying.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-chart-simple text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">Live cost preview</h3>
-      <p class="text-gray-500 mt-2">Monthly and hourly estimates update live as you configure pools. Cost visible on deploy form, dashboard cards, detail page, and admin panels.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-chart-simple text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Live cost preview</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Monthly and hourly estimates update live as you configure pools. Cost visible on deploy form, dashboard cards, detail page, and admin panels.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">TTL &amp; destroy protection</h3>
-      <p class="text-gray-500 mt-2">Set time-to-live in hours with color-coded countdown badges (green &gt;24h, orange &lt;24h, red &lt;4h). Protected clusters require admin force-destroy override.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">TTL &amp; destroy protection</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Set time-to-live in hours with color-coded countdown badges (green &gt;24h, orange &lt;24h, red &lt;4h). Protected clusters require admin force-destroy override.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-network-wired text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">CIDR pool management</h3>
-      <p class="text-gray-500 mt-2">Admin-managed /24 ranges — each cluster consumes one on deploy and releases on destroy. No overlaps, automatic allocation.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-network-wired text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">CIDR pool management</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Admin-managed /24 ranges — each cluster consumes one on deploy and releases on destroy. No overlaps, automatic allocation.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-key text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">Kubeconfig + SSH keys</h3>
-      <p class="text-gray-500 mt-2">Download kubeconfig (OCI exec plugin) and Terraform-generated SSH private key directly from the cluster detail page.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-key text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Kubeconfig + SSH keys</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Download kubeconfig (OCI exec plugin) and Terraform-generated SSH private key directly from the cluster detail page.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-terminal text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">Live Terraform streaming</h3>
-      <p class="text-gray-500 mt-2">Watch <code class="text-xs bg-gray-100 px-1 rounded">terraform init</code>, <code class="text-xs bg-gray-100 px-1 rounded">plan</code>, and <code class="text-xs bg-gray-100 px-1 rounded">apply</code> output stream in real time via SSE during deploy, scale, and destroy.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-terminal text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Live Terraform streaming</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Watch <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">terraform init</code>, <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">plan</code>, and <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">apply</code> output stream in real time via SSE during deploy, scale, and destroy.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">Bring your own infra</h3>
-      <p class="text-gray-500 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Bring your own infra</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks.</p>
     </div>
     <div class="glass-card rounded-2xl p-6">
-      <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A]"></i></div>
-      <h3 class="text-xl font-bold">Resource limits</h3>
-      <p class="text-gray-500 mt-2">Two-tier limit system: global defaults + per-user overrides. Covers clusters, pools, nodes, OCPU, RAM, storage, and tier. Visual feedback when limits are reached.</p>
+      <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Resource limits</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Two-tier limit system: global defaults + per-user overrides. Covers clusters, pools, nodes, OCPU, RAM, storage, and tier. Visual feedback when limits are reached.</p>
     </div>
   </div>
 </section>
 
 <!-- Templates + RBAC section -->
-<section id="templates" class="bg-gray-50 py-14 md:py-18">
+<section id="templates" class="bg-gray-50 dark:bg-gray-900/50 py-14 md:py-18">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div>
-        <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-white px-3 py-1 rounded-full border border-gray-200">Cluster templates &amp; RBAC</span>
-        <h2 class="text-3xl md:text-4xl font-bold mt-5 mb-5">Golden paths with role-based gating</h2>
-        <p class="text-gray-600 mb-6">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields — users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations.</p>
-        <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+        <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-white dark:bg-gray-800 px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700">Cluster templates &amp; RBAC</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-5 mb-5 text-gray-900 dark:text-white">Golden paths with role-based gating</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields — users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations.</p>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm">
           <div class="flex flex-wrap justify-between items-center gap-2">
-            <span class="font-bold text-gray-800">Template: PROD — HA</span>
-            <span class="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-full border border-amber-200">requires: production</span>
+            <span class="font-bold text-gray-800 dark:text-white">Template: PROD — HA</span>
+            <span class="text-xs bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-1 rounded-full border border-amber-200 dark:border-amber-700">requires: production</span>
           </div>
-          <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-500">
-            <span><i class="fas fa-lock text-[#1C5D7A]"></i> Destroy protection</span>
-            <span><i class="fas fa-clock text-[#1C5D7A]"></i> TTL: 720h</span>
-            <span><i class="fas fa-server text-[#1C5D7A]"></i> VM.Standard3.Flex</span>
-            <span><i class="fas fa-layer-group text-[#1C5D7A]"></i> 3 node pools</span>
+          <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
+            <span><i class="fas fa-lock text-[#1C5D7A] dark:text-[#5BB8D8]"></i> Destroy protection</span>
+            <span><i class="fas fa-clock text-[#1C5D7A] dark:text-[#5BB8D8]"></i> TTL: 720h</span>
+            <span><i class="fas fa-server text-[#1C5D7A] dark:text-[#5BB8D8]"></i> VM.Standard3.Flex</span>
+            <span><i class="fas fa-layer-group text-[#1C5D7A] dark:text-[#5BB8D8]"></i> 3 node pools</span>
           </div>
-          <p class="text-xs text-gray-400 mt-3"><i class="fas fa-eye-slash"></i> Users without the <code class="bg-gray-100 px-1 rounded">production</code> role never see this template — clean UI, no error messages.</p>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mt-3"><i class="fas fa-eye-slash"></i> Users without the <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">production</code> role never see this template — clean UI, no error messages.</p>
         </div>
       </div>
-      <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
-        <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
-          <i class="fas fa-id-badge text-[#1C5D7A] text-xl"></i>
-          <span class="font-semibold">OIDC role mapping (Keycloak / Azure AD / Okta)</span>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
+        <div class="flex items-center gap-2 border-b border-gray-100 dark:border-gray-700 pb-3 mb-4">
+          <i class="fas fa-id-badge text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+          <span class="font-semibold text-gray-900 dark:text-white">OIDC role mapping (Keycloak / Azure AD / Okta)</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="bg-gray-50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A]">DEV — Small</span>
-            <div class="text-xs text-gray-500 mt-1">No role required &rarr; all users</div>
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">DEV — Small</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">No role required &rarr; all users</div>
           </div>
-          <div class="bg-gray-50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A]">TEST — Medium</span>
-            <div class="text-xs text-gray-500 mt-1">Role: <code class="bg-white px-1 rounded">testing</code> &rarr; QA team</div>
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">TEST — Medium</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">testing</code> &rarr; QA team</div>
           </div>
-          <div class="bg-gray-50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A]">UAT — Large</span>
-            <div class="text-xs text-gray-500 mt-1">Role: <code class="bg-white px-1 rounded">uat</code> &rarr; release managers</div>
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">UAT — Large</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">uat</code> &rarr; release managers</div>
           </div>
-          <div class="bg-gray-50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A]">PROD — HA</span>
-            <div class="text-xs text-gray-500 mt-1">Role: <code class="bg-white px-1 rounded">production</code> &rarr; SRE only</div>
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">PROD — HA</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">production</code> &rarr; SRE only</div>
           </div>
         </div>
       </div>
@@ -344,77 +539,77 @@
 <!-- FinOps Section -->
 <section id="finops" class="py-14 md:py-18 max-w-7xl mx-auto px-6 lg:px-8">
   <div class="text-center mb-10">
-    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-[#EFF6FA] px-3 py-1 rounded-full">FinOps native</span>
-    <h2 class="text-3xl md:text-4xl font-bold mt-4">Cost visibility &amp; governance</h2>
-    <p class="text-gray-600 max-w-2xl mx-auto mt-3">Real-time cost previews, cluster-level breakdowns, and global spend dashboards — no surprises. Both server-side and client-side cost engines produce identical results.</p>
+    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full">FinOps native</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Cost visibility &amp; governance</h2>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Real-time cost previews, cluster-level breakdowns, and global spend dashboards — no surprises. Both server-side and client-side cost engines produce identical results.</p>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-    <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm">
-      <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-        <i class="fas fa-dollar-sign text-lg text-[#1C5D7A]"></i>
+    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800/50 shadow-sm">
+      <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-dollar-sign text-lg text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
       </div>
-      <h3 class="font-bold text-lg">Deploy cost summary</h3>
-      <p class="text-gray-500 text-sm mt-2">Hourly &amp; monthly cost updates live as you configure node pools, shape, and tier. Also shown in the deploy plan confirm modal.</p>
-      <div class="mt-3 bg-gray-50 p-3 rounded-lg text-sm font-mono text-gray-600">$0.025/OCPU&middot;hr + $0.0015/GB RAM</div>
+      <h3 class="font-bold text-lg text-gray-900 dark:text-white">Deploy cost summary</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Hourly &amp; monthly cost updates live as you configure node pools, shape, and tier. Also shown in the deploy plan confirm modal.</p>
+      <div class="mt-3 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg text-sm font-mono text-gray-600 dark:text-gray-400">$0.025/OCPU&middot;hr + $0.0015/GB RAM</div>
     </div>
-    <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm">
-      <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-        <i class="fas fa-chart-pie text-lg text-[#1C5D7A]"></i>
+    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800/50 shadow-sm">
+      <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-chart-pie text-lg text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
       </div>
-      <h3 class="font-bold text-lg">Cluster cost cards</h3>
-      <p class="text-gray-500 text-sm mt-2">Dashboard cards show estimated monthly cost per cluster. Detail page shows full breakdown: per-pool cost, control plane cost, total with hourly rate.</p>
+      <h3 class="font-bold text-lg text-gray-900 dark:text-white">Cluster cost cards</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Dashboard cards show estimated monthly cost per cluster. Detail page shows full breakdown: per-pool cost, control plane cost, total with hourly rate.</p>
     </div>
-    <div class="border border-gray-200 rounded-2xl p-6 bg-white shadow-sm">
-      <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-        <i class="fas fa-chart-line text-lg text-[#1C5D7A]"></i>
+    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800/50 shadow-sm">
+      <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-chart-line text-lg text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
       </div>
-      <h3 class="font-bold text-lg">Admin spend overview</h3>
-      <p class="text-gray-500 text-sm mt-2">Total monthly spend across all active clusters in the admin stats bar. Shape-specific rate overrides supported for custom OCI enterprise contracts.</p>
+      <h3 class="font-bold text-lg text-gray-900 dark:text-white">Admin spend overview</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Total monthly spend across all active clusters in the admin stats bar. Shape-specific rate overrides supported for custom OCI enterprise contracts.</p>
     </div>
   </div>
-  <div class="mt-10 bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+  <div class="mt-10 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-4">
     <div>
-      <i class="fas fa-calculator text-[#1C5D7A] text-xl mr-2"></i>
-      <span class="font-semibold">Identical server-side &amp; client-side cost engine</span>
-      <p class="text-sm text-gray-500 mt-1">OCI Pay-As-You-Go rates + admin overrides for custom enterprise contracts.</p>
+      <i class="fas fa-calculator text-[#1C5D7A] dark:text-[#5BB8D8] text-xl mr-2"></i>
+      <span class="font-semibold text-gray-900 dark:text-white">Identical server-side &amp; client-side cost engine</span>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">OCI Pay-As-You-Go rates + admin overrides for custom enterprise contracts.</p>
     </div>
-    <div class="text-sm font-semibold text-gray-700 bg-white px-4 py-2 rounded-lg border border-gray-200 text-center">Basic CP: <span class="text-emerald-600">$0</span> &middot; Enhanced CP: <span class="text-[#1C5D7A]">$0.10/hr</span></div>
+    <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-center">Basic CP: <span class="text-emerald-600 dark:text-emerald-400">$0</span> &middot; Enhanced CP: <span class="text-[#1C5D7A] dark:text-[#5BB8D8]">$0.10/hr</span></div>
   </div>
 </section>
 
 <!-- Admin Panel Section -->
-<section id="admin" class="bg-gray-50 py-14 md:py-18">
+<section id="admin" class="bg-gray-50 dark:bg-gray-900/50 py-14 md:py-18">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <div class="text-center mb-10">
-      <span class="bg-white text-[#1C5D7A] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 uppercase tracking-wider">Admin &amp; governance</span>
-      <h2 class="text-3xl md:text-4xl font-bold mt-4">Five dedicated admin panels</h2>
-      <p class="text-gray-600 mt-2">Global oversight, resource limits, configuration, templates, and audit logs — all changes take effect immediately.</p>
+      <span class="bg-white dark:bg-gray-800 text-[#1C5D7A] dark:text-[#5BB8D8] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 uppercase tracking-wider">Admin &amp; governance</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Five dedicated admin panels</h2>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, and audit logs — all changes take effect immediately.</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
-      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
-        <i class="fas fa-globe text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-2">All Clusters</h4>
-        <p class="text-xs text-gray-500 mt-1">Every cluster across all users with status, owner, CIDR, K8s version, tier, resources, cost, and age. Stats bar with total spend.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8]">
+        <i class="fas fa-globe text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">All Clusters</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Every cluster across all users with status, owner, CIDR, K8s version, tier, resources, cost, and age. Stats bar with total spend.</p>
       </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
-        <i class="fas fa-users text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-2">Users &amp; Limits</h4>
-        <p class="text-xs text-gray-500 mt-1">Per-user overrides for any combination of limits and tier. Reset to global defaults with one click. Override badges visible.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8]">
+        <i class="fas fa-users text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Users &amp; Limits</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Per-user overrides for any combination of limits and tier. Reset to global defaults with one click. Override badges visible.</p>
       </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
-        <i class="fas fa-sliders text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-2">Configuration</h4>
-        <p class="text-xs text-gray-500 mt-1">CIDR pool, VM shapes, K8s versions, node images (with enable/disable), global resource limits. No restart needed.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8]">
+        <i class="fas fa-sliders text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Configuration</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">CIDR pool, VM shapes, K8s versions, node images (with enable/disable), global resource limits. No restart needed.</p>
       </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
-        <i class="fas fa-layer-group text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-2">Cluster Templates</h4>
-        <p class="text-xs text-gray-500 mt-1">Template table with live cost preview in add/edit modal. Enable/disable toggle and permanent delete.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8]">
+        <i class="fas fa-layer-group text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Cluster Templates</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Template table with live cost preview in add/edit modal. Enable/disable toggle and permanent delete.</p>
       </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A]">
-        <i class="fas fa-clock-rotate-left text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-2">Audit Log</h4>
-        <p class="text-xs text-gray-500 mt-1">Append-only record of every deploy, scale, destroy. Filterable by user, operation, and status.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8]">
+        <i class="fas fa-clock-rotate-left text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Audit Log</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Append-only record of every deploy, scale, destroy. Filterable by user, operation, and status.</p>
       </div>
     </div>
   </div>
@@ -424,90 +619,146 @@
 <section id="deploy" class="py-14 md:py-18 max-w-7xl mx-auto px-6 lg:px-8">
   <div class="grid lg:grid-cols-2 gap-12 items-center">
     <div>
-      <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] bg-[#EFF6FA] px-3 py-1 rounded-full">Deployment flexibility</span>
-      <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-5">OCI Marketplace, Helm, or any Kubernetes</h2>
-      <ul class="space-y-3 text-gray-600">
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>OCI Resource Manager Stack</strong> — one-click "Launch Stack" with guided form. Creates new OKE cluster or deploys into existing infrastructure.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>Helm chart</strong> — single chart with configurable values, ingress-nginx with OCI load balancer annotations. Supports <code class="text-xs bg-gray-100 px-1 rounded">imagePullSecrets</code> for private registries.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>CI/CD pipelines</strong> — GitHub Actions (GHCR) &amp; GitLab CI (GitLab CR) included. Images tagged <code class="text-xs bg-gray-100 px-1 rounded">dev-latest</code> and <code class="text-xs bg-gray-100 px-1 rounded">latest</code>.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>Single VM (k3s) on OCI Always Free</strong> — ARM-compatible, control-plane tolerations for single-node scheduling.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 mt-1 flex-shrink-0"></i> <span><strong>Any OIDC provider</strong> — bundled Keycloak, or connect Azure AD, Okta, Google Workspace. PKCE flow, no client secrets in frontend.</span></li>
+      <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full">Deployment flexibility</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-5 text-gray-900 dark:text-white">OCI Marketplace, Helm, or any Kubernetes</h2>
+      <ul class="space-y-3 text-gray-600 dark:text-gray-400">
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">OCI Resource Manager Stack</strong> — one-click "Launch Stack" with guided form. Creates new OKE cluster or deploys into existing infrastructure.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Helm chart</strong> — single chart with configurable values, ingress-nginx with OCI load balancer annotations. Supports <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">imagePullSecrets</code> for private registries.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">CI/CD pipelines</strong> — GitHub Actions (GHCR) &amp; GitLab CI (GitLab CR) included. Images tagged <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">dev-latest</code> and <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">latest</code>.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Single VM (k3s) on OCI Always Free</strong> — ARM-compatible, control-plane tolerations for single-node scheduling.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Any OIDC provider</strong> — bundled Keycloak, or connect Azure AD, Okta, Google Workspace. PKCE flow, no client secrets in frontend.</span></li>
       </ul>
-      <div class="flex flex-wrap gap-3 mt-8">
-        <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium"><i class="fab fa-docker text-gray-500 mr-1"></i> Docker Compose local dev</span>
-        <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium"><i class="fas fa-vial text-gray-500 mr-1"></i> 87 automated tests</span>
-        <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-medium"><i class="fas fa-cloud-arrow-up text-gray-500 mr-1"></i> GHCR / GitLab CR / OCIR</span>
-      </div>
     </div>
-    <div class="bg-gray-900 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl overflow-hidden">
-      <div class="flex justify-between items-center border-b border-gray-700 pb-3">
-        <span class="font-mono text-cyan-300 text-xs sm:text-sm break-all">helm install infragate ./chart \</span>
-        <i class="fas fa-anchor text-2xl text-gray-600"></i>
+    <!-- Deployment workflow animation -->
+    <div class="bg-gray-900 rounded-xl sm:rounded-2xl p-5 sm:p-7 shadow-2xl overflow-hidden border border-transparent dark:border-gray-700">
+      <div class="flex items-center gap-2 border-b border-gray-700 pb-3 mb-5">
+        <i class="fas fa-rocket text-cyan-400 text-lg"></i>
+        <span class="font-semibold text-white text-sm">Deployment Workflow</span>
       </div>
-      <div class="mt-4 font-mono text-xs text-gray-400 space-y-1 break-all leading-relaxed">
-        <div>&nbsp;&nbsp;--set oci.region=us-ashburn-1 \</div>
-        <div>&nbsp;&nbsp;--set oci.compartmentId=ocid1.compartment... \</div>
-        <div>&nbsp;&nbsp;--set oidc.providerUrl=https://keycloak.example.com \</div>
-        <div>&nbsp;&nbsp;--set storage.blockVolume.enabled=true</div>
+      <div class="space-y-4" id="workflowSteps">
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="0">
+          <div class="w-9 h-9 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-code-branch text-cyan-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Push to main</div>
+            <div class="text-gray-500 text-xs">CI/CD pipeline triggered</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="1">
+          <div class="w-9 h-9 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fab fa-docker text-purple-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Build &amp; push images</div>
+            <div class="text-gray-500 text-xs">GHCR / GitLab CR / OCIR</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="2">
+          <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-vial text-amber-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Run test suite</div>
+            <div class="text-gray-500 text-xs">87 automated tests passed</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="3">
+          <div class="w-9 h-9 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-dharmachakra text-blue-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Helm upgrade</div>
+            <div class="text-gray-500 text-xs">Rolling deployment to OKE</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="4">
+          <div class="w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-check-double text-emerald-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Health check passed</div>
+            <div class="text-gray-500 text-xs">All pods running, ingress ready</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
       </div>
       <div class="mt-5 bg-gray-800/50 p-3 rounded-lg text-emerald-300 text-xs">
-        <i class="fas fa-check-circle mr-1"></i> Supports private registries, imagePullSecrets, OCI Block Volume, and OCI flexible LB
+        <i class="fas fa-infinity mr-1"></i> Automated CI/CD with GitHub Actions &amp; GitLab CI — zero manual steps
       </div>
     </div>
   </div>
 </section>
 
 <!-- Identity & Security -->
-<section id="identity" class="bg-gray-50 py-14 md:py-18">
+<section id="identity" class="bg-gray-50 dark:bg-gray-900/50 py-14 md:py-18">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <div class="text-center mb-10">
-      <span class="bg-white text-[#1C5D7A] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 uppercase tracking-wider">Identity &amp; security</span>
-      <h2 class="text-3xl md:text-4xl font-bold mt-4">Enterprise-grade access control</h2>
-      <p class="text-gray-600 mt-2">Zero external dependencies. No data leaves your tenancy. No SaaS control plane.</p>
+      <span class="bg-white dark:bg-gray-800 text-[#1C5D7A] dark:text-[#5BB8D8] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 uppercase tracking-wider">Identity &amp; security</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Enterprise-grade access control</h2>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Zero external dependencies. No data leaves your tenancy. No SaaS control plane.</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
-        <i class="fas fa-id-card text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-3">Any OIDC Provider</h4>
-        <p class="text-xs text-gray-500 mt-1">Keycloak (bundled), Azure AD, Okta, Google Workspace — any OIDC-compliant IdP.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
+        <i class="fas fa-id-card text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">Any OIDC Provider</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Keycloak (bundled), Azure AD, Okta, Google Workspace — any OIDC-compliant IdP.</p>
       </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
-        <i class="fas fa-fingerprint text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-3">PKCE Auth Flow</h4>
-        <p class="text-xs text-gray-500 mt-1">Authorization Code + PKCE. No client secrets stored in the frontend. Auto token refresh.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
+        <i class="fas fa-fingerprint text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">PKCE Auth Flow</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Authorization Code + PKCE. No client secrets stored in the frontend. Auto token refresh.</p>
       </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
-        <i class="fas fa-user-check text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-3">Auto-provisioning</h4>
-        <p class="text-xs text-gray-500 mt-1">No user directory needed. Users auto-provisioned on first login from JWT <code class="bg-gray-100 px-1 rounded">sub</code> claim.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
+        <i class="fas fa-user-check text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">Auto-provisioning</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">No user directory needed. Users auto-provisioned on first login from JWT <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">sub</code> claim.</p>
       </div>
-      <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
-        <i class="fas fa-bolt text-[#1C5D7A] text-xl"></i>
-        <h4 class="font-bold mt-3">Cached OIDC Discovery</h4>
-        <p class="text-xs text-gray-500 mt-1">Well-known config cached in sessionStorage + nginx proxy layer. Zero network round-trips on load.</p>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
+        <i class="fas fa-bolt text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">Cached OIDC Discovery</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Well-known config cached in sessionStorage + nginx proxy layer. Zero network round-trips on load.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Stats -->
-<div class="border-y border-gray-100 bg-white py-10">
+<div class="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0B1120] py-10">
   <div class="max-w-6xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
     <div>
       <div class="stat-number">&lt;10 min</div>
-      <div class="text-sm text-gray-500">Cluster provisioning</div>
+      <div class="text-sm text-gray-500 dark:text-gray-400">Cluster provisioning</div>
     </div>
     <div>
       <div class="stat-number">87+</div>
-      <div class="text-sm text-gray-500">Automated tests</div>
+      <div class="text-sm text-gray-500 dark:text-gray-400">Automated tests</div>
     </div>
     <div>
       <div class="stat-number">$0</div>
-      <div class="text-sm text-gray-500">Software license</div>
+      <div class="text-sm text-gray-500 dark:text-gray-400">Software license</div>
     </div>
     <div>
       <div class="stat-number">100%</div>
-      <div class="text-sm text-gray-500">In-tenancy</div>
+      <div class="text-sm text-gray-500 dark:text-gray-400">In-tenancy</div>
     </div>
   </div>
 </div>
@@ -522,34 +773,58 @@
       <a href="https://github.com/SolviaLab/infragate" class="bg-white text-[#0B2B3F] px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto">
         <i class="fab fa-github"></i> View on GitHub
       </a>
-      <a href="mailto:hello@infragate.cloud" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 transition shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto">
-        <i class="fas fa-envelope"></i> Request Demo
-      </a>
+      <button onclick="openDemoModal()" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 transition shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer">
+        <i class="fas fa-envelope"></i> Request a Demo
+      </button>
     </div>
-    <p class="text-gray-300 text-sm mt-8">Built by <a href="https://solvialab.tech" class="text-white hover:underline">Solvia Lab s.r.o.</a> &middot; <a href="https://infragate.cloud" class="text-white hover:underline">infragate.cloud</a> &middot; <a href="mailto:hello@infragate.cloud" class="text-white hover:underline">hello@infragate.cloud</a></p>
+    <p class="text-gray-300 text-sm mt-8">Built by <a href="https://solvialab.tech" class="text-white hover:underline">Solvia Lab s.r.o.</a> | <a href="mailto:hello@infragate.cloud" class="text-white hover:underline">hello@infragate.cloud</a></p>
   </div>
 </section>
 
 <!-- Footer -->
-<footer class="border-t border-gray-200 py-8">
+<footer class="border-t border-gray-200 dark:border-gray-800 py-8">
   <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
     <div class="flex items-center gap-4">
       <div class="flex items-center gap-2">
         <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
-        <span class="font-bold text-sm text-gray-800">Infragate</span>
+        <span class="font-bold text-sm text-gray-800 dark:text-white">Infragate</span>
       </div>
       <span class="text-gray-400 text-sm">&copy; 2026 Solvia Lab s.r.o.</span>
     </div>
     <div class="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6 text-sm text-gray-400">
-      <a href="https://github.com/SolviaLab/infragate" class="hover:text-gray-600 transition">GitHub</a>
-      <a href="https://github.com/SolviaLab/infragate" class="hover:text-gray-600 transition">Documentation</a>
-      <a href="mailto:hello@infragate.cloud" class="hover:text-gray-600 transition">Support</a>
-      <a href="https://solvialab.tech" class="hover:text-gray-600 transition">Solvia Lab</a>
+      <a href="https://github.com/SolviaLab/infragate" class="hover:text-gray-600 dark:hover:text-gray-200 transition">GitHub</a>
+      <a href="https://github.com/SolviaLab/infragate" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Documentation</a>
+      <a href="mailto:support@infragate.cloud" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Support</a>
+      <a href="https://solvialab.tech" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Solvia Lab</a>
     </div>
   </div>
 </footer>
 
 <script>
+  // Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var html = document.documentElement;
+    var isDark = html.classList.toggle('dark');
+    localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
+  });
+
+  // Demo modal
+  function openDemoModal() {
+    document.getElementById('demoModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDemoModal() {
+    document.getElementById('demoModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('modalClose').addEventListener('click', closeDemoModal);
+  document.getElementById('demoModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDemoModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeDemoModal();
+  });
+
   // Mobile menu toggle
   document.getElementById('menuToggle').addEventListener('click', function() {
     document.getElementById('mobileNav').classList.toggle('open');
@@ -568,7 +843,7 @@
       var target = document.querySelector(href);
       if (target) {
         e.preventDefault();
-        var offset = window.innerWidth >= 768 ? 84 : 72;
+        var offset = window.innerWidth >= 768 ? 90 : 80;
         var pos = target.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({ top: pos, behavior: 'smooth' });
       }
@@ -596,6 +871,110 @@
     var el = document.getElementById(id);
     if (el) observer.observe(el);
   });
+
+  // Terraform streaming animation
+  (function() {
+    var container = document.getElementById('terraformOutput');
+    var lines = [
+      { html: '<span class="text-gray-500">$ terraform init</span>', delay: 600 },
+      { html: '<span class="text-gray-400">Initializing provider plugins...</span>', delay: 900 },
+      { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/oci v5.23.0 installed</span>', delay: 700 },
+      { html: '<span class="text-gray-500">$ terraform apply -auto-approve</span>', delay: 1100 },
+      { html: '<span class="text-yellow-400">&#9210;</span> Plan: 12 to add, 0 to change, 0 to destroy', delay: 1400 },
+      { html: '<span class="text-blue-400">&#x21BB;</span> oci_core_vcn.infra: Creating...', delay: 1100 },
+      { html: '<span class="text-green-400">&#10003;</span> oci_core_vcn.infra: Creation complete <span class="text-gray-500">[4s]</span>', delay: 1500 },
+      { html: '<span class="text-blue-400">&#x21BB;</span> oke_cluster.primary: Creating...', delay: 1300 },
+      { html: '<span class="text-green-400">&#10003;</span> oke_cluster.primary: Creation complete <span class="text-gray-500">[2m12s]</span>', delay: 1700 },
+      { html: '<span class="text-blue-400">&#x21BB;</span> oke_node_pool.workers: Provisioning...', delay: 1200 },
+      { html: '<span class="text-green-400">&#10003;</span> oke_node_pool.workers: Creation complete <span class="text-gray-500">[3m45s]</span>', delay: 1800 },
+      { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 12 added, 0 changed, 0 destroyed.</span>', delay: 900 },
+      { html: '<span class="text-gray-500 text-xs">infragate.cloud/cluster-prod-01</span>', delay: 0 }
+    ];
+
+    function runTerraform() {
+      container.innerHTML = '';
+      var i = 0;
+      function showLine() {
+        if (i >= lines.length) {
+          setTimeout(runTerraform, 2800);
+          return;
+        }
+        var div = document.createElement('div');
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(4px)';
+        div.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+        div.innerHTML = lines[i].html;
+        if (i === lines.length - 1) div.classList.add('mt-2');
+        container.appendChild(div);
+        // Keep max visible lines to prevent overflow
+        if (container.children.length > 8) {
+          var first = container.firstChild;
+          first.style.opacity = '0';
+          first.style.marginTop = '-1.5rem';
+          first.style.transition = 'opacity 0.3s ease, margin-top 0.3s ease';
+          setTimeout(function() { if (first.parentNode) first.parentNode.removeChild(first); }, 300);
+        }
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            div.style.opacity = '1';
+            div.style.transform = 'translateY(0)';
+          });
+        });
+        var nextDelay = lines[i].delay || 1000;
+        // Add slight randomness for natural feel
+        nextDelay += Math.floor(Math.random() * 400) - 200;
+        i++;
+        setTimeout(showLine, nextDelay);
+      }
+      showLine();
+    }
+    runTerraform();
+  })();
+
+  // Workflow animation
+  (function() {
+    var steps = document.querySelectorAll('#workflowSteps .flow-step');
+    var currentStep = 0;
+    var totalSteps = steps.length;
+
+    function animateStep() {
+      steps.forEach(function(step, i) {
+        var check = step.querySelector('.step-check');
+        if (i < currentStep) {
+          step.style.opacity = '1';
+          check.style.borderColor = '#10b981';
+          check.style.background = '#10b981';
+          check.querySelector('i').style.color = 'white';
+        } else if (i === currentStep) {
+          step.style.opacity = '1';
+          check.style.borderColor = '#06b6d4';
+          check.style.background = 'transparent';
+          check.querySelector('i').style.color = 'transparent';
+        } else {
+          step.style.opacity = '0.3';
+          check.style.borderColor = '#4b5563';
+          check.style.background = 'transparent';
+          check.querySelector('i').style.color = 'transparent';
+        }
+      });
+
+      currentStep++;
+      if (currentStep > totalSteps) {
+        setTimeout(function() {
+          currentStep = 0;
+          animateStep();
+        }, 3000);
+      } else {
+        // Vary timing per step for natural feel
+        var delays = [1800, 2200, 2500, 1800, 1500];
+        var d = delays[currentStep - 1] || 1800;
+        d += Math.floor(Math.random() * 300) - 150;
+        setTimeout(animateStep, d);
+      }
+    }
+
+    animateStep();
+  })();
 </script>
 </body>
 </html>
