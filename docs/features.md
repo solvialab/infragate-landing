@@ -1,6 +1,6 @@
 # Infragate — Features
 
-A complete overview of what Infragate can do. For deployment instructions see [GUIDE.md](./GUIDE.md), for technical architecture see [STACK.md](./STACK.md).
+A complete overview of what Infragate can do. For deployment instructions see [GUIDE.md](./GUIDE.md).
 
 ---
 
