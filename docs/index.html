@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Infragate Docs</title>
+  <meta name="description" content="Infragate documentation — deployment guides, features, and enterprise integration for OKE lifecycle management on Oracle Cloud.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+    (function() {
+      var stored = localStorage.getItem('infragate-theme');
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #ffffff; }
+    .dark body { background: #0B1120; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      min-height: calc(100vh - 64px);
+      border-right: 1px solid #e5e7eb;
+      background: #f9fafb;
+      transition: transform 0.3s ease;
+    }
+    .dark .sidebar {
+      background: #0F172A;
+      border-right-color: #1e293b;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #4b5563;
+      border-radius: 0.5rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .dark .sidebar-link { color: #9ca3af; }
+    .sidebar-link:hover {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .dark .sidebar-link:hover {
+      background: #1e293b;
+      color: #f3f4f6;
+    }
+    .sidebar-link.active {
+      background: #EFF6FA;
+      color: #1C5D7A;
+      font-weight: 600;
+    }
+    .dark .sidebar-link.active {
+      background: rgba(91, 184, 216, 0.1);
+      color: #5BB8D8;
+    }
+
+    /* Mobile sidebar overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 40;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    @media (max-width: 1023px) {
+      .sidebar {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+      }
+      .sidebar.open { transform: translateX(0); }
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      cursor: pointer;
+      background: transparent;
+      color: #6b7280;
+      border: none;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { background: #f3f4f6; color: #374151; }
+    .dark .theme-toggle:hover { background: #1e293b; color: #e2e8f0; }
+    .theme-toggle .fa-sun { display: none; }
+    .dark .theme-toggle .fa-sun { display: inline; }
+    .dark .theme-toggle .fa-moon { display: none; }
+
+    /* Markdown content styling */
+    .prose-infragate h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      color: #111827;
+      line-height: 1.2;
+    }
+    .dark .prose-infragate h1 { color: #f9fafb; }
+    .prose-infragate h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      color: #111827;
+    }
+    .dark .prose-infragate h2 {
+      color: #f9fafb;
+      border-bottom-color: #1e293b;
+    }
+    .prose-infragate h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      color: #1f2937;
+    }
+    .dark .prose-infragate h3 { color: #e5e7eb; }
+    .prose-infragate h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+    .dark .prose-infragate h4 { color: #d1d5db; }
+    .prose-infragate p {
+      margin-bottom: 1rem;
+      line-height: 1.75;
+      color: #374151;
+    }
+    .dark .prose-infragate p { color: #d1d5db; }
+    .prose-infragate a {
+      color: #1C5D7A;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .dark .prose-infragate a { color: #5BB8D8; }
+    .prose-infragate a:hover { opacity: 0.8; }
+    .prose-infragate strong { color: #111827; }
+    .dark .prose-infragate strong { color: #f9fafb; }
+    .prose-infragate ul, .prose-infragate ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      color: #374151;
+    }
+    .dark .prose-infragate ul, .dark .prose-infragate ol { color: #d1d5db; }
+    .prose-infragate ul { list-style-type: disc; }
+    .prose-infragate ol { list-style-type: decimal; }
+    .prose-infragate li {
+      margin-bottom: 0.375rem;
+      line-height: 1.7;
+    }
+    .prose-infragate li > ul, .prose-infragate li > ol {
+      margin-top: 0.375rem;
+      margin-bottom: 0;
+    }
+    .prose-infragate code {
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.85em;
+      background: #f3f4f6;
+      color: #1C5D7A;
+      padding: 0.15em 0.4em;
+      border-radius: 0.25rem;
+    }
+    .dark .prose-infragate code {
+      background: #1e293b;
+      color: #5BB8D8;
+    }
+    .prose-infragate pre {
+      margin-bottom: 1.25rem;
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      background: #0F172A;
+      border: 1px solid #1e293b;
+    }
+    .prose-infragate pre code {
+      display: block;
+      padding: 1rem 1.25rem;
+      background: transparent;
+      color: #e2e8f0;
+      font-size: 0.8125rem;
+      line-height: 1.7;
+    }
+    .prose-infragate blockquote {
+      border-left: 4px solid #1C5D7A;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      background: #f0f7fa;
+      border-radius: 0 0.5rem 0.5rem 0;
+      color: #374151;
+    }
+    .dark .prose-infragate blockquote {
+      border-left-color: #5BB8D8;
+      background: rgba(91, 184, 216, 0.08);
+      color: #d1d5db;
+    }
+    .prose-infragate hr {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 2rem 0;
+    }
+    .dark .prose-infragate hr { border-top-color: #1e293b; }
+    .prose-infragate table {
+      width: 100%;
+      margin-bottom: 1.25rem;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    .prose-infragate th {
+      text-align: left;
+      padding: 0.625rem 0.75rem;
+      font-weight: 600;
+      color: #111827;
+      background: #f3f4f6;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .dark .prose-infragate th {
+      color: #f9fafb;
+      background: #1e293b;
+      border-bottom-color: #334155;
+    }
+    .prose-infragate td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+      color: #374151;
+    }
+    .dark .prose-infragate td {
+      border-bottom-color: #1e293b;
+      color: #d1d5db;
+    }
+    .prose-infragate img {
+      max-width: 100%;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    /* Table of contents */
+    .toc-link {
+      display: block;
+      padding: 0.25rem 0;
+      font-size: 0.8125rem;
+      color: #6b7280;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .toc-link:hover { color: #1C5D7A; }
+    .dark .toc-link { color: #6b7280; }
+    .dark .toc-link:hover { color: #5BB8D8; }
+    .toc-link.depth-3 { padding-left: 1rem; }
+
+    /* Scrollbar */
+    .sidebar::-webkit-scrollbar, .toc-aside::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb, .toc-aside::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark .sidebar::-webkit-scrollbar-thumb, .dark .toc-aside::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="antialiased dark:text-gray-100">
+
+<!-- Top nav -->
+<nav class="sticky top-0 z-30 h-16 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 flex items-center px-4 sm:px-6">
+  <div class="flex items-center gap-3 flex-1">
+    <button id="sidebarToggle" class="lg:hidden p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a href="index.html" class="flex items-center gap-2">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      <span class="font-bold text-lg text-gray-800 dark:text-white">Infragate</span>
+      <span class="text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">Docs</span>
+    </a>
+  </div>
+  <div class="flex items-center gap-3">
+    <a href="https://github.com/SolviaLab/infragate" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition" title="GitHub">
+      <i class="fab fa-github text-lg"></i>
+    </a>
+    <a href="/" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-[#1C5D7A] dark:text-[#5BB8D8] hover:opacity-80 transition">
+      <i class="fas fa-arrow-left text-xs"></i> Home
+    </a>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      <i class="fas fa-moon text-sm"></i>
+      <i class="fas fa-sun text-sm"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Sidebar overlay (mobile) -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+<!-- Layout -->
+<div class="flex">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar overflow-y-auto py-6 px-4 flex-shrink-0">
+    <div class="mb-6">
+      <div class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 px-3 mb-2">Getting started</div>
+      <a class="sidebar-link active" data-page="readme">
+        <i class="fas fa-home text-xs w-4"></i> Overview
+      </a>
+      <a class="sidebar-link" data-page="features">
+        <i class="fas fa-puzzle-piece text-xs w-4"></i> Features
+      </a>
+    </div>
+    <div class="mb-6">
+      <div class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 px-3 mb-2">Deployment</div>
+      <a class="sidebar-link" data-page="guide">
+        <i class="fas fa-rocket text-xs w-4"></i> Deployment Guide
+      </a>
+      <a class="sidebar-link" data-page="integration">
+        <i class="fas fa-plug text-xs w-4"></i> Enterprise Integration
+      </a>
+    </div>
+    <div class="mb-6">
+      <div class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 px-3 mb-2">Links</div>
+      <a href="https://github.com/SolviaLab/infragate" class="sidebar-link" target="_blank">
+        <i class="fab fa-github text-xs w-4"></i> GitHub <i class="fas fa-external-link-alt text-[10px] ml-auto opacity-40"></i>
+      </a>
+      <a href="/" class="sidebar-link">
+        <i class="fas fa-globe text-xs w-4"></i> Website
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 min-w-0">
+    <div class="max-w-4xl mx-auto px-6 sm:px-10 py-10">
+      <!-- Loading state -->
+      <div id="loading" class="flex items-center justify-center py-20">
+        <i class="fas fa-spinner fa-spin text-[#1C5D7A] dark:text-[#5BB8D8] text-xl mr-3"></i>
+        <span class="text-gray-500 dark:text-gray-400 text-sm">Loading docs...</span>
+      </div>
+      <!-- Content renders here -->
+      <article id="content" class="prose-infragate hidden"></article>
+    </div>
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-6 px-6 sm:px-10">
+      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-400">
+        <span>&copy; 2026 Solvia Lab s.r.o.</span>
+        <div class="flex gap-4">
+          <a href="/" class="hover:text-gray-600 dark:hover:text-gray-200 transition">infragate.cloud</a>
+          <a href="mailto:hello@infragate.cloud" class="hover:text-gray-600 dark:hover:text-gray-200 transition">hello@infragate.cloud</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script>
+  // Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
+  });
+
+  // Sidebar toggle (mobile)
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  document.getElementById('sidebarToggle').addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+  });
+
+  // Page loading
+  var contentEl = document.getElementById('content');
+  var loadingEl = document.getElementById('loading');
+  var currentPage = null;
+
+  // Configure marked
+  marked.setOptions({
+    gfm: true,
+    breaks: false
+  });
+
+  function getPageFromHash() {
+    var hash = window.location.hash.replace('#', '');
+    return hash || 'readme';
+  }
+
+  function loadPage(page) {
+    if (page === currentPage) return;
+    currentPage = page;
+
+    // Update sidebar active state
+    document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
+      link.classList.toggle('active', link.getAttribute('data-page') === page);
+    });
+
+    // Update page title
+    var titles = {
+      readme: 'Overview',
+      features: 'Features',
+      guide: 'Deployment Guide',
+      integration: 'Enterprise Integration'
+    };
+    document.title = (titles[page] || 'Docs') + ' — Infragate Docs';
+
+    // Show loading
+    contentEl.classList.add('hidden');
+    loadingEl.classList.remove('hidden');
+
+    fetch(page + '.md')
+      .then(function(res) {
+        if (!res.ok) throw new Error('Not found');
+        return res.text();
+      })
+      .then(function(md) {
+        // Fix internal links: ./GUIDE.md -> #guide, ./FEATURES.md -> #features etc.
+        md = md.replace(/\(\.\/([A-Z]+)\.md\)/g, function(match, name) {
+          return '(#' + name.toLowerCase() + ')';
+        });
+
+        contentEl.innerHTML = marked.parse(md);
+        contentEl.classList.remove('hidden');
+        loadingEl.classList.add('hidden');
+
+        // Scroll to top
+        window.scrollTo(0, 0);
+
+        // Close mobile sidebar
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+      })
+      .catch(function() {
+        contentEl.innerHTML = '<div class="text-center py-20"><i class="fas fa-exclamation-triangle text-amber-500 text-3xl mb-4"></i><p class="text-gray-500 dark:text-gray-400">Page not found.</p></div>';
+        contentEl.classList.remove('hidden');
+        loadingEl.classList.add('hidden');
+      });
+  }
+
+  // Sidebar link clicks
+  document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var page = this.getAttribute('data-page');
+      window.location.hash = page;
+    });
+  });
+
+  // Handle hash changes
+  window.addEventListener('hashchange', function() {
+    loadPage(getPageFromHash());
+  });
+
+  // Initial load
+  loadPage(getPageFromHash());
+</script>
+</body>
+</html>
