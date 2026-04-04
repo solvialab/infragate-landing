@@ -496,9 +496,6 @@
       <a class="sidebar-link" data-page="features">
         <i class="fas fa-puzzle-piece text-xs w-4"></i> Features
       </a>
-      <a class="sidebar-link" data-page="stack">
-        <i class="fas fa-layer-group text-xs w-4"></i> Stack & Architecture
-      </a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-heading">Deployment</div>
@@ -561,7 +558,6 @@
   var PAGES = [
     { id: 'readme', title: 'Overview', icon: 'fa-home' },
     { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' },
-    { id: 'stack', title: 'Stack & Architecture', icon: 'fa-layer-group' },
     { id: 'guide', title: 'Deployment Guide', icon: 'fa-rocket' },
     { id: 'integration', title: 'Enterprise Integration', icon: 'fa-plug' }
   ];
@@ -669,7 +665,7 @@
 
     function render(md) {
       // Map known .md files to docs page hashes (with optional #anchor)
-      var knownPages = { readme: 1, features: 1, stack: 1, guide: 1, integration: 1 };
+      var knownPages = { readme: 1, features: 1, guide: 1, integration: 1 };
       md = md.replace(/\(\.\/([A-Z_]+)\.md(#[^)]+)?\)/gi, function(m, name, anchor) {
         var lower = name.toLowerCase();
         if (knownPages[lower]) return '(#' + lower + (anchor ? '/' + anchor.substring(1) : '') + ')';
