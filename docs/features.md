@@ -190,4 +190,4 @@ Five dedicated admin pages accessible to users with the `admin` role:
 
 ---
 
-Built by [Solvia Lab s.r.o.](https://solvialab.tech) · [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/company/infragate-cloud/)
+Built by [Solvia Lab s.r.o.](https://solvialab.tech)
