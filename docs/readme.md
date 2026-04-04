@@ -365,6 +365,4 @@ Infragate is licensed under the [Business Source License 1.1](./LICENSE).
 
 For a complete feature overview see [FEATURES.md](./FEATURES.md).
 For integration and deployment details see [INTEGRATION.md](./INTEGRATION.md).
-For the full technical stack and backend architecture see [STACK.md](./STACK.md).
-
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
