@@ -52,6 +52,8 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
   --set api.oci.parentCompartmentOcid=ocid1.compartment...
 ```
 
+> Helm chart access is available to licensed customers. Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for details.
+
 ### Single-node k3s
 
 For dev/test or Always Free tier VMs:
@@ -62,6 +64,8 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
   --set postgresql.auth.password=YOUR_DB_PASSWORD \
   --set keycloak.admin.password=YOUR_KC_PASSWORD
 ```
+
+> Helm chart access is available to licensed customers. Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for details.
 
 See [GUIDE.md](./GUIDE.md) for the full step-by-step deployment guide for all three paths.
 
