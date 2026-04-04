@@ -346,10 +346,7 @@
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    <form id="demoForm" class="space-y-4" action="https://formsubmit.co/hello@infragate.cloud" method="POST">
-      <input type="hidden" name="_subject" value="Infragate Demo Request">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_template" value="table">
+    <form id="demoForm" class="space-y-4">
       <div>
         <label for="demo-name">Full Name <span class="text-red-400">*</span></label>
         <input type="text" id="demo-name" name="name" required placeholder="John Smith">
@@ -370,11 +367,22 @@
         <label for="demo-message">Tell us about your use case</label>
         <textarea id="demo-message" name="message" rows="3" placeholder="How many clusters do you manage? What's your current workflow?"></textarea>
       </div>
-      <button type="submit" class="w-full btn-solid-premium px-6 py-3 text-sm font-semibold rounded-xl">
+      <button type="submit" id="demoSubmitBtn" class="w-full btn-solid-premium px-6 py-3 text-sm font-semibold rounded-xl">
         <i class="fas fa-paper-plane mr-1.5"></i> Submit Request
       </button>
       <p class="text-xs text-gray-400 text-center">We respect your privacy. No spam, ever.</p>
     </form>
+    <!-- Success state (hidden by default) -->
+    <div id="demoSuccess" class="hidden text-center py-6">
+      <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check text-2xl text-emerald-600 dark:text-emerald-400"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Thank you!</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">Your demo request has been submitted.<br>We'll be in touch shortly.</p>
+      <button onclick="closeDemoModal()" class="mt-6 btn-solid-premium px-8 py-2.5 text-sm font-semibold rounded-xl">
+        Close
+      </button>
+    </div>
   </div>
 </div>
 
@@ -853,6 +861,9 @@
 
   // Demo modal
   function openDemoModal() {
+    // Reset to form view when opening
+    document.getElementById('demoForm').classList.remove('hidden');
+    document.getElementById('demoSuccess').classList.add('hidden');
     document.getElementById('demoModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -860,6 +871,48 @@
     document.getElementById('demoModal').classList.remove('active');
     document.body.style.overflow = '';
   }
+
+  // Form submission via AJAX
+  document.getElementById('demoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    var btn = document.getElementById('demoSubmitBtn');
+    var originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Sending...';
+
+    var data = {
+      name: form.name.value,
+      company: form.company.value,
+      email: form.email.value,
+      title: form.title.value,
+      message: form.message.value,
+      _subject: 'Infragate Demo Request',
+      _captcha: 'false',
+      _template: 'table'
+    };
+
+    fetch('https://formsubmit.co/ajax/hello@infragate.cloud', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(resp) {
+      form.classList.add('hidden');
+      document.getElementById('demoSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .catch(function() {
+      form.classList.add('hidden');
+      document.getElementById('demoSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.innerHTML = originalHTML;
+    });
+  });
   document.getElementById('modalClose').addEventListener('click', closeDemoModal);
   document.getElementById('demoModal').addEventListener('click', function(e) {
     if (e.target === this) closeDemoModal();
