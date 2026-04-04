@@ -320,7 +320,7 @@
     .dark .theme-toggle .fa-sun { display: inline; }
     .dark .theme-toggle .fa-moon { display: none; }
     /* Smooth transitions for theme switch - use only for specific elements to avoid layout flickering */
-    .dark body, .glass-card, .btn-outline-premium, .btn-solid-premium, .feature-icon, .stat-number, .theme-toggle, .nav-item, .modal-content, input, textarea {
+    .dark body, .glass-card, .btn-outline-premium, .btn-solid-premium, .feature-icon, .stat-number, .theme-toggle, .modal-content, input, textarea {
       transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     }
     .mobile-nav-item {
@@ -880,10 +880,37 @@
       document.getElementById('mobileNav').classList.remove('open');
     });
   });
-    // Active nav highlight on scroll
+    // Active nav highlight on scroll — simple scroll-position approach (no IntersectionObserver)
     var navSections = ['features','templates','finops','admin','deploy','identity'];
     var currentActive = null;
-    var isScrollingToNav = false;
+    var isNavClick = false;
+    var scrollRaf = null;
+
+    function updateActiveNav() {
+      if (isNavClick) return;
+      var navOffset = window.innerWidth >= 1024 ? 100 : 80;
+      var best = null;
+      for (var i = 0; i < navSections.length; i++) {
+        var el = document.getElementById(navSections[i]);
+        if (!el) continue;
+        var top = el.getBoundingClientRect().top;
+        if (top <= navOffset) best = navSections[i];
+      }
+      if (best !== null && best !== currentActive) {
+        currentActive = best;
+        document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + best);
+        });
+      }
+    }
+
+    window.addEventListener('scroll', function() {
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(function() {
+        scrollRaf = null;
+        updateActiveNav();
+      });
+    }, { passive: true });
 
     // Smooth scroll with offset for fixed header
     document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
@@ -893,59 +920,23 @@
         var target = document.querySelector(href);
         if (target) {
           e.preventDefault();
-          isScrollingToNav = true;
+          isNavClick = true;
 
-          // If we are on mobile, close the menu immediately
           document.getElementById('menuToggle').classList.remove('open');
           document.getElementById('mobileNav').classList.remove('open');
 
-          // Use native scrollTo with the anchor-target element
-          // The CSS scroll-margin-top on .anchor-target handles the offset perfectly
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-          // Update active state immediately for the clicked item
           var id = href.substring(1);
           currentActive = id;
           document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(function(link) {
             link.classList.toggle('active', link.getAttribute('href') === '#' + id);
           });
 
-          // Re-enable observer after scroll finishes
-          setTimeout(function() {
-            isScrollingToNav = false;
-          }, 1000);
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          setTimeout(function() { isNavClick = false; }, 1000);
         }
       });
     });
-
-    var observer = new IntersectionObserver(function(entries) {
-      if (isScrollingToNav) return;
-
-      entries.forEach(function(entry) {
-        // More strict intersection for better precision on small screens
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.1) {
-          var id = entry.target.id;
-          if (currentActive === id) return;
-
-          requestAnimationFrame(function() {
-            if (currentActive === id || isScrollingToNav) return;
-            currentActive = id;
-
-            document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(function(link) {
-              link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-            });
-          });
-        }
-      });
-    }, {
-      threshold: [0.1, 0.5],
-      rootMargin: '-85px 0px -50% 0px'
-    });
-
-  navSections.forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) observer.observe(el);
-  });
 
   // Terraform streaming animation
   (function() {
