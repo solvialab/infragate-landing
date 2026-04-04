@@ -408,7 +408,7 @@
           <i class="fas fa-moon text-sm"></i>
           <i class="fas fa-sun text-sm"></i>
         </button>
-        <a href="https://github.com/SolviaLab/infragate" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition"><i class="fas fa-book text-xs"></i> Docs</a>
+        <a href="/docs/" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition"><i class="fas fa-book text-xs"></i> Docs</a>
         <button onclick="openDemoModal()" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-full btn-solid-premium cursor-pointer">Request a Demo</button>
         <button id="menuToggle" class="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white relative z-50" aria-label="Toggle menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -428,7 +428,7 @@
       <a href="#deploy" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Deployment</a>
       <a href="#identity" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Identity</a>
       <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
-        <a href="https://github.com/SolviaLab/infragate" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
+        <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
         <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center cursor-pointer">Request a Demo</button>
       </div>
     </div>
@@ -466,7 +466,7 @@
             <div class="w-3 h-3 rounded-full bg-green-500"></div>
             <span class="text-gray-400 text-xs ml-2">terraform apply — streaming</span>
           </div>
-          <div id="terraformOutput" class="p-4 text-gray-300 text-sm font-mono space-y-1 bg-[#0F172A] h-[200px] md:h-[260px] overflow-hidden">
+          <div id="terraformOutput" class="p-4 text-gray-300 text-sm font-mono space-y-1 bg-[#0F172A] h-[210px] md:h-[320px] overflow-hidden">
           </div>
         </div>
         <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C5D7A]/10 rounded-full blur-2xl -z-10"></div>
@@ -996,16 +996,29 @@
     var container = document.getElementById('terraformOutput');
     var lines = [
       { html: '<span class="text-gray-500">$ terraform init</span>', delay: 600 },
+      { html: '<span class="text-gray-400">Initializing the backend...</span>', delay: 700 },
       { html: '<span class="text-gray-400">Initializing provider plugins...</span>', delay: 900 },
-      { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/oci v5.23.0 installed</span>', delay: 700 },
+      { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/oci v5.23.0 installed</span>', delay: 600 },
+      { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/tls v4.0.5 installed</span>', delay: 500 },
+      { html: '<span class="text-gray-400">Terraform has been successfully initialized!</span>', delay: 800 },
+      { html: '', delay: 300 },
       { html: '<span class="text-gray-500">$ terraform apply -auto-approve</span>', delay: 1100 },
       { html: '<span class="text-yellow-400">&#9210;</span> Plan: 12 to add, 0 to change, 0 to destroy', delay: 1400 },
+      { html: '<span class="text-blue-400">&#x21BB;</span> oci_identity_compartment.cluster: Creating...', delay: 900 },
+      { html: '<span class="text-green-400">&#10003;</span> oci_identity_compartment.cluster: Creation complete <span class="text-gray-500">[1s]</span>', delay: 1200 },
       { html: '<span class="text-blue-400">&#x21BB;</span> oci_core_vcn.infra: Creating...', delay: 1100 },
-      { html: '<span class="text-green-400">&#10003;</span> oci_core_vcn.infra: Creation complete <span class="text-gray-500">[4s]</span>', delay: 1500 },
+      { html: '<span class="text-green-400">&#10003;</span> oci_core_vcn.infra: Creation complete <span class="text-gray-500">[4s]</span>', delay: 1300 },
+      { html: '<span class="text-blue-400">&#x21BB;</span> oci_core_subnet.node_subnet: Creating...', delay: 900 },
+      { html: '<span class="text-green-400">&#10003;</span> oci_core_subnet.node_subnet: Creation complete <span class="text-gray-500">[3s]</span>', delay: 1100 },
+      { html: '<span class="text-blue-400">&#x21BB;</span> oci_core_security_list.oke_sl: Creating...', delay: 800 },
+      { html: '<span class="text-green-400">&#10003;</span> oci_core_security_list.oke_sl: Creation complete <span class="text-gray-500">[1s]</span>', delay: 1000 },
       { html: '<span class="text-blue-400">&#x21BB;</span> oke_cluster.primary: Creating...', delay: 1300 },
       { html: '<span class="text-green-400">&#10003;</span> oke_cluster.primary: Creation complete <span class="text-gray-500">[2m12s]</span>', delay: 1700 },
       { html: '<span class="text-blue-400">&#x21BB;</span> oke_node_pool.workers: Provisioning...', delay: 1200 },
       { html: '<span class="text-green-400">&#10003;</span> oke_node_pool.workers: Creation complete <span class="text-gray-500">[3m45s]</span>', delay: 1800 },
+      { html: '<span class="text-blue-400">&#x21BB;</span> tls_private_key.ssh: Creating...', delay: 700 },
+      { html: '<span class="text-green-400">&#10003;</span> tls_private_key.ssh: Creation complete <span class="text-gray-500">[0s]</span>', delay: 600 },
+      { html: '', delay: 400 },
       { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 12 added, 0 changed, 0 destroyed.</span>', delay: 900 },
       { html: '<span class="text-gray-500 text-xs">infragate.cloud/cluster-prod-01</span>', delay: 0 }
     ];
@@ -1025,8 +1038,9 @@
         div.innerHTML = lines[i].html;
         if (i === lines.length - 1) div.classList.add('mt-2');
         container.appendChild(div);
-        // Keep max visible lines to prevent overflow
-        if (container.children.length > 8) {
+        // Keep max visible lines to prevent overflow (fewer on mobile)
+        var maxLines = window.innerWidth >= 768 ? 12 : 8;
+        if (container.children.length > maxLines) {
           var first = container.firstChild;
           first.style.opacity = '0';
           first.style.marginTop = '-1.5rem';
