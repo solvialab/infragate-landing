@@ -335,16 +335,6 @@ dev.infragate.cloud → <VM_PUBLIC_IP>  (A record)
 
 ## 3. Install k3s
 
-> **Checklist:**
-> - [ ] SELinux packages installed (Oracle Linux only)
-> - [ ] k3s installed with Traefik disabled, service running
-> - [ ] `kubectl get nodes` shows Ready
-> - [ ] kubectl config copied to `~/.kube/config`, `KUBECONFIG` exported
-> - [ ] nginx ingress controller installed with `hostNetwork: true`
-> - [ ] `sudo ss -tlnp | grep ':80'` shows nginx listening
-> - [ ] CoreDNS configured with `forward . 8.8.8.8 8.8.4.4` and domain hairpin
-> - [ ] Pod DNS resolution verified
-
 SSH into the VM:
 
 ```bash
@@ -539,15 +529,6 @@ newgrp docker
 
 ## 5. OCI service account setup
 
-> **Checklist:**
-> - [ ] IAM user `infragate-svc` created
-> - [ ] IAM group `infragate-svc-group` created with policies
-> - [ ] API key generated and `.pem` downloaded
-> - [ ] Tenancy OCID, user OCID, fingerprint, region noted
-> - [ ] Terraform state bucket `infragate-tfstate` created (versioned)
-> - [ ] S3-compatible Customer Secret Key generated (access key + secret key)
-> - [ ] Parent compartment OCID noted
-
 Infragate provisions OKE clusters via Terraform using an OCI IAM service account.
 
 ### 5.1 Create IAM user and group
@@ -736,12 +717,6 @@ kubectl annotate namespace infragate meta.helm.sh/release-name=infragate meta.he
 
 ## 8. Deploy with Helm
 
-> **Checklist:**
-> - [ ] `values-dev.yaml` created with your domain and settings
-> - [ ] `helm upgrade --install` completed without errors
-> - [ ] All 4 pods Running: postgresql, keycloak, api, frontend
-> - [ ] `curl http://dev.infragate.cloud/health` returns `{"status":"ok"}`
-
 ### 8.1 Create your values file
 
 The Helm chart ships with three values files (see [STACK.md — Helm configuration](./STACK.md#8-helm-configuration) for details):
@@ -886,15 +861,6 @@ Choose **one** of the two options below:
 
 ### Option A: Deploy your own Keycloak
 
-> **Checklist:**
-> - [ ] Keycloak admin console accessible via port-forward
-> - [ ] `infragate` realm created
-> - [ ] `infragate-portal` client created with correct redirect URIs
-> - [ ] `admin` realm role created
-> - [ ] Admin user created with password and `admin` role assigned
-> - [ ] (Optional) Regular test user created
-> - [ ] Keycloak exposed through the ingress at `/auth`
-
 #### 9A.1 Access Keycloak admin console
 
 Port-forward to access it:
@@ -971,14 +937,6 @@ This makes the issuer URL `https://dev.infragate.cloud/auth/realms/infragate`, w
 ---
 
 ### Option B: Bring your own Keycloak
-
-> **Checklist:**
-> - [ ] Existing Keycloak instance reachable from both the browser and the k3s cluster
-> - [ ] `infragate` realm created (or existing realm chosen)
-> - [ ] `infragate-portal` public OIDC client created with PKCE
-> - [ ] `admin` realm role created and assigned to at least one user
-> - [ ] Helm values updated to disable in-cluster Keycloak and point at external issuer
-> - [ ] JWKS endpoint reachable from the API pod (tested with curl)
 
 Use this option if your organization already runs a Keycloak instance (or any OIDC-compatible IdP that supports PKCE). Infragate only needs:
 
@@ -1207,16 +1165,6 @@ kubectl delete challenge,order,certificaterequest -n infragate --all
 ---
 
 ## 11. Configure Infragate
-
-> **Checklist:**
-> - [ ] Logged in as admin — admin navigation links visible
-> - [ ] CIDR pool configured (at least one /24 range)
-> - [ ] OCI Settings filled in (compartment, region, cluster tier, bucket, namespace)
-> - [ ] VM shapes added (at least one)
-> - [ ] *(Optional)* Node images configured (leave empty for auto-select)
-> - [ ] Resource limits set and saved
-> - [ ] K8s versions added
-> - [ ] *(Optional)* Cluster templates created
 
 All platform configuration is done through the **Admin UI** — no curl commands needed.
 
