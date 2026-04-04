@@ -225,25 +225,6 @@ Deploy Infragate on a single OCI VM running k3s at `dev.infragate.cloud`. This g
 
 ---
 
-## Setup checklist
-
-Use this to track your progress. Check off each step as you complete it.
-
-- [ ] **1. Prerequisites** — OCI account, domain, SSH key, repo cloned
-- [ ] **2. Provision the OCI VM** — VM created, VCN ports opened (80+443 ingress, all-protocol egress), DNS configured
-- [ ] **3. Install k3s** — k3s running, kubectl working, nginx ingress with hostNetwork, CoreDNS fixed
-- [ ] **4. Install tooling** — Helm installed (Docker optional, only for local builds)
-- [ ] **5. OCI service account** — IAM user, policies, API key, state bucket, S3 keys
-- [ ] **6. Container images** — CI pushes to GHCR automatically, verify images are available
-- [ ] **7. Create secrets** — OCI key secret created in `infragate` namespace
-- [ ] **8. Deploy with Helm** — All pods Running (postgresql, keycloak if deployed, api, frontend)
-- [ ] **9. Configure Keycloak** — **Option A** (deploy your own) OR **Option B** (bring your own)
-- [ ] **10. Enable HTTPS** — cert-manager installed, TLS certificate Ready
-- [ ] **11. Configure Infragate** — CIDRs, shapes, node images, limits, K8s versions, cluster templates set via Admin UI
-- [ ] **12. Verify** — Landing page loads, sign-in works, admin panel accessible
-
----
-
 ## Table of contents
 
 1. [Prerequisites](#1-prerequisites)
