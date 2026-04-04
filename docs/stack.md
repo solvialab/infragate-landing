@@ -519,7 +519,7 @@ pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 | `test_health.py` | 2 | Health and root endpoints |
 | `test_users.py` | 13 | User auto-provisioning, effective limits, deploy options, template filtering, pricing |
 | `test_cluster_access.py` | 10 | Kubeconfig + SSH key download (user + admin), access control |
-| `test_admin_config.py` | 25 | Config CRUD, cluster type, CIDR/shape/K8s version management |
+| `test_admin_config.py` | 29 | Config CRUD, cluster type, CIDR/shape/K8s version management |
 | `test_admin_templates.py` | 12 | Template CRUD, enable/disable, duplicate rejection, storage validation |
 | `test_admin_users.py` | 8 | User listing, per-user overrides, search, storage validation |
 | `test_admin_clusters.py` | 6 | Admin stats with cost estimation, cluster listing, search |
