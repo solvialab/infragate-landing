@@ -367,4 +367,4 @@ For a complete feature overview see [FEATURES.md](./FEATURES.md).
 For integration and deployment details see [INTEGRATION.md](./INTEGRATION.md).
 For the full technical stack and backend architecture see [STACK.md](./STACK.md).
 
-Built by [Solvia Lab s.r.o.](https://solvialab.tech) · [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/company/infragate-cloud/)
+Built by [Solvia Lab s.r.o.](https://solvialab.tech)
