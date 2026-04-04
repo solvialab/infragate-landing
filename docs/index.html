@@ -340,6 +340,60 @@
     }
     .dark .search-result-item mark { background: rgba(91, 184, 216, 0.2); }
 
+    /* Support modal */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: white; border-radius: 1rem; padding: 1.75rem;
+      width: 90%; max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.2s;
+    }
+    .dark .modal-content {
+      background: #1e293b; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%; padding: 0.625rem 0.75rem;
+      border: 1px solid #e5e7eb; border-radius: 0.5rem;
+      font-size: 0.875rem; color: #374151; background: white;
+      outline: none; transition: border-color 0.15s;
+    }
+    .dark .modal-content input,
+    .dark .modal-content textarea {
+      background: #0f172a; border-color: #334155; color: #e2e8f0;
+    }
+    .modal-content input:focus,
+    .modal-content textarea:focus {
+      border-color: #1C5D7A;
+    }
+    .dark .modal-content input:focus,
+    .dark .modal-content textarea:focus {
+      border-color: #5BB8D8;
+    }
+    .modal-content label {
+      display: block; font-size: 0.8125rem; font-weight: 600;
+      color: #374151; margin-bottom: 0.25rem;
+    }
+    .dark .modal-content label { color: #cbd5e1; }
+    .btn-solid {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #1C5D7A; color: white; border: none; cursor: pointer;
+      font-weight: 600; transition: background 0.15s;
+    }
+    .btn-solid:hover { background: #174d66; }
+    .dark .btn-solid { background: #5BB8D8; color: #0f172a; }
+    .dark .btn-solid:hover { background: #7cc8e2; }
+
     /* Scrollbar */
     .sidebar::-webkit-scrollbar, .toc-sidebar::-webkit-scrollbar { width: 3px; }
     .sidebar::-webkit-scrollbar-thumb, .toc-sidebar::-webkit-scrollbar-thumb {
@@ -351,6 +405,53 @@
   </style>
 </head>
 <body class="antialiased dark:text-gray-100">
+
+<!-- Support Modal -->
+<div id="supportModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Contact Support</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
+      </div>
+      <button id="supportModalClose" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="supportForm" class="space-y-4">
+      <div>
+        <label for="support-name">Full Name <span class="text-red-400">*</span></label>
+        <input type="text" id="support-name" name="name" required placeholder="John Smith">
+      </div>
+      <div>
+        <label for="support-email">Email <span class="text-red-400">*</span></label>
+        <input type="email" id="support-email" name="email" required placeholder="john@acme.com">
+      </div>
+      <div>
+        <label for="support-subject">Subject <span class="text-red-400">*</span></label>
+        <input type="text" id="support-subject" name="subject" required placeholder="Deployment issue, feature request, etc.">
+      </div>
+      <div>
+        <label for="support-message">Message <span class="text-red-400">*</span></label>
+        <textarea id="support-message" name="message" rows="4" required placeholder="Describe your issue or question..."></textarea>
+      </div>
+      <button type="submit" id="supportSubmitBtn" class="w-full btn-solid px-6 py-3 text-sm rounded-xl">
+        <i class="fas fa-paper-plane mr-1.5"></i> Send Message
+      </button>
+      <p class="text-xs text-gray-400 text-center">Or email us directly at <a href="mailto:hello@infragate.cloud" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline">hello@infragate.cloud</a></p>
+    </form>
+    <div id="supportSuccess" class="hidden text-center py-6">
+      <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check text-2xl text-emerald-600 dark:text-emerald-400"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Message sent!</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">We'll be in touch shortly.</p>
+      <button onclick="closeSupportModal()" class="mt-6 btn-solid px-8 py-2.5 text-sm rounded-xl">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- Top nav -->
 <nav class="sticky top-0 z-30 h-16 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 flex items-center px-4 sm:px-6">
@@ -395,6 +496,9 @@
       <a class="sidebar-link" data-page="features">
         <i class="fas fa-puzzle-piece text-xs w-4"></i> Features
       </a>
+      <a class="sidebar-link" data-page="stack">
+        <i class="fas fa-layer-group text-xs w-4"></i> Stack & Architecture
+      </a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-heading">Deployment</div>
@@ -410,7 +514,7 @@
       <a href="/" class="sidebar-link">
         <i class="fas fa-globe text-xs w-4"></i> Website
       </a>
-      <a href="mailto:support@infragate.cloud" class="sidebar-link">
+      <a href="#" onclick="openSupportModal(); return false;" class="sidebar-link">
         <i class="fas fa-envelope text-xs w-4"></i> Support
       </a>
     </div>
@@ -460,6 +564,7 @@
   var PAGES = [
     { id: 'readme', title: 'Overview', icon: 'fa-home' },
     { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' },
+    { id: 'stack', title: 'Stack & Architecture', icon: 'fa-layer-group' },
     { id: 'guide', title: 'Deployment Guide', icon: 'fa-rocket' },
     { id: 'integration', title: 'Enterprise Integration', icon: 'fa-plug' }
   ];
@@ -496,8 +601,24 @@
 
   // ── Helpers
   function getPageFromHash() {
-    var hash = window.location.hash.replace('#', '').split('/')[0];
-    return hash || 'readme';
+    var hash = window.location.hash.replace('#', '');
+    var page = hash.split('/')[0];
+    // Only treat as page if it matches a known page ID
+    for (var i = 0; i < PAGES.length; i++) {
+      if (PAGES[i].id === page) return page;
+    }
+    return 'readme';
+  }
+
+  function getHeadingFromHash() {
+    var hash = window.location.hash.replace('#', '');
+    var parts = hash.split('/');
+    // If first part is a known page, heading is after /
+    for (var i = 0; i < PAGES.length; i++) {
+      if (PAGES[i].id === parts[0]) return parts[1] || null;
+    }
+    // Otherwise the whole hash might be an in-page anchor
+    return hash || null;
   }
 
   function getPageInfo(id) {
@@ -508,12 +629,27 @@
   }
 
   function slugify(text) {
-    return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+    // GitHub-compatible slug: lowercase, strip non-alnum/space/hyphen, spaces→hyphens
+    return text.toLowerCase()
+      .replace(/[^\w\s-]/g, '')   // remove non-word except spaces and hyphens
+      .replace(/ /g, '-')         // each space → one hyphen (preserves double-space → --)
+      .replace(/^-+|-+$/g, '');   // trim leading/trailing hyphens
   }
 
   // ── Load page
   function loadPage(page) {
-    if (page === currentPage) return;
+    if (page === currentPage) {
+      // Same page — just scroll to heading if present
+      var heading = getHeadingFromHash();
+      if (heading) {
+        var el = document.getElementById(heading);
+        if (el) {
+          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+      return;
+    }
     currentPage = page;
 
     // Update sidebar
@@ -535,9 +671,12 @@
     tocList.innerHTML = '';
 
     function render(md) {
-      // Fix internal links
-      md = md.replace(/\(\.\/([A-Z]+)\.md\)/g, function(m, name) {
-        return '(#' + name.toLowerCase() + ')';
+      // Map known .md files to docs page hashes (with optional #anchor)
+      var knownPages = { readme: 1, features: 1, stack: 1, guide: 1, integration: 1 };
+      md = md.replace(/\(\.\/([A-Z_]+)\.md(#[^)]+)?\)/gi, function(m, name, anchor) {
+        var lower = name.toLowerCase();
+        if (knownPages[lower]) return '(#' + lower + (anchor ? '/' + anchor.substring(1) : '') + ')';
+        return m; // leave unknown .md links as-is
       });
 
       contentEl.innerHTML = marked.parse(md);
@@ -545,14 +684,44 @@
       contentEl.classList.remove('loading');
       loadingEl.classList.add('hidden');
 
+      // Rewrite in-page anchor clicks to use smooth scroll instead of hash nav
+      contentEl.querySelectorAll('a[href^="#"]').forEach(function(a) {
+        var href = a.getAttribute('href').substring(1);
+        // If it points to a known page, let hash router handle it
+        if (knownPages[href]) return;
+        // Otherwise it's an in-page anchor — smooth scroll to it
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          var targetId = href;
+          var el = document.getElementById(targetId);
+          if (el) {
+            var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        });
+      });
+
       // Add heading anchors + build TOC
       buildTOC();
       // Add copy buttons to code blocks
       addCopyButtons();
       // Build prev/next nav
       buildPageNav();
-      // Scroll to top
-      window.scrollTo(0, 0);
+
+      // Scroll to heading if hash contains one, otherwise top
+      var targetHeading = getHeadingFromHash();
+      if (targetHeading) {
+        var el = document.getElementById(targetHeading);
+        if (el) {
+          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'auto' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      } else {
+        window.scrollTo(0, 0);
+      }
+
       // Close mobile sidebar
       sidebar.classList.remove('open');
       overlay.classList.remove('active');
@@ -598,20 +767,21 @@
     });
     tocList.innerHTML = html;
 
-    // TOC click: scroll to heading
+    // TOC click: scroll to heading with offset for sticky nav
     tocList.querySelectorAll('.toc-item').forEach(function(link) {
       link.addEventListener('click', function(e) {
         e.preventDefault();
         var targetId = this.getAttribute('href').split('/').pop();
         var el = document.getElementById(targetId);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
           history.replaceState(null, '', this.getAttribute('href'));
         }
       });
     });
 
-    // Highlight TOC on scroll
+    // Highlight TOC on scroll — find the heading closest to the top of viewport
     if (headings.length > 0) {
       var tocItems = tocList.querySelectorAll('.toc-item');
       var scrollRaf = null;
@@ -619,10 +789,15 @@
         if (scrollRaf) return;
         scrollRaf = requestAnimationFrame(function() {
           scrollRaf = null;
-          var best = null;
-          headings.forEach(function(h, i) {
-            if (h.getBoundingClientRect().top <= 100) best = i;
-          });
+          var best = 0;
+          for (var i = 0; i < headings.length; i++) {
+            // 90px accounts for sticky nav (64px) + padding
+            if (headings[i].getBoundingClientRect().top <= 90) {
+              best = i;
+            } else {
+              break;
+            }
+          }
           tocItems.forEach(function(item, i) {
             item.classList.toggle('active', i === best);
           });
@@ -772,6 +947,69 @@
 
   // ── Initial load
   loadPage(getPageFromHash());
+
+  // ── Support modal
+  function openSupportModal() {
+    document.getElementById('supportForm').classList.remove('hidden');
+    document.getElementById('supportSuccess').classList.add('hidden');
+    document.getElementById('supportModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  window.openSupportModal = openSupportModal;
+
+  function closeSupportModal() {
+    document.getElementById('supportModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  window.closeSupportModal = closeSupportModal;
+
+  document.getElementById('supportForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    var btn = document.getElementById('supportSubmitBtn');
+    var originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Sending...';
+
+    var data = {
+      name: form.name.value,
+      email: form.email.value,
+      subject: form.subject.value,
+      message: form.message.value,
+      _subject: 'Infragate Docs — ' + form.subject.value,
+      _captcha: 'false',
+      _template: 'table'
+    };
+
+    fetch('https://formsubmit.co/ajax/hello@infragate.cloud', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function() {
+      form.classList.add('hidden');
+      document.getElementById('supportSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .catch(function() {
+      form.classList.add('hidden');
+      document.getElementById('supportSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.innerHTML = originalHTML;
+    });
+  });
+
+  document.getElementById('supportModalClose').addEventListener('click', closeSupportModal);
+  document.getElementById('supportModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSupportModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeSupportModal();
+  });
 </script>
 </body>
 </html>
