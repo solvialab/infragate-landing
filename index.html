@@ -326,15 +326,6 @@
     .mobile-nav-item {
       transition: none !important;
     }
-    /* Disable all transitions during scroll to prevent flickering */
-    body.is-scrolling {
-      pointer-events: none;
-      user-select: none;
-    }
-    body.is-scrolling *, body.is-scrolling {
-      transition: none !important;
-      scroll-behavior: auto !important;
-    }
     /* Exclude animations from theme transition */
     .flow-step, .flow-step *, .terminal *, #terraformOutput * {
       transition-property: opacity, transform, border-color, background, color;
@@ -859,23 +850,6 @@
     var isDark = html.classList.toggle('dark');
     localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
   });
-
-  // Performance: Scroll-lock class on body
-  var scrollTimeout;
-  var isScrolling = false;
-  window.addEventListener('scroll', function() {
-    if (!isScrolling) {
-      isScrolling = true;
-      document.body.classList.add('is-scrolling');
-    }
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(function() {
-      if (isScrolling) {
-        isScrolling = false;
-        document.body.classList.remove('is-scrolling');
-      }
-    }, 150);
-  }, { passive: true });
 
   // Demo modal
   function openDemoModal() {
