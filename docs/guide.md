@@ -719,7 +719,7 @@ kubectl annotate namespace infragate meta.helm.sh/release-name=infragate meta.he
 
 ### 8.1 Create your values file
 
-The Helm chart ships with three values files (see [STACK.md — Helm configuration](./STACK.md#8-helm-configuration) for details):
+The Helm chart ships with three values files:
 
 | File | Purpose |
 |---|---|
@@ -1439,6 +1439,5 @@ kubectl delete namespace infragate
 ---
 
 For identity provider integration, API reference, and resource limits see [INTEGRATION.md](./INTEGRATION.md).
-For architecture and technical stack see [STACK.md](./STACK.md).
 For testing procedures see [TESTING.md](./TESTING.md).
 For marketplace listing strategy see [MARKETPLACE.md](./MARKETPLACE.md).
