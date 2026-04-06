@@ -123,6 +123,47 @@
     @media (max-width: 1279px) {
       .toc-sidebar { display: none; }
     }
+    /* Mobile TOC dropdown */
+    .toc-mobile { display: none; }
+    @media (max-width: 1279px) {
+      .toc-mobile { display: block; }
+    }
+    .toc-mobile summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #6b7280;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      user-select: none;
+    }
+    .dark .toc-mobile summary { color: #9ca3af; border-color: #374151; }
+    .toc-mobile summary::-webkit-details-marker { display: none; }
+    .toc-mobile summary .toc-chevron { transition: transform 0.2s; }
+    .toc-mobile[open] summary .toc-chevron { transform: rotate(180deg); }
+    .toc-mobile .toc-mobile-list {
+      padding: 0.5rem 0.75rem;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    .toc-mobile .toc-mobile-list a {
+      display: block;
+      padding: 0.25rem 0;
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-decoration: none;
+    }
+    .dark .toc-mobile .toc-mobile-list a { color: #9ca3af; }
+    .toc-mobile .toc-mobile-list a:hover { color: #1C5D7A; }
+    .dark .toc-mobile .toc-mobile-list a:hover { color: #5BB8D8; }
+    .toc-mobile .toc-mobile-list a.active { color: #1C5D7A; font-weight: 600; }
+    .dark .toc-mobile .toc-mobile-list a.active { color: #5BB8D8; }
+    .toc-mobile .toc-mobile-list a.depth-3 { padding-left: 0.75rem; }
 
     /* Theme toggle */
     .theme-toggle {
@@ -527,6 +568,11 @@
           <i class="fas fa-chevron-right text-[8px]"></i>
           <span id="breadcrumbPage" class="text-gray-600 dark:text-gray-300">Overview</span>
         </div>
+        <!-- Mobile TOC -->
+        <details class="toc-mobile mb-4" id="tocMobile">
+          <summary><i class="fas fa-list-ul text-xs"></i> On this page <i class="fas fa-chevron-down text-[10px] toc-chevron"></i></summary>
+          <div class="toc-mobile-list" id="tocMobileList"></div>
+        </details>
         <!-- Loading state -->
         <div id="loading" class="flex items-center justify-center py-20">
           <i class="fas fa-spinner fa-spin text-[#1C5D7A] dark:text-[#5BB8D8] text-xl mr-3"></i>
@@ -568,6 +614,8 @@
   var contentEl = document.getElementById('content');
   var loadingEl = document.getElementById('loading');
   var tocList = document.getElementById('tocList');
+  var tocMobileList = document.getElementById('tocMobileList');
+  var tocMobile = document.getElementById('tocMobile');
   var pageNav = document.getElementById('pageNav');
   var breadcrumbPage = document.getElementById('breadcrumbPage');
   var sidebar = document.getElementById('sidebar');
@@ -630,9 +678,9 @@
   }
 
   // ── Load page
-  function loadPage(page) {
+  function loadPage(page, forceScroll) {
     if (page === currentPage) {
-      // Same page — just scroll to heading if present
+      // Same page — scroll to heading if present, or top
       var heading = getHeadingFromHash();
       if (heading) {
         var el = document.getElementById(heading);
@@ -640,6 +688,8 @@
           var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
+      } else if (forceScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       return;
     }
@@ -759,9 +809,13 @@
       html += '<a class="toc-item' + depth + '" href="#' + currentPage + '/' + id + '">' + h.textContent.replace(/^# ?/, '') + '</a>';
     });
     tocList.innerHTML = html;
+    tocMobileList.innerHTML = html;
+    // Show/hide mobile TOC based on whether there are headings
+    tocMobile.style.display = headings.length > 0 ? '' : 'none';
+    // Close mobile TOC when navigating
+    tocMobile.removeAttribute('open');
 
-    // TOC click: scroll to heading with offset for sticky nav
-    tocList.querySelectorAll('.toc-item').forEach(function(link) {
+    function handleTocClick(link) {
       link.addEventListener('click', function(e) {
         e.preventDefault();
         var targetId = this.getAttribute('href').split('/').pop();
@@ -771,12 +825,19 @@
           window.scrollTo({ top: y, behavior: 'smooth' });
           history.replaceState(null, '', this.getAttribute('href'));
         }
+        // Close mobile TOC on click
+        tocMobile.removeAttribute('open');
       });
-    });
+    }
+
+    // TOC click: scroll to heading with offset for sticky nav
+    tocList.querySelectorAll('.toc-item').forEach(handleTocClick);
+    tocMobileList.querySelectorAll('.toc-item').forEach(handleTocClick);
 
     // Highlight TOC on scroll — find the heading closest to the top of viewport
     if (headings.length > 0) {
       var tocItems = tocList.querySelectorAll('.toc-item');
+      var tocMobileItems = tocMobileList.querySelectorAll('.toc-item');
       var scrollRaf = null;
       window._tocScrollHandler = function() {
         if (scrollRaf) return;
@@ -792,6 +853,9 @@
             }
           }
           tocItems.forEach(function(item, i) {
+            item.classList.toggle('active', i === best);
+          });
+          tocMobileItems.forEach(function(item, i) {
             item.classList.toggle('active', i === best);
           });
         });
@@ -904,9 +968,17 @@
         }).join('');
         searchResults.querySelectorAll('.search-result-item').forEach(function(item) {
           item.addEventListener('click', function() {
-            window.location.hash = this.getAttribute('data-page');
+            var targetPage = this.getAttribute('data-page');
             searchInput.value = '';
             searchResults.classList.remove('active');
+            if (targetPage === currentPage) {
+              loadPage(targetPage, true);
+            } else if (window.location.hash === '#' + targetPage) {
+              // Hash won't change, so manually trigger load
+              loadPage(targetPage);
+            } else {
+              window.location.hash = targetPage;
+            }
           });
         });
       }
