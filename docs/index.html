@@ -966,21 +966,6 @@
             '<div>' + r.snippet + '</div>' +
             '<div class="result-page"><i class="fas fa-' + r.page.icon + ' text-[10px] mr-1"></i>' + r.page.title + '</div></a>';
         }).join('');
-        searchResults.querySelectorAll('.search-result-item').forEach(function(item) {
-          item.addEventListener('click', function() {
-            var targetPage = this.getAttribute('data-page');
-            searchInput.value = '';
-            searchResults.classList.remove('active');
-            if (targetPage === currentPage) {
-              loadPage(targetPage, true);
-            } else if (window.location.hash === '#' + targetPage) {
-              // Hash won't change, so manually trigger load
-              loadPage(targetPage);
-            } else {
-              window.location.hash = targetPage;
-            }
-          });
-        });
       }
       searchResults.classList.add('active');
     }, 200);
@@ -991,6 +976,27 @@
     if (!e.target.closest('.search-box')) {
       searchResults.classList.remove('active');
     }
+  });
+
+  // Search result click (delegated so it works after innerHTML re-renders)
+  searchResults.addEventListener('click', function(e) {
+    var item = e.target.closest('.search-result-item');
+    if (!item) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var targetPage = item.getAttribute('data-page');
+    searchInput.value = '';
+    searchResults.classList.remove('active');
+    if (targetPage === currentPage) {
+      loadPage(targetPage, true);
+    } else if (window.location.hash === '#' + targetPage) {
+      loadPage(targetPage);
+    } else {
+      window.location.hash = targetPage;
+    }
+    // Close mobile sidebar
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
   });
 
   // ── Sidebar link clicks
