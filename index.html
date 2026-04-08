@@ -31,7 +31,7 @@
   <style>
     * { font-family: 'Inter', sans-serif; }
     html { scroll-behavior: auto; }
-    body { background: #ffffff; transition: background-color 0.3s ease, color 0.3s ease; }
+    body { background: #ffffff; transition: background-color 0.3s ease, color 0.3s ease; overflow-x: clip !important; }
     .dark body { background: #0B1120; }
     .gradient-text {
       background: linear-gradient(135deg, #0B2B3F 0%, #1C5D7A 100%);
@@ -803,7 +803,7 @@
     }
   </style>
 </head>
-<body class="antialiased dark:text-gray-100" style="overflow-x:clip">
+<body class="antialiased dark:text-gray-100">
 
 <!-- Floating particles -->
 <div class="particles-container" id="particles"></div>
@@ -1348,11 +1348,11 @@
     document.getElementById('demoForm').classList.remove('hidden');
     document.getElementById('demoSuccess').classList.add('hidden');
     document.getElementById('demoModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflowY = 'hidden';
   }
   function closeDemoModal() {
     document.getElementById('demoModal').classList.remove('active');
-    document.body.style.overflow = '';
+    document.body.style.overflowY = '';
   }
 
   // Form submission via AJAX
