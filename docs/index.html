@@ -335,11 +335,11 @@
 
     /* Search */
     .search-box {
-      position: relative; margin-bottom: 1.25rem;
+      position: relative; margin-bottom: 1.25rem; z-index: 20;
     }
     .search-box input {
       width: 100%; padding: 0.5rem 0.75rem 0.5rem 2rem;
-      font-size: 0.8125rem; border: 1px solid #e5e7eb;
+      font-size: 1rem; border: 1px solid #e5e7eb;
       border-radius: 0.5rem; background: white; color: #374151;
       outline: none; transition: border-color 0.15s;
     }
@@ -356,7 +356,7 @@
       position: absolute; top: 100%; left: 0; right: 0;
       background: white; border: 1px solid #e5e7eb;
       border-radius: 0.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      max-height: 280px; overflow-y: auto; z-index: 10; display: none;
+      max-height: 280px; overflow-x: hidden; overflow-y: auto; z-index: 10; display: none;
     }
     .dark .search-results {
       background: #1e293b; border-color: #334155;
@@ -367,7 +367,7 @@
       display: block; padding: 0.625rem 0.75rem;
       font-size: 0.8125rem; color: #374151;
       text-decoration: none; border-bottom: 1px solid #f3f4f6;
-      cursor: pointer;
+      cursor: pointer; word-break: break-word;
     }
     .dark .search-result-item { color: #d1d5db; border-bottom-color: #334155; }
     .search-result-item:hover { background: #f0f7fa; }
@@ -523,12 +523,13 @@
 <!-- Layout -->
 <div class="flex">
   <!-- Left sidebar -->
-  <aside id="sidebar" class="sidebar overflow-y-auto py-5 px-3 flex-shrink-0">
-    <div class="search-box">
+  <aside id="sidebar" class="sidebar flex-shrink-0" style="display:flex;flex-direction:column">
+    <div class="search-box px-3 pt-5">
       <i class="fas fa-search"></i>
       <input type="text" id="searchInput" placeholder="Search docs..." autocomplete="off">
       <div id="searchResults" class="search-results"></div>
     </div>
+    <div class="overflow-y-auto flex-1 px-3 pb-5">
     <div class="sidebar-section">
       <div class="sidebar-heading">Getting started</div>
       <a class="sidebar-link active" data-page="readme">
@@ -555,6 +556,7 @@
       <a href="#" onclick="openSupportModal(); return false;" class="sidebar-link">
         <i class="fas fa-envelope text-xs w-4"></i> Support
       </a>
+    </div>
     </div>
   </aside>
 
