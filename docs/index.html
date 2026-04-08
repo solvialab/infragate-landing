@@ -962,7 +962,7 @@
         searchResults.innerHTML = '<div class="px-3 py-4 text-center text-xs text-gray-400">No results found</div>';
       } else {
         searchResults.innerHTML = results.map(function(r) {
-          return '<a class="search-result-item" data-page="' + r.page.id + '">' +
+          return '<a class="search-result-item" href="#' + r.page.id + '" data-page="' + r.page.id + '">' +
             '<div>' + r.snippet + '</div>' +
             '<div class="result-page"><i class="fas fa-' + r.page.icon + ' text-[10px] mr-1"></i>' + r.page.title + '</div></a>';
         }).join('');
@@ -987,16 +987,14 @@
     var targetPage = item.getAttribute('data-page');
     searchInput.value = '';
     searchResults.classList.remove('active');
-    if (targetPage === currentPage) {
-      loadPage(targetPage, true);
-    } else if (window.location.hash === '#' + targetPage) {
-      loadPage(targetPage);
-    } else {
-      window.location.hash = targetPage;
-    }
-    // Close mobile sidebar
     sidebar.classList.remove('open');
     overlay.classList.remove('active');
+    // Force navigation: reset currentPage so loadPage always runs
+    var samePage = targetPage === currentPage;
+    if (samePage) currentPage = null;
+    window.location.hash = targetPage;
+    // If hash didn't change, hashchange won't fire — call loadPage directly
+    if (samePage) loadPage(targetPage);
   });
 
   // ── Sidebar link clicks
