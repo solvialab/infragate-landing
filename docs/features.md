@@ -168,17 +168,18 @@ Five dedicated admin pages accessible to users with the `admin` role:
 
 ## Deployment options
 
-- **OCI Marketplace — Resource Manager Stack** — one-click "Launch Stack" deployment from OCI Console with a guided form. Provisions OKE cluster, networking, ingress, and Infragate automatically. Supports creating a new cluster or deploying into an existing one
-- **OCI Marketplace — Helm Chart** — for advanced users who want to install on their own Kubernetes cluster using Helm
-- **Existing OKE cluster** — deploy into an existing Oracle Kubernetes Engine cluster with `values-oke.yaml`. Pre-configured for OCI Block Volume storage, nginx ingress with OCI load balancer, and GHCR images
-- **CI/CD with any container registry** — GitHub Actions (GHCR) and GitLab CI (GitLab CR) pipelines included out of the box. Images tagged `dev-latest` for DEV branch, `latest` for main. Helm chart supports `imagePullSecrets` for private registries (GitLab CR, OCIR, Docker Hub, etc.)
-- **k3s on OCI** — single VM deployment pulling images from GHCR, with control-plane tolerations for single-node scheduling
+- **Existing OKE cluster (recommended)** — deploy into an existing Oracle Kubernetes Engine cluster with `values-oke.yaml`. Pre-configured for OCI Block Volume storage, nginx ingress with OCI load balancer, and GHCR images. Ideal for enterprise teams already running OKE
+- **k3s on OCI** — single VM deployment pulling images from GHCR, with control-plane tolerations for single-node scheduling. Great for dev/test, demos, or OCI Always Free tier
 - **Any Kubernetes** — Helm chart works on any K8s cluster with ingress
+- **CI/CD with any container registry** — GitHub Actions (GHCR) and GitLab CI (GitLab CR) pipelines included out of the box. Images tagged `dev-latest` for DEV branch, `latest` for main. Helm chart supports `imagePullSecrets` for private registries (GitLab CR, OCIR, Docker Hub, etc.)
 - **Docker Compose** — included for local development with bundled Keycloak + PostgreSQL
+- **OCI Marketplace (planned)** — one-click "Launch Stack" deployment from OCI Console is planned for a future release
 
 ---
 
-## Marketplace features
+## Marketplace features (planned)
+
+> These features are prepared for a future OCI Marketplace listing. The same deployment capabilities are available today via the Helm chart.
 
 - **Guided deployment form** — OCI Resource Manager schema with dynamic dropdowns for compartment, VCN, subnet, shapes, images, and existing clusters
 - **Conditional OKE creation** — create a new OKE cluster with VCN, subnets, and security lists, or deploy into an existing cluster
