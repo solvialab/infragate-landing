@@ -323,9 +323,9 @@ Infragate supports three deployment paths. Choose the one that fits your environ
 
 | Path | Best for | Guide |
 |---|---|---|
-| **OCI Marketplace** | OCI customers who want one-click deployment via Resource Manager | [GUIDE.md — Marketplace](./GUIDE.md#marketplace-deployment) |
-| **Existing OKE cluster** | Teams with an existing Kubernetes cluster on OCI | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) |
+| **Existing OKE cluster** | Teams with an existing Kubernetes cluster on OCI (recommended) | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) |
 | **Single-node k3s** | Dev/test, Always Free tier, single-VM setups | [GUIDE.md — k3s](./GUIDE.md#single-node-k3s-deployment) |
+| **OCI Marketplace (planned)** | One-click deployment via Resource Manager — coming in a future release | [GUIDE.md — Marketplace](./GUIDE.md#marketplace-deployment) |
 
 All paths use the same Helm chart with different values files:
 
