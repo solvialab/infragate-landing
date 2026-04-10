@@ -893,7 +893,7 @@
         <label for="support-attachment" class="mb-1.5 block">Attachment <span class="text-gray-400 font-normal">(optional)</span></label>
         <label class="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 cursor-pointer hover:border-[#1C5D7A] dark:hover:border-[#5BB8D8] transition text-sm text-gray-500 dark:text-gray-400">
           <i class="fas fa-paperclip text-gray-400"></i>
-          <span id="attachmentLabel">Choose file...</span>
+          <span id="attachmentLabel">Choose files...</span>
           <input type="file" id="support-attachment" name="attachment" class="hidden" accept=".png,.jpg,.jpeg,.gif,.pdf,.txt,.log,.zip,.json,.yaml,.yml" multiple>
         </label>
         <p class="text-xs text-gray-400 mt-1">Max 5 MB total. Images, PDF, text, logs, zip. Multiple files allowed.</p>
@@ -1482,7 +1482,9 @@
         label.textContent = 'Choose files...';
         return;
       }
-      label.textContent = this.files.length === 1 ? this.files[0].name : this.files.length + ' files selected';
+      var names = [];
+      for (var i = 0; i < this.files.length; i++) names.push(this.files[i].name);
+      label.textContent = names.join(', ');
     } else {
       label.textContent = 'Choose files...';
     }
@@ -1504,8 +1506,8 @@
     formData.append('_captcha', 'false');
     formData.append('_template', 'table');
     var fileInput = document.getElementById('support-attachment');
-    if (fileInput.files.length > 0) {
-      formData.append('attachment', fileInput.files[0]);
+    for (var i = 0; i < fileInput.files.length; i++) {
+      formData.append('attachment', fileInput.files[i]);
     }
 
     fetch('https://formsubmit.co/ajax/support@infragate.cloud', {
@@ -1518,13 +1520,13 @@
       form.classList.add('hidden');
       document.getElementById('supportSuccess').classList.remove('hidden');
       form.reset();
-      document.getElementById('attachmentLabel').textContent = 'Choose file...';
+      document.getElementById('attachmentLabel').textContent = 'Choose files...';
     })
     .catch(function() {
       form.classList.add('hidden');
       document.getElementById('supportSuccess').classList.remove('hidden');
       form.reset();
-      document.getElementById('attachmentLabel').textContent = 'Choose file...';
+      document.getElementById('attachmentLabel').textContent = 'Choose files...';
     })
     .finally(function() {
       btn.disabled = false;
