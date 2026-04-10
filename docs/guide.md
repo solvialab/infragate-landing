@@ -2,17 +2,19 @@
 
 This guide covers three deployment paths:
 
-- **[OCI Marketplace (recommended)](#marketplace-deployment)** — one-click "Launch Stack" from the OCI Console. Ideal for OCI customers who want Infragate running in minutes.
-- **[Existing OKE cluster](#existing-oke-cluster-deployment)** — deploy Infragate into an existing Oracle Kubernetes Engine cluster using Helm. Best for teams that already manage their own OKE infrastructure.
-- **[Single-node k3s](#single-node-k3s-deployment)** — step-by-step guide for deploying on a single OCI VM with k3s. Ideal for dev/test or Always Free tier.
+- **[Existing OKE cluster (recommended)](#existing-oke-cluster-deployment)** — deploy Infragate into an existing Oracle Kubernetes Engine cluster using Helm. Best for enterprise teams that already manage their own OKE infrastructure.
+- **[Single-node k3s](#single-node-k3s-deployment)** — step-by-step guide for deploying on a single OCI VM with k3s. Ideal for dev/test, demos, or Always Free tier.
+- **[OCI Marketplace (planned)](#marketplace-deployment)** — one-click "Launch Stack" from the OCI Console. Coming in a future release.
 
 ---
 
 ## Marketplace Deployment
 
+> **Status: Planned** — OCI Marketplace listing is planned for a future release. The deployment flow below documents the intended experience. For now, use the [Existing OKE cluster](#existing-oke-cluster-deployment) or [Single-node k3s](#single-node-k3s-deployment) paths.
+
 ### What the customer gets
 
-When an OCI customer clicks **Launch Stack** on the Marketplace listing, the OCI Resource Manager presents a guided form and provisions the entire Infragate stack automatically:
+When the Marketplace listing is live, an OCI customer clicking **Launch Stack** will get the OCI Resource Manager guided form that provisions the entire Infragate stack automatically:
 
 | Component | What gets created |
 |---|---|
@@ -1440,4 +1442,4 @@ kubectl delete namespace infragate
 
 For identity provider integration, API reference, and resource limits see [INTEGRATION.md](./INTEGRATION.md).
 For testing procedures see [TESTING.md](./TESTING.md).
-For marketplace listing strategy see [MARKETPLACE.md](./MARKETPLACE.md).
+For go-to-market strategy see [MARKETPLACE.md](./MARKETPLACE.md).
