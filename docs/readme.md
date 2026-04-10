@@ -23,21 +23,9 @@ Infragate is an internal developer platform that lets engineers spin up, scale, 
 
 ## 1. Quick start
 
-### OCI Marketplace (recommended)
+### Existing OKE cluster (recommended)
 
-1. Find **Infragate** on the [OCI Marketplace](https://cloud.oracle.com/marketplace)
-2. Click **Launch Stack** — a guided form walks you through:
-   - Compartment, region, domain name
-   - New OKE cluster or deploy into existing
-   - New VCN or use existing networking
-   - Bundled Keycloak or connect your own OIDC provider
-3. Click **Apply** — Resource Manager provisions everything automatically
-4. Point your DNS to the load balancer IP shown in the outputs
-5. Log in and start provisioning clusters
-
-### Existing OKE cluster
-
-For teams that already have an OKE cluster:
+For teams that already have an OKE cluster — deploy Infragate via Helm in minutes:
 
 ```bash
 helm upgrade --install infragate deploy/helm/ -n infragate \
@@ -52,11 +40,11 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
   --set api.oci.parentCompartmentOcid=ocid1.compartment...
 ```
 
-> Helm chart access is available to licensed customers. Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for details.
+> Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for Helm chart access and onboarding support.
 
 ### Single-node k3s
 
-For dev/test or Always Free tier VMs:
+For dev/test, demos, or OCI Always Free tier VMs:
 
 ```bash
 helm upgrade --install infragate deploy/helm/ -n infragate \
@@ -65,7 +53,11 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
   --set keycloak.admin.password=YOUR_KC_PASSWORD
 ```
 
-> Helm chart access is available to licensed customers. Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for details.
+> Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for Helm chart access and onboarding support.
+
+### OCI Marketplace (planned)
+
+An OCI Marketplace listing with one-click "Launch Stack" deployment is planned for a future release. In the meantime, the Helm-based deployment paths above provide the same functionality with full flexibility.
 
 See [GUIDE.md](./GUIDE.md) for the full step-by-step deployment guide for all three paths.
 
@@ -312,7 +304,7 @@ Infragate ships with CI/CD pipelines for both GitHub and GitLab:
 | `test` | 87 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `docker-build-push` | Build + push images to GHCR (`dev-latest` on DEV, `latest` on main) |
-| `terraform-validate` | Core module, runner template, and marketplace stack |
+| `terraform-validate` | Core module and runner template |
 
 **GitLab CI** (`.gitlab-ci.yml`):
 
@@ -321,7 +313,7 @@ Infragate ships with CI/CD pipelines for both GitHub and GitLab:
 | `test` | 87 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `build-api` / `build-frontend` | Build + push images to GitLab Container Registry |
-| `terraform-validate` | Core module, runner template, and marketplace stack |
+| `terraform-validate` | Core module and runner template |
 
 Both use the same tagging scheme (`latest` / `dev-latest` + commit SHA). The Helm chart's `imagePullSecrets` support makes it work with any private container registry.
 
