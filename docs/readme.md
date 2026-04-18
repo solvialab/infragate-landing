@@ -58,14 +58,22 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
 
 ### Single-node k3s
 
-For dev/test, demos, or OCI Always Free tier VMs:
+For dev/test, demos, or OCI Always Free tier VMs. Run this on an OCI VM in the same region as your target tenancy for low-latency access to the OCI API:
 
 ```bash
 helm upgrade --install infragate deploy/helm/ -n infragate \
-  -f deploy/helm/values-dev.yaml \
+  -f deploy/helm/values-oci.yaml \
+  --set global.domain=infragate.example.com \
   --set postgresql.auth.password=YOUR_DB_PASSWORD \
-  --set keycloak.admin.password=YOUR_KC_PASSWORD
+  --set keycloak.admin.password=YOUR_KC_PASSWORD \
+  --set api.oci.tenancyOcid=ocid1.tenancy... \
+  --set api.oci.userOcid=ocid1.user... \
+  --set api.oci.fingerprint=xx:xx:xx... \
+  --set api.oci.namespace=YOUR_NAMESPACE \
+  --set api.oci.parentCompartmentOcid=ocid1.compartment...
 ```
+
+OCI credentials are still required — Infragate calls the OCI API to provision OKE clusters regardless of where Infragate itself runs. See [GUIDE.md — OCI service account setup](./GUIDE.md#5-oci-service-account-setup) for how to generate the API key, S3 Customer Secret Key, and Terraform state bucket.
 
 > Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for Helm chart access and onboarding support.
 
