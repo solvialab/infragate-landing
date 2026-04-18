@@ -808,19 +808,19 @@
 <!-- Floating particles -->
 <div class="particles-container" id="particles"></div>
 
-<!-- Demo Request Modal -->
+<!-- Contact / Demo / POC / Enterprise / Partner Modal (shared) -->
 <div id="demoModal" class="modal-overlay">
   <div class="modal-content">
     <div class="flex items-center justify-between mb-5">
       <div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Book a 20-min demo</h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
+        <h3 id="demoModalTitle" class="text-xl font-bold text-gray-900 dark:text-white">Book a 20-min demo</h3>
+        <p id="demoModalSubtitle" class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
       </div>
       <button id="modalClose" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    <form id="demoForm" class="space-y-4">
+    <form id="demoForm" class="space-y-4" data-subject="Infragate Demo Request">
       <div>
         <label for="demo-name">Full Name <span class="text-red-400">*</span></label>
         <input type="text" id="demo-name" name="name" required placeholder="John Smith">
@@ -838,11 +838,11 @@
         <input type="text" id="demo-title" name="title" placeholder="Platform Engineer">
       </div>
       <div>
-        <label for="demo-message">Tell us about your use case</label>
+        <label for="demo-message" id="demoMessageLabel">Tell us about your use case</label>
         <textarea id="demo-message" name="message" rows="3" placeholder="How many clusters do you manage? What's your current workflow?"></textarea>
       </div>
       <button type="submit" id="demoSubmitBtn" class="w-full btn-solid-premium px-6 py-3 text-sm font-semibold rounded-xl">
-        <i class="fas fa-paper-plane mr-1.5"></i> Submit Request
+        <i class="fas fa-paper-plane mr-1.5"></i> <span id="demoSubmitText">Submit Request</span>
       </button>
       <p class="text-xs text-gray-400 text-center">We respect your privacy. No spam, ever.</p>
     </form>
@@ -852,7 +852,7 @@
         <i class="fas fa-check text-2xl text-emerald-600 dark:text-emerald-400"></i>
       </div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Thank you!</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">Your demo request has been submitted.<br>We'll be in touch shortly.</p>
+      <p id="demoSuccessMessage" class="text-gray-500 dark:text-gray-400 mt-2 text-sm">Your request has been submitted.<br>We'll be in touch shortly.</p>
       <button onclick="closeDemoModal()" class="mt-6 btn-solid-premium px-8 py-2.5 text-sm font-semibold rounded-xl">
         Close
       </button>
@@ -1553,7 +1553,7 @@
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Version pinning &amp; minor upgrades</span></li>
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private GHCR PAT · per-customer rotation</span></li>
         </ul>
-        <button onclick="openDemoModal()" class="block text-center px-5 py-3 text-sm font-semibold rounded-full btn-solid-premium cursor-pointer">Start a POC</button>
+        <button onclick="openDemoModal('poc')" class="block text-center px-5 py-3 text-sm font-semibold rounded-full btn-solid-premium cursor-pointer">Start a POC</button>
       </div>
 
       <!-- Enterprise -->
@@ -1574,12 +1574,12 @@
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance support · SOC 2 Q&amp;A, security questionnaires</span></li>
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>LTS pinning · architect hours</span></li>
         </ul>
-        <a href="mailto:hello@infragate.cloud?subject=Infragate%20Enterprise%20enquiry" class="block text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition">Contact us</a>
+        <button onclick="openDemoModal('enterprise')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Contact us</button>
       </div>
     </div>
 
     <div class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-      Design-partner discount available for the first production customers — <a href="mailto:hello@infragate.cloud?subject=Design%20partner%20enquiry" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline font-medium">reach out</a> if you want to help shape the roadmap.
+      Design-partner discount available for the first production customers — <button onclick="openDemoModal('partner')" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline font-medium cursor-pointer bg-transparent border-0 p-0">reach out</button> if you want to help shape the roadmap.
     </div>
   </div>
 </section>
@@ -1597,12 +1597,11 @@
       <span class="font-semibold text-white">50% off Business</span> — $18,000/year for a 6-month commitment — in exchange for monthly feedback calls and the right to publish a sanitized case study. You help shape the roadmap; we make sure you succeed.
     </p>
     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-8 reveal" style="transition-delay:0.45s">
-      <a href="mailto:hello@infragate.cloud?subject=Design%20partner%20enquiry&body=Hi%20%E2%80%94%20interested%20in%20the%20Infragate%20design-partner%20programme.%20A%20bit%20about%20us%3A" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer cta-btn">
+      <button onclick="openDemoModal('partner')" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer cta-btn">
         <i class="fas fa-paper-plane"></i> Apply as design partner
-      </a>
+      </button>
     </div>
     <p class="text-gray-300 text-sm mt-6 reveal" style="transition-delay:0.55s">Not ready yet? <a href="#pricing" class="text-white hover:underline">See standard pricing</a></p>
-    <p class="text-gray-300 text-sm mt-8">Built by <a href="https://solvialab.tech" class="text-white hover:underline">Solvia Lab s.r.o.</a> | <a href="mailto:hello@infragate.cloud" class="text-white hover:underline">hello@infragate.cloud</a></p>
   </div>
 </section>
 
@@ -1632,8 +1631,55 @@
     localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
   });
 
-  // Demo modal
-  function openDemoModal() {
+  // Demo / POC / Enterprise / Partner modal — shared form, context-driven copy
+  var DEMO_MODAL_CONFIGS = {
+    demo: {
+      title: 'Book a 20-min demo',
+      subtitle: "We'll get back to you within one business day.",
+      messageLabel: 'Tell us about your use case',
+      messagePlaceholder: "How many clusters do you manage? What's your current workflow?",
+      submitText: 'Submit Request',
+      successMessage: 'Your demo request has been submitted.<br>We\'ll be in touch shortly.',
+      subject: 'Infragate Demo Request'
+    },
+    poc: {
+      title: 'Start a Proof of Concept',
+      subtitle: 'Scoped 2–4 week POC. We\'ll set up a kickoff call within one business day.',
+      messageLabel: 'Tell us about your environment',
+      messagePlaceholder: 'How many OCI tenancies / clusters? What does success look like for the POC?',
+      submitText: 'Request a POC',
+      successMessage: 'Your POC request has been submitted.<br>We\'ll be in touch to schedule the kickoff.',
+      subject: 'Infragate POC Request'
+    },
+    enterprise: {
+      title: 'Talk to sales — Enterprise',
+      subtitle: 'Tell us what you need. We\'ll respond within one business day.',
+      messageLabel: 'What are you looking for?',
+      messagePlaceholder: 'Multi-tenancy, compliance support (SOC 2 / ISO), managed install, air-gapped delivery, LTS pinning…',
+      submitText: 'Get in touch',
+      successMessage: 'Your enquiry has been submitted.<br>An Enterprise contact will reach out shortly.',
+      subject: 'Infragate Enterprise Enquiry'
+    },
+    partner: {
+      title: 'Apply as a design partner',
+      subtitle: '50% off Business for 6 months in exchange for monthly feedback + a sanitized case study. Limited spots.',
+      messageLabel: 'Tell us about your team',
+      messagePlaceholder: 'Team size, current OCI usage, what would success look like in 6 months?',
+      submitText: 'Submit application',
+      successMessage: 'Your application has been received.<br>We\'ll review and reach out within a few business days.',
+      subject: 'Infragate Design Partner Application'
+    }
+  };
+
+  function openDemoModal(context) {
+    var cfg = DEMO_MODAL_CONFIGS[context] || DEMO_MODAL_CONFIGS.demo;
+    document.getElementById('demoModalTitle').textContent = cfg.title;
+    document.getElementById('demoModalSubtitle').textContent = cfg.subtitle;
+    document.getElementById('demoMessageLabel').textContent = cfg.messageLabel;
+    document.getElementById('demo-message').setAttribute('placeholder', cfg.messagePlaceholder);
+    document.getElementById('demoSubmitText').textContent = cfg.submitText;
+    document.getElementById('demoSuccessMessage').innerHTML = cfg.successMessage;
+    document.getElementById('demoForm').setAttribute('data-subject', cfg.subject);
     // Reset to form view when opening
     document.getElementById('demoForm').classList.remove('hidden');
     document.getElementById('demoSuccess').classList.add('hidden');
@@ -1660,7 +1706,7 @@
       email: form.email.value,
       title: form.title.value,
       message: form.message.value,
-      _subject: 'Infragate Demo Request',
+      _subject: form.getAttribute('data-subject') || 'Infragate Enquiry',
       _captcha: 'false',
       _template: 'table'
     };
