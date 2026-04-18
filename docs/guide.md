@@ -8,108 +8,6 @@ This guide covers three deployment paths:
 
 ---
 
-## Marketplace Deployment
-
-> **Status: Planned** — OCI Marketplace listing is planned for a future release. The deployment flow below documents the intended experience. For now, use the [Existing OKE cluster](#existing-oke-cluster-deployment) or [Single-node k3s](#single-node-k3s-deployment) paths.
-
-### What the customer gets
-
-When the Marketplace listing is live, an OCI customer clicking **Launch Stack** will get the OCI Resource Manager guided form that provisions the entire Infragate stack automatically:
-
-| Component | What gets created |
-|---|---|
-| **OKE Cluster** | New managed Kubernetes cluster (or deploys into an existing one) |
-| **Networking** | VCN, subnets (API, node, LB), internet gateway, route tables, security lists (or uses existing) |
-| **IAM** | Dynamic group for OKE nodes + IAM policies for image pulling |
-| **Ingress** | NGINX ingress controller with OCI flexible load balancer |
-| **Infragate** | Full Helm release — API, frontend, PostgreSQL, Keycloak (optional) |
-| **Secrets** | OCI API key mounted as Kubernetes secret, auto-generated DB and Keycloak passwords |
-
-### Customer prerequisites
-
-Before clicking "Launch Stack", the customer needs:
-
-| Requirement | Where to create it | Why |
-|---|---|---|
-| **OCI API Key** | Identity > Users > API Keys > Add API Key | Infragate uses this to provision OKE clusters in the customer's tenancy |
-| **API Key Fingerprint** | Shown when the API key is uploaded | Required for OCI API authentication |
-| **Object Storage Bucket** | Object Storage > Create Bucket (`infragate-tfstate`) | Stores Terraform state for each provisioned cluster |
-| **S3 Compatibility Credentials** | Identity > Users > Customer Secret Keys | Used by Terraform to read/write state via S3-compatible API |
-| **Domain Name** | Any DNS provider | A record pointing to the load balancer IP (configured after deploy) |
-| **Compartment** | Identity > Compartments | Target compartment for all Infragate resources |
-
-### Customer deployment flow
-
-```
-Step 1: Find "Infragate" on OCI Marketplace
-         ↓
-Step 2: Click "Launch Stack"
-         ↓
-Step 3: Fill in the guided form:
-         - Compartment + Region
-         - Domain name (e.g. infragate.company.com)
-         - New OKE cluster OR select existing
-         - New VCN OR select existing networking
-         - OCI API key fingerprint + private key PEM
-         - S3 credentials for Terraform state
-         - Bundled Keycloak OR external OIDC provider
-         ↓
-Step 4: Click "Plan" → Review resources → Click "Apply"
-         ↓
-Step 5: Wait ~15-20 minutes for provisioning
-         ↓
-Step 6: Note the outputs:
-         - Infragate Portal URL
-         - Keycloak Admin Console URL
-         - Load Balancer IP
-         - Post-deployment instructions
-         ↓
-Step 7: Create DNS A record:
-         infragate.company.com → <Load Balancer IP>
-         ↓
-Step 8: Configure Keycloak (if using bundled):
-         - Log into Keycloak admin console
-         - Create realm "infragate"
-         - Create client "infragate-portal" (public, PKCE)
-         - Create users and assign admin role
-         ↓
-Step 9: Access the portal and start provisioning clusters
-```
-
-### Post-deployment: What customers need to configure
-
-The Resource Manager Stack handles all infrastructure. Customers only need to:
-
-1. **DNS** — Point their domain at the load balancer IP (shown in stack outputs)
-2. **Keycloak realm** — Create the `infragate` realm and `infragate-portal` client (if using bundled Keycloak)
-3. **Users** — Create users in Keycloak and assign the `admin` realm role to platform administrators
-4. **Platform config** — Log into Infragate admin panel and configure:
-   - CIDR pool (available /24 ranges for cluster allocation)
-   - Allowed VM shapes
-   - Allowed Kubernetes versions
-   - Node images (or leave empty for auto-select)
-   - Resource limits per user
-
-### Upgrading
-
-Customers upgrade by re-running the Resource Manager Stack with updated container image tags:
-
-1. OCI Console > Resource Manager > Stacks > Select Infragate stack
-2. Edit variables > Update `api_image_tag` and `frontend_image_tag` to new version
-3. Click "Apply" — Helm performs a rolling update
-
-### Marketplace customer support flow
-
-| Issue | Resolution |
-|---|---|
-| Stack Plan fails | Check IAM policies — service account needs `manage cluster-family`, `manage virtual-network-family` in the target compartment |
-| Pods not starting | Check image pull — ensure images are accessible from OKE nodes. For private registries, set `global.imagePullSecrets` |
-| Keycloak slow to start | Normal — first boot takes 60-90s. Startup probe allows up to 210s |
-| OIDC errors | Verify issuer URL matches the JWT `iss` claim exactly. For bundled Keycloak: `https://<domain>/auth/realms/infragate` |
-| Terraform operations fail | Check OCI credentials — fingerprint, private key, user OCID must all match the same API key |
-
----
-
 ## Existing OKE Cluster Deployment
 
 Deploy Infragate into an existing OKE cluster. This path is for teams that already have a Kubernetes cluster and want Infragate running in a dedicated namespace.
@@ -308,6 +206,11 @@ sudo firewall-cmd --permanent --add-port=6443/tcp
 sudo firewall-cmd --permanent --zone=trusted --add-source=10.42.0.0/16
 sudo firewall-cmd --permanent --zone=trusted --add-source=10.43.0.0/16
 
+# Trust CNI interfaces — required for inter-pod communication
+# Without this, traefik returns 502 (firewalld blocks pod-to-pod traffic on the bridge)
+sudo firewall-cmd --zone=trusted --add-interface=cni0 --permanent
+sudo firewall-cmd --zone=trusted --add-interface=flannel.1 --permanent
+
 sudo firewall-cmd --reload
 ```
 
@@ -352,12 +255,12 @@ sudo dnf install -y container-selinux selinux-policy-base
 sudo rpm -i https://rpm.rancher.io/k3s/stable/common/centos/8/noarch/k3s-selinux-1.6-1.el8.noarch.rpm
 ```
 
-### 3.2 Install k3s without Traefik
+### 3.2 Install k3s
 
-Traefik is disabled in favour of nginx-ingress, which has better SSE support for the Terraform log streaming.
+k3s ships with Traefik as the bundled ingress controller — the `values-oci.yaml` chart values file is already wired for `className: traefik`, so no separate ingress install is needed.
 
 ```bash
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable=traefik" sh -
+curl -sfL https://get.k3s.io | sh -
 ```
 
 Verify the install succeeded and the service is running:
@@ -410,45 +313,19 @@ kubectl get nodes
 kubectl get pods -A
 ```
 
-### 3.5 Install nginx ingress controller
+### 3.5 Verify Traefik ingress is running
+
+k3s brings up Traefik automatically in the `kube-system` namespace — no separate install or host-networking patch is needed. Confirm it is running and listening on ports 80/443 of the node:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
-```
+kubectl get pods -n kube-system | grep traefik
+# Expected: traefik-<hash> pod Running
 
-Wait for it to be ready:
+kubectl get svc -n kube-system traefik
+# Expected: LoadBalancer with the node's public IP as EXTERNAL-IP (via k3s klipper-lb)
 
-```bash
-kubectl wait --namespace ingress-nginx \
-  --for=condition=ready pod \
-  --selector=app.kubernetes.io/component=controller \
-  --timeout=120s
-```
-
-Patch the controller to use host networking so it binds directly to the host's ports 80/443 (single-node, no cloud LB). The `hostPort` approach does not work reliably with flannel CNI — `hostNetwork` is required:
-
-```bash
-kubectl patch deployment ingress-nginx-controller \
-  -n ingress-nginx \
-  --type=json \
-  -p='[{"op": "add", "path": "/spec/template/spec/hostNetwork", "value": true}]'
-```
-
-Wait for the pod to restart and verify it's listening:
-
-```bash
-kubectl rollout status deployment ingress-nginx-controller -n ingress-nginx
-sudo ss -tlnp | grep ':80'
-```
-
-You should see nginx listening on `0.0.0.0:80` and `0.0.0.0:443`.
-
-If the ingress-nginx service stays `<pending>` (no cloud LB), switch to NodePort:
-
-```bash
-kubectl patch svc ingress-nginx-controller \
-  -n ingress-nginx \
-  -p '{"spec": {"type": "NodePort"}}'
+sudo ss -tlnp | grep -E ':80|:443'
+# Expected: entries bound on 0.0.0.0:80 and 0.0.0.0:443
 ```
 
 ### 3.6 Fix CoreDNS for external DNS resolution
@@ -497,34 +374,26 @@ kubectl run dns-test --rm -it --image=busybox --restart=Never -- nslookup acme-v
 
 ## 4. Install tooling
 
-### 4.1 Helm
+### 4.1 Git
+
+Oracle Linux:
 
 ```bash
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-```
-
-### 4.2 Docker
-
-Needed to build images on the VM. Skip if building elsewhere.
-
-Oracle Linux 8:
-
-```bash
-sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-sudo dnf install -y docker-ce docker-ce-cli containerd.io
-sudo systemctl enable --now docker
-sudo usermod -aG docker $USER
-newgrp docker
+sudo dnf install -y git
+git --version
 ```
 
 Ubuntu:
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y docker.io
-sudo systemctl enable --now docker
-sudo usermod -aG docker $USER
-newgrp docker
+sudo apt-get update && sudo apt-get install -y git
+git --version
+```
+
+### 4.2 Helm
+
+```bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
 
 ---
@@ -533,47 +402,73 @@ newgrp docker
 
 Infragate provisions OKE clusters via Terraform using an OCI IAM service account.
 
-### 5.1 Create IAM user and group
+### 5.1 Create IAM service account
 
-In the OCI Console:
+OCI manages users under **Identity Domains** (per compartment). Each tenancy has a **Default** domain.
 
-1. **Identity & Security > Users > Create User** — name it `infragate-svc`
-2. **Identity & Security > Groups > Create Group** — name it `infragate-svc-group`
-3. Add `infragate-svc` to `infragate-svc-group`
+1. **OCI Console** > **Identity & Security** > **Domains**
+2. Click the **Default** domain (or whichever domain your tenancy uses)
+3. In the left sidebar, click **Users**
+4. Click **Create user**
+5. First name: `Infragate`, Last name: `Service`
+6. Username: `infragate-svc`
+7. Email: use a shared team address (required by Domains — e.g. `infragate-svc@yourdomain.com`)
+8. Uncheck **Use the email address as the username**
+9. Click **Create**
+10. **Copy the user OCID** from the user details page — you'll need it as `userOcid`
+
+> If your tenancy still uses the legacy Identity (no Domains), go to **Identity & Security** > **Users** > **Create User** > select **IAM User** instead.
 
 ### 5.2 Create IAM policies
 
-Create a policy in the compartment where clusters will be provisioned:
+Create a policy in the **root compartment** (policies must be at root or above the target compartment):
+
+1. **OCI Console** > **Identity & Security** > **Policies**
+2. Click **Create Policy**
+3. Name: `infragate-svc-policy`
+4. Switch to **Manual Editor** and paste:
 
 ```
-Allow group infragate-svc-group to manage cluster-family in compartment <your-compartment>
-Allow group infragate-svc-group to manage virtual-network-family in compartment <your-compartment>
-Allow group infragate-svc-group to manage instance-family in compartment <your-compartment>
-Allow group infragate-svc-group to manage compartments in compartment <your-compartment>
-Allow group infragate-svc-group to read tenancies in tenancy
-Allow group infragate-svc-group to read objectstorage-namespaces in tenancy
+Allow any-user to manage cluster-family in compartment <your-compartment> where request.user.id = '<infragate-svc-user-ocid>'
+Allow any-user to manage virtual-network-family in compartment <your-compartment> where request.user.id = '<infragate-svc-user-ocid>'
+Allow any-user to manage instance-family in compartment <your-compartment> where request.user.id = '<infragate-svc-user-ocid>'
+Allow any-user to manage compartments in compartment <your-compartment> where request.user.id = '<infragate-svc-user-ocid>'
+Allow any-user to manage object-family in compartment <your-compartment> where request.user.id = '<infragate-svc-user-ocid>'
+Allow any-user to read all-resources in tenancy where request.user.id = '<infragate-svc-user-ocid>'
 ```
+
+> **Replace** `<infragate-svc-user-ocid>` with the actual OCID from Step 5.1 (e.g. `ocid1.user.oc1..aaaaaa...`). Replace `<your-compartment>` with your compartment name. This `any-user where request.user.id` syntax works with both Identity Domains and legacy IAM.
+>
+> The `read all-resources` is needed for Terraform to look up availability domains and OKE node pool options.
 
 ### 5.3 Generate API key
 
-1. Go to the `infragate-svc` user > **API Keys > Add API Key > Generate API Key Pair**
-2. Download the private key (`.pem` file)
-3. Note from the **Configuration File Preview**:
+1. In the Default domain, go to **Users** > click `infragate-svc`
+2. In the left sidebar under **Resources**, click **API keys**
+3. Click **Add API key** > **Generate API key pair**
+4. Click **Download private key** — save as `oci_api_key.pem`
+5. Click **Add**
+6. Note from the **Configuration File Preview**:
    - `tenancy` — tenancy OCID
-   - `user` — user OCID
+   - `user` — user OCID (this is the **infragate-svc** OCID, not your personal account)
    - `fingerprint` — key fingerprint
    - `region` — e.g. `eu-frankfurt-1`
 
 Copy the key to the VM:
 
 ```bash
+ssh opc@<VM_PUBLIC_IP> "mkdir -p ~/.oci && chmod 700 ~/.oci"
 scp oci_api_key.pem opc@<VM_PUBLIC_IP>:~/.oci/oci_api_key.pem
 ```
 
-Create the directory on the VM first if it doesn't exist:
+Verify and secure the key on the VM:
 
 ```bash
-ssh opc@<VM_PUBLIC_IP> "mkdir -p ~/.oci && chmod 700 ~/.oci"
+ssh opc@<VM_PUBLIC_IP>
+ls -la ~/.oci/oci_api_key.pem
+head -1 ~/.oci/oci_api_key.pem
+# Expected: -----BEGIN RSA PRIVATE KEY----- (or -----BEGIN PRIVATE KEY-----)
+chmod 600 ~/.oci/oci_api_key.pem
 ```
 
 ### 5.4 Create Terraform state bucket
@@ -585,8 +480,16 @@ ssh opc@<VM_PUBLIC_IP> "mkdir -p ~/.oci && chmod 700 ~/.oci"
 
 ### 5.5 Generate S3-compatible Customer Secret Key
 
-1. Go to `infragate-svc` user > **Customer Secret Keys > Generate Secret Key**
-2. Save both the **Access Key** and the **Secret Key** — the secret is shown only once
+1. **OCI Console** > **Identity & Security** > **Domains** > **Default** domain
+2. Click **Users** > click `infragate-svc`
+3. In the left sidebar under **Resources**, click **Customer secret keys**
+4. Click **Generate secret key**
+5. Name: `infragate-tfstate-s3`
+6. Click **Generate secret key**
+7. **Copy the Secret Key immediately** — it's shown only once. This is your `s3SecretKey`.
+8. **Copy the Access Key** from the table — this is your `s3AccessKey`.
+
+> If using legacy Identity (no Domains): **Identity & Security** > **Users** > `infragate-svc` > **Customer Secret Keys**.
 
 ### 5.6 Note the parent compartment OCID
 
@@ -666,24 +569,6 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
 
 Public GHCR packages don't need this step.
 
-### Fallback: Build locally on VM
-
-If you need to test images that haven't been pushed yet (e.g. local branch):
-
-```bash
-cd ~/infragate
-docker build -t infragate-api:local -f Dockerfile .
-docker build -t infragate-frontend:local -f Dockerfile.frontend .
-
-docker save infragate-api:local -o /tmp/api.tar
-sudo /usr/local/bin/k3s ctr images import /tmp/api.tar && rm /tmp/api.tar
-
-docker save infragate-frontend:local -o /tmp/frontend.tar
-sudo /usr/local/bin/k3s ctr images import /tmp/frontend.tar && rm /tmp/frontend.tar
-```
-
-Use `pullPolicy: Never` and `tag: local` in your values file for local images.
-
 ---
 
 ## 7. Create secrets
@@ -721,7 +606,7 @@ kubectl annotate namespace infragate meta.helm.sh/release-name=infragate meta.he
 
 ### 8.1 Create your values file
 
-The Helm chart ships with three values files:
+The Helm chart ships with three values files (see [INTEGRATION.md — Helm configuration](./INTEGRATION.md#13-helm-configuration) for details):
 
 | File | Purpose |
 |---|---|
@@ -1412,8 +1297,6 @@ Key differences from dev mode:
 
 If you need to access the Keycloak admin console for debugging, the admin credentials are the same as configured during install (`--set keycloak.admin.password`).
 
-> **Docker Compose** (`backend/docker-compose.yml`) still uses `start-dev` for local development — this is intentional for faster iteration.
-
 ### Restart a component
 
 ```bash
@@ -1425,7 +1308,7 @@ kubectl rollout restart deploy/infragate-frontend -n infragate
 ### Upgrade k3s
 
 ```bash
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable=traefik" sh -
+curl -sfL https://get.k3s.io | sh -
 sudo systemctl restart k3s
 kubectl get nodes
 ```
@@ -1440,6 +1323,44 @@ kubectl delete namespace infragate
 
 ---
 
-For identity provider integration, API reference, and resource limits see [INTEGRATION.md](./INTEGRATION.md).
-For testing procedures see [TESTING.md](./TESTING.md).
-For go-to-market strategy see [MARKETPLACE.md](./MARKETPLACE.md).
+---
+
+## Marketplace Deployment
+
+> **Status: Planned** — OCI Marketplace listing is planned for a future release. The deployment flow below documents the intended experience. For now, use the [Existing OKE cluster](#existing-oke-cluster-deployment) or [Single-node k3s](#single-node-k3s-deployment) paths.
+
+### What the customer gets
+
+When the Marketplace listing is live, an OCI customer clicking **Launch Stack** will get the OCI Resource Manager guided form that provisions the entire Infragate stack automatically:
+
+| Component | What gets created |
+|---|---|
+| **OKE Cluster** | New managed Kubernetes cluster (or deploys into an existing one) |
+| **Networking** | VCN, subnets (API, node, LB), internet gateway, route tables, security lists (or uses existing) |
+| **IAM** | Dynamic group for OKE nodes + IAM policies for image pulling |
+| **Ingress** | NGINX ingress controller with OCI flexible load balancer |
+| **Infragate** | Full Helm release — API, frontend, PostgreSQL, Keycloak (optional) |
+| **Secrets** | OCI API key mounted as Kubernetes secret, auto-generated DB and Keycloak passwords |
+
+### Customer prerequisites
+
+| Requirement | Where to create it | Why |
+|---|---|---|
+| **OCI API Key** | Identity > Users > API Keys > Add API Key | Infragate uses this to provision OKE clusters in the customer's tenancy |
+| **API Key Fingerprint** | Shown when the API key is uploaded | Required for OCI API authentication |
+| **Object Storage Bucket** | Object Storage > Create Bucket (`infragate-tfstate`) | Stores Terraform state for each provisioned cluster |
+| **S3 Compatibility Credentials** | Identity > Users > Customer Secret Keys | Used by Terraform to read/write state via S3-compatible API |
+| **Domain Name** | Any DNS provider | A record pointing to the load balancer IP (configured after deploy) |
+| **Compartment** | Identity > Compartments | Target compartment for all Infragate resources |
+
+### Upgrading
+
+Customers upgrade by re-running the Resource Manager Stack with updated container image tags:
+
+1. OCI Console > Resource Manager > Stacks > Select Infragate stack
+2. Edit variables > Update `api_image_tag` and `frontend_image_tag` to new version
+3. Click "Apply" — Helm performs a rolling update
+
+---
+
+For identity provider integration, API reference, stack architecture, and resource limits see [INTEGRATION.md](./INTEGRATION.md).
