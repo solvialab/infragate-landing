@@ -1,6 +1,6 @@
 # Infragate — Features
 
-A complete overview of what Infragate can do. For deployment instructions see [GUIDE.md](./GUIDE.md).
+A complete overview of what Infragate can do. For deployment instructions see [GUIDE.md](./GUIDE.md), for technical architecture and integration details see [INTEGRATION.md](./INTEGRATION.md).
 
 ---
 
@@ -14,6 +14,7 @@ A complete overview of what Infragate can do. For deployment instructions see [G
 - **CIDR pool management** — admins pre-populate a pool of /24 ranges; each cluster allocates one on deploy and releases it on destroy
 - **Multi-pool support** — configure 1–N node pools per cluster, each with independent node count, OCPU, RAM, and storage sizing
 - **Node image selection** — admins configure allowed OCI compute images; users select an image on the deploy form or leave it as auto-select (latest OKE-compatible image). Templates can lock a specific image
+- **Architecture-aware auto-select** — when no image is set, Terraform filters OKE image options by the requested shape's architecture: ARM shapes (`VM.Standard.A*`) resolve to `aarch64` images, GPU shapes to `Gen2-GPU` variants, and all others to plain x86_64 — preventing shape/image mismatches that would otherwise block node launches
 
 ---
 
@@ -68,6 +69,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 ## Scaling
 
 - **Full resource scaling** — adjust nodes, OCPU, RAM, and storage per pool from the portal
+- **Scale to zero** — node counts accept `0` on deploy and scale, letting users park a cluster configuration without running compute. Useful for pausing charges on idle Basic clusters where the control plane is free
 - **Pool add/remove** — add new node pools or remove existing ones directly from the scale modal, no redeployment needed
 - **Per-pool control** — scale each pool independently
 - **Change preview** — review all changes before applying (current vs. new values, new pools highlighted, removed pools shown)
@@ -168,11 +170,22 @@ Five dedicated admin pages accessible to users with the `admin` role:
 
 ## Deployment options
 
-- **Existing OKE cluster (recommended)** — deploy into an existing Oracle Kubernetes Engine cluster with `values-oke.yaml`. Pre-configured for OCI Block Volume storage, nginx ingress with OCI load balancer, and GHCR images. Ideal for enterprise teams already running OKE
-- **k3s on OCI** — single VM deployment pulling images from GHCR, with control-plane tolerations for single-node scheduling. Great for dev/test, demos, or OCI Always Free tier
-- **Any Kubernetes** — Helm chart works on any K8s cluster with ingress
-- **CI/CD with any container registry** — GitHub Actions (GHCR) and GitLab CI (GitLab CR) pipelines included out of the box. Images tagged `dev-latest` for DEV branch, `latest` for main. Helm chart supports `imagePullSecrets` for private registries (GitLab CR, OCIR, Docker Hub, etc.)
-- **Docker Compose** — included for local development with bundled Keycloak + PostgreSQL
+Two first-class deployment paths, each tuned to its target environment. Both use the same Helm chart and the same upstream container images — the difference is the values file, which configures the right ingress controller, storage class, and scheduling for each platform.
+
+| | **Existing OKE cluster** | **Single-node k3s on OCI VM** |
+|---|---|---|
+| **Best for** | Production, enterprise OKE users | Dev/test, demos, Always Free tier |
+| **Values file** | `values-oke.yaml` | `values-oci.yaml` |
+| **Ingress** | ingress-nginx with OCI flexible Load Balancer (installed separately) | Traefik (bundled with k3s, `className: traefik`, no extra install) |
+| **Storage class** | `oci-bv` (OCI Block Volume) | `local-path` (k3s default) |
+| **PostgreSQL volume floor** | 50 GB (OCI BV minimum) | 20 GB (local disk) |
+| **Image pull policy** | `IfNotPresent` | `Always` |
+| **Scheduling** | No tolerations (dedicated workers) | Control-plane tolerations for single-node |
+| **Setup time** | ~30 min (cluster exists) | ~15 min |
+| **End-to-end guide** | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) | [GUIDE.md — k3s](./GUIDE.md#single-node-k3s-deployment) |
+
+- **Any Kubernetes** — the Helm chart also works on any K8s cluster that has an ingress controller and a default StorageClass; use `values.yaml` as a starting point and override for your environment
+- **CI/CD with any container registry** — GitHub Actions (GHCR) and GitLab CI (GitLab Container Registry) pipelines included out of the box. Images tagged `dev-latest` for DEV branch, `latest` for main. Helm chart supports `imagePullSecrets` for private registries (GitLab CR, OCIR, Docker Hub, etc.)
 - **OCI Marketplace (planned)** — one-click "Launch Stack" deployment from OCI Console is planned for a future release
 
 ---
