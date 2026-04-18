@@ -23,6 +23,20 @@ Infragate is an internal developer platform that lets engineers spin up, scale, 
 
 ## 1. Quick start
 
+Pick the deployment path that matches your environment — both use the same Helm chart with different values files, tuned for the ingress controller, storage class, and networking model of each target.
+
+| | **Existing OKE cluster** *(recommended for production)* | **Single-node k3s on an OCI VM** |
+|---|---|---|
+| Best for | Enterprise teams already running OKE | Dev/test, demos, Always Free tier |
+| Ingress controller | ingress-nginx + OCI flexible Load Balancer (installed separately) | Traefik (bundled with k3s, zero setup) |
+| Storage class | `oci-bv` (OCI Block Volume) | `local-path` (k3s default) |
+| Image pull policy | `IfNotPresent` (OKE nodes pull from GHCR) | `Always` (single VM refresh-on-restart) |
+| Scheduling | No tolerations (OKE has dedicated workers) | Control-plane tolerations (single-node scheduling) |
+| Values file | `deploy/helm/values-oke.yaml` | `deploy/helm/values-oci.yaml` |
+| Chart values `ingress.className` | `nginx` | `traefik` |
+| Setup time | ~30 min (cluster exists) | ~15 min |
+| Guide | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) | [GUIDE.md — k3s](./GUIDE.md#single-node-k3s-deployment) |
+
 ### Existing OKE cluster (recommended)
 
 For teams that already have an OKE cluster — deploy Infragate via Helm in minutes:
@@ -59,7 +73,7 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
 
 An OCI Marketplace listing with one-click "Launch Stack" deployment is planned for a future release. In the meantime, the Helm-based deployment paths above provide the same functionality with full flexibility.
 
-See [GUIDE.md](./GUIDE.md) for the full step-by-step deployment guide for all three paths.
+See [GUIDE.md](./GUIDE.md) for the full step-by-step deployment guide.
 
 ---
 
@@ -356,5 +370,6 @@ Infragate is licensed under the [Business Source License 1.1](./LICENSE).
 ---
 
 For a complete feature overview see [FEATURES.md](./FEATURES.md).
-For integration and deployment details see [INTEGRATION.md](./INTEGRATION.md).
+For integration, deployment, stack architecture, and API reference see [INTEGRATION.md](./INTEGRATION.md).
+
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
