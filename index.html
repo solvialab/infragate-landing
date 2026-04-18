@@ -813,7 +813,7 @@
   <div class="modal-content">
     <div class="flex items-center justify-between mb-5">
       <div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Request a Demo</h3>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Book a 20-min demo</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
       </div>
       <button id="modalClose" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1">
@@ -928,12 +928,8 @@
       </a>
       <div class="hidden lg:flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-400" id="desktopNav">
         <a href="#features" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Features</a>
-        <a href="#templates" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Templates</a>
-        <a href="#finops" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">FinOps</a>
-        <a href="#admin" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Admin</a>
-        <a href="#deploy" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Deployment</a>
-        <a href="#identity" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Identity</a>
         <a href="#why-infragate" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Why Infragate</a>
+        <a href="#pricing" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Pricing</a>
       </div>
       <div class="flex items-center gap-2 sm:gap-3">
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
@@ -941,7 +937,7 @@
           <i class="fas fa-sun text-sm"></i>
         </button>
         <a href="/docs/" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition"><i class="fas fa-book text-xs"></i> Docs</a>
-        <button onclick="openDemoModal()" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-full btn-solid-premium cursor-pointer">Request a Demo</button>
+        <button onclick="openDemoModal()" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-full btn-solid-premium cursor-pointer">Book a demo</button>
         <button id="menuToggle" class="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white relative z-50" aria-label="Toggle menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path class="line line-1" d="M4 6h16" stroke-linecap="round"/>
@@ -954,15 +950,11 @@
     <!-- Mobile/tablet menu -->
     <div id="mobileNav" class="mobile-nav flex-col gap-3 pb-4 lg:hidden">
       <a href="#features" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Features</a>
-      <a href="#templates" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Templates</a>
-      <a href="#finops" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">FinOps</a>
-      <a href="#admin" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Admin</a>
-      <a href="#deploy" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Deployment</a>
-      <a href="#identity" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Identity</a>
       <a href="#why-infragate" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Why Infragate</a>
+      <a href="#pricing" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Pricing</a>
       <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
         <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
-        <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center cursor-pointer">Request a Demo</button>
+        <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center cursor-pointer">Book a demo</button>
       </div>
     </div>
   </div>
@@ -984,7 +976,7 @@
           Infragate is a complete platform for OKE clusters lifecycle management — provisioning, scaling, cost governance, and access control through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
         </p>
         <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
-          <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-full cursor-pointer cta-btn">Request a Demo</button>
+          <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-full cursor-pointer cta-btn">Book a 20-min demo</button>
           <a href="/docs/" class="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cta-btn"><i class="fas fa-book text-xs"></i> Read the Docs</a>
         </div>
         <div class="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500 dark:text-gray-400 reveal from-left stagger-children justify-center lg:justify-start" style="transition-delay: 0.3s;">
@@ -1510,20 +1502,106 @@
 </div>
 
 
-<!-- CTA -->
+<!-- Pricing -->
+<section id="pricing" class="py-14 md:py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12 reveal">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 text-[#1C5D7A] dark:text-[#5BB8D8] text-xs font-semibold uppercase tracking-wider mb-4">
+        <i class="fas fa-tag text-xs"></i> Pricing
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Simple, transparent pricing</h2>
+      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">One product, all features, no per-user metering. Pick the tier that matches your support needs — not your feature list.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+      <!-- Community -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Community</div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Free</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">BSL 1.1 · self-serve</div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For solo devs, homelabs, evaluators, and non-production use. Full product, no feature gates.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>All features unlocked</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Self-serve docs &amp; setup guides</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>GitHub Issues (best-effort)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Latest builds, public GHCR images</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">Commercial managed-service use not permitted</span></li>
+        </ul>
+        <a href="/docs/" class="block text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition">Get the docs</a>
+      </div>
+
+      <!-- Business (highlighted) -->
+      <div class="rounded-2xl border-2 border-[#1C5D7A] dark:border-[#5BB8D8] bg-white dark:bg-gray-900/60 p-6 md:p-8 flex flex-col relative shadow-xl reveal">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#1C5D7A] dark:bg-[#5BB8D8] text-white dark:text-gray-900 text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Most popular</div>
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] uppercase tracking-wider">Business</div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">$3,000</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">/ month</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Billed annually · $36,000 / year</div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For platform teams at SMB and mid-market orgs running one OCI tenancy.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Community</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Unlimited clusters &amp; users</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support · 48h SLA</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Version pinning &amp; minor upgrades</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private GHCR PAT · per-customer rotation</span></li>
+        </ul>
+        <button onclick="openDemoModal()" class="block text-center px-5 py-3 text-sm font-semibold rounded-full btn-solid-premium cursor-pointer">Start a POC</button>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Enterprise</div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Custom</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">From $75,000 / year</div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For regulated enterprises, banks, government, and healthcare. Multi-tenancy, compliance, managed install.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Business</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>4h SLA · named support contact</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Managed install · multi-tenancy</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private / mirrored registry &amp; air-gapped delivery</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance support · SOC 2 Q&amp;A, security questionnaires</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>LTS pinning · architect hours</span></li>
+        </ul>
+        <a href="mailto:hello@infragate.cloud?subject=Infragate%20Enterprise%20enquiry" class="block text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition">Contact us</a>
+      </div>
+    </div>
+
+    <div class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+      Design-partner discount available for the first production customers — <a href="mailto:hello@infragate.cloud?subject=Design%20partner%20enquiry" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline font-medium">reach out</a> if you want to help shape the roadmap.
+    </div>
+  </div>
+</section>
+
+
+<!-- Design-partner CTA -->
 <section class="py-14 md:py-18 px-4 sm:px-6 lg:px-8 overflow-hidden">
   <div class="max-w-4xl mx-auto gradient-bg-premium animated-gradient-bg rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 text-center shadow-2xl reveal scale-up relative overflow-hidden">
     <div class="blob" style="width:180px;height:180px;background:#5BB8D8;top:-40px;right:-20px;opacity:0.1;animation-delay:-2s"></div>
-    <h2 class="text-3xl md:text-4xl font-bold text-white reveal" style="transition-delay:0.15s">Ready to simplify OKE operations?</h2>
-    <p class="text-gray-200 mt-4 text-lg max-w-xl mx-auto reveal" style="transition-delay:0.3s">Give your engineers self-service superpowers, reduce cloud complexity, and gain FinOps visibility — all within your tenancy.</p>
-    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-8 reveal" style="transition-delay:0.45s">
-      <a href="/docs/" class="bg-white text-[#0B2B3F] px-8 py-3 rounded-full font-semibold hover:bg-gray-100 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cta-btn">
-        <i class="fas fa-book"></i> Read the Docs
-      </a>
-      <button onclick="openDemoModal()" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer cta-btn">
-        <i class="fas fa-envelope"></i> Request a Demo
-      </button>
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold uppercase tracking-wider mb-5 reveal" style="transition-delay:0.1s">
+      <i class="fas fa-star text-amber-300 text-xs"></i> Design-partner programme · limited spots
     </div>
+    <h2 class="text-3xl md:text-4xl font-bold text-white reveal" style="transition-delay:0.15s">Be one of our first production customers</h2>
+    <p class="text-gray-200 mt-4 text-lg max-w-2xl mx-auto reveal" style="transition-delay:0.3s">
+      <span class="font-semibold text-white">50% off Business</span> — $18,000/year for a 6-month commitment — in exchange for monthly feedback calls and the right to publish a sanitized case study. You help shape the roadmap; we make sure you succeed.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-8 reveal" style="transition-delay:0.45s">
+      <a href="mailto:hello@infragate.cloud?subject=Design%20partner%20enquiry&body=Hi%20%E2%80%94%20interested%20in%20the%20Infragate%20design-partner%20programme.%20A%20bit%20about%20us%3A" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer cta-btn">
+        <i class="fas fa-paper-plane"></i> Apply as design partner
+      </a>
+    </div>
+    <p class="text-gray-300 text-sm mt-6 reveal" style="transition-delay:0.55s">Not ready yet? <a href="#pricing" class="text-white hover:underline">See standard pricing</a></p>
     <p class="text-gray-300 text-sm mt-8">Built by <a href="https://solvialab.tech" class="text-white hover:underline">Solvia Lab s.r.o.</a> | <a href="mailto:hello@infragate.cloud" class="text-white hover:underline">hello@infragate.cloud</a></p>
   </div>
 </section>
