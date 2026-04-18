@@ -933,6 +933,7 @@
         <a href="#admin" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Admin</a>
         <a href="#deploy" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Deployment</a>
         <a href="#identity" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Identity</a>
+        <a href="#why-infragate" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Why Infragate</a>
       </div>
       <div class="flex items-center gap-2 sm:gap-3">
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
@@ -958,6 +959,7 @@
       <a href="#admin" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Admin</a>
       <a href="#deploy" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Deployment</a>
       <a href="#identity" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Identity</a>
+      <a href="#why-infragate" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Why Infragate</a>
       <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
         <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
         <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center cursor-pointer">Request a Demo</button>
@@ -979,16 +981,17 @@
           Internal Developer Platform for <span class="shimmer-text">Oracle Cloud</span>
         </h1>
         <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="transition-delay: 0.15s;">
-          Infragate is a complete platform for OKE clusters lifecycle management — provisioning, scaling, cost governance, and access control through a single web portal. No Terraform, no CLI, no OCI Console complexity. Runs entirely in your tenancy.
+          Infragate is a complete platform for OKE clusters lifecycle management — provisioning, scaling, cost governance, and access control through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
         </p>
+        <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
+          <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-full cursor-pointer cta-btn">Request a Demo</button>
+          <a href="/docs/" class="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cta-btn"><i class="fas fa-book text-xs"></i> Read the Docs</a>
+        </div>
         <div class="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500 dark:text-gray-400 reveal from-left stagger-children justify-center lg:justify-start" style="transition-delay: 0.3s;">
           <span><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mr-1"></i> Live Terraform streaming</span>
           <span><i class="fas fa-chart-line text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Real-time cost preview</span>
           <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> RBAC + destroy protection</span>
           <span><i class="fas fa-database text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> 100% in-tenancy</span>
-          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Append-only audit logs</span>
-          <span><i class="fas fa-chart-line text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> FinOps cost visibility</span>
-          <span><i class="fas fa-code-branch text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> CI/CD pipelines included</span>
         </div>
       </div>
       <div class="relative reveal from-right w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none" style="transition-delay: 0.2s;">
@@ -1007,6 +1010,23 @@
     </div>
   </div>
 </section>
+
+<!-- Trust / value strip -->
+<div class="border-y border-gray-100 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-900/40 py-5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row items-center justify-center md:justify-between gap-3 md:gap-6 text-sm text-gray-600 dark:text-gray-400">
+      <div class="flex items-center gap-2.5 text-center md:text-left">
+        <i class="fas fa-cloud text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
+        <span>Built on Oracle Cloud — native to <strong class="text-gray-800 dark:text-gray-200">OKE</strong>, <strong class="text-gray-800 dark:text-gray-200">IAM</strong>, <strong class="text-gray-800 dark:text-gray-200">VCN</strong>, and <strong class="text-gray-800 dark:text-gray-200">Object Storage</strong></span>
+      </div>
+      <div class="hidden md:block h-5 w-px bg-gray-200 dark:bg-gray-700"></div>
+      <div class="flex items-center gap-2.5 text-center md:text-left">
+        <i class="fas fa-tag text-emerald-600 dark:text-emerald-400"></i>
+        <span class="font-semibold text-gray-800 dark:text-gray-200"><span class="text-emerald-600 dark:text-emerald-400">$0</span> software license — pay only for the OCI resources you consume</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Features Grid -->
 <div id="features" class="anchor-target"></div>
@@ -1327,11 +1347,147 @@
   </div>
 </section>
 
+<!-- Why Infragate (Rafay + Quali comparison) -->
+<div id="why-infragate" class="anchor-target"></div>
+<section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+  <div class="text-center mb-10">
+    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full">OCI-First & Sovereign</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Why Infragate — Built differently for Oracle Cloud</h2>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">The only truly self-hosted, OCI-native Internal Developer Platform.<br>Everything runs in your tenancy — nothing phones home, nothing ever leaves.</p>
+  </div>
+
+  <!-- Sovereignty pill strip -->
+  <div class="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-12">
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No external SaaS
+    </span>
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No control plane outside your tenancy
+    </span>
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No data egress
+    </span>
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No third parties
+    </span>
+  </div>
+
+  <div class="max-w-5xl mx-auto">
+    <div class="glass-card rounded-3xl p-5 sm:p-6 md:p-10 overflow-hidden">
+      <!-- Desktop / tablet table -->
+      <table class="hidden md:table w-full text-left">
+        <thead>
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="pb-6 text-gray-500 dark:text-gray-400 font-medium">Sovereignty dimension</th>
+            <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">Rafay</th>
+            <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">Quali (Torque)</th>
+            <th class="pb-6 text-center text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold">Infragate</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+          <tr>
+            <td class="py-5 font-medium">Control plane location</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor SaaS (self-host optional)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor SaaS</td>
+            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Inside your OCI tenancy</td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Outbound network egress</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Required (phone-home, telemetry)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Required (agent callbacks)</td>
+            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">None — zero outbound calls</td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Credentials &amp; secrets</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared with vendor</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared with vendor</td>
+            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Stay inside your cluster</td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Third-party dependencies</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor infra + subprocessors</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor infra + subprocessors</td>
+            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Zero — OCI services only</td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Air-gapped / disconnected OCI regions</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Limited</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Limited</td>
+            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Fully supported</td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Vendor breach blast radius</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared SaaS surface</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared SaaS surface</td>
+            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">None — no shared infra</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Mobile stacked cards -->
+      <div class="md:hidden space-y-4">
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Control plane location</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor SaaS (self-host optional)</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor SaaS</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Inside your OCI tenancy</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Outbound network egress</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Required (phone-home, telemetry)</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Required (agent callbacks)</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">None — zero outbound calls</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Credentials &amp; secrets</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Shared with vendor</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Shared with vendor</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Stay inside your cluster</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Third-party dependencies</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor infra + subprocessors</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor infra + subprocessors</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Zero — OCI services only</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Air-gapped / disconnected OCI regions</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Limited</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Limited</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Fully supported</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Vendor breach blast radius</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Shared SaaS surface</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Shared SaaS surface</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">None — no shared infra</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-10 text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+    Data privacy and sovereignty aren’t a deployment option — they’re the foundation. Infragate was built to live entirely inside your OCI tenancy from day one.
+  </div>
+</section>
+
 <!-- Stats -->
 <div class="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0B1120] py-12 md:py-16" id="statsSection">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 xs:grid-cols-4 gap-8 md:gap-10">
     <div class="stat-card text-center" data-stat-index="0">
-      <div class="stat-number" data-count-to="10" data-count-prefix="<" data-count-suffix=" min" data-count-duration="2500">&lt;10 min</div>
+      <div class="stat-number" data-count-to="15" data-count-prefix="<" data-count-suffix=" min" data-count-duration="2500">&lt;15 min</div>
       <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
       <div class="stat-label">Cluster provisioning</div>
     </div>
