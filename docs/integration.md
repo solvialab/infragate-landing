@@ -1,20 +1,29 @@
-# Infragate — Integration Guide
+# Infragate — Integration & Stack Reference
 
-This guide is for platform, identity, and infrastructure teams responsible for deploying Infragate within an existing enterprise environment. Infragate is designed to integrate with your current tooling rather than replace it.
+Technical reference for platform, identity, and infrastructure teams deploying Infragate within an existing enterprise environment. Covers the full stack — frontend, backend, database, Terraform layer, provisioning flow — plus IdP integration, API surface, Helm configuration, deployment paths, and security.
+
+Infragate is designed to integrate with your current tooling rather than replace it.
 
 ---
 
 ## Table of contents
 
 1. [Prerequisites](#1-prerequisites)
-2. [Identity provider integration](#2-identity-provider-integration)
-3. [Existing OCI infrastructure](#3-existing-oci-infrastructure)
-4. [Resource limits and user overrides](#4-resource-limits-and-user-overrides)
-5. [Cluster tiers](#5-cluster-tiers)
-6. [API integration](#6-api-integration)
-7. [Deployment](#7-deployment)
-8. [Configuration reference](#8-configuration-reference)
-9. [Security considerations](#9-security-considerations)
+2. [Stack overview](#2-stack-overview)
+3. [Frontend](#3-frontend)
+4. [Backend](#4-backend)
+5. [Database schema](#5-database-schema)
+6. [Terraform layer](#6-terraform-layer)
+7. [Provisioning flow](#7-provisioning-flow)
+8. [Identity provider integration](#8-identity-provider-integration)
+9. [Existing OCI infrastructure](#9-existing-oci-infrastructure)
+10. [Resource limits and user overrides](#10-resource-limits-and-user-overrides)
+11. [Cluster tiers](#11-cluster-tiers)
+12. [API reference](#12-api-reference)
+13. [Helm configuration](#13-helm-configuration)
+14. [Deployment](#14-deployment)
+15. [Configuration reference](#15-configuration-reference)
+16. [Security considerations](#16-security-considerations)
 
 ---
 
@@ -23,18 +32,301 @@ This guide is for platform, identity, and infrastructure teams responsible for d
 | Requirement | Details |
 |---|---|
 | OCI tenancy | Active tenancy with OKE enabled in at least one region |
-| OCI service account | IAM user with API key — see Section 3 |
+| OCI service account | IAM user with API key — see Section 9 |
 | OIDC-compliant IdP | Any provider supporting OIDC Authorization Code flow with PKCE |
 | Kubernetes cluster | OKE, k3s, or any K8s cluster with Helm 3.x and an ingress controller |
 | PostgreSQL 14+ | Bundled via Helm chart, or bring your own managed/self-hosted instance |
+| Container registry | GitHub Container Registry (GHCR), GitLab Container Registry, or any OCI-compliant registry. Prebuilt images are published by the reference CI pipelines — see Section 14 |
 
 ---
 
-## 2. Identity provider integration
+## 2. Stack overview
+
+| Layer | Technology |
+|---|---|
+| Frontend | Vanilla HTML / CSS / JS — single file, no build step |
+| Backend | FastAPI (Python 3.12), async, SSE log streaming |
+| Database | PostgreSQL 16 — clusters, jobs, users, config, templates, audit log |
+| IaC | Terraform 1.7 — OCI provider, per-job execution |
+| State backend | OCI Object Storage (S3-compatible API) |
+| Auth | OIDC PKCE + Bearer JWT validation (JWKS) |
+| Container images | Prebuilt multi-stage images published to GHCR and GitLab Container Registry by the reference CI pipelines |
+| CI/CD | GitHub Actions and GitLab CI — pipelines ship with the repository |
+| DNS / CDN | Cloudflare (reference setup) |
+| Domain | infragate.cloud (Namecheap → Cloudflare NS, reference setup) |
+
+---
+
+## 3. Frontend
+
+Single `index.html` with external `css/` and `js/` assets. No framework, no build step, no runtime dependencies — served from any static host.
+
+**Pages:**
+- Landing — product overview, sign in
+- Deploy — cluster provisioning form (Standard + Advanced tabs), live Terraform log stream, plan preview
+- Dashboard (My Clusters) — cluster cards with status, pool visualisation, tier pill, estimated cost, actions
+- Detail — full cluster info, node pools, cost breakdown (per-pool + control plane + total), kubeconfig + SSH key download
+- Admin — All clusters (with cost per cluster + total spend), Users & limits, Configuration, Cluster templates (with cost per template), Audit log
+
+**Auth flow:** OIDC Authorization Code + PKCE. On login the frontend exchanges the code for a JWT, stores it in memory, and attaches it as `Authorization: Bearer` on every API call.
+
+**Limit enforcement:** On load, `GET /api/v1/users/me` returns the user's resolved effective limits. The deploy form uses these to constrain pool counts, node counts, and compute values. The cluster limit wall is shown if the user is at their limit. Node counts may be set to zero on deploy and scale — useful for pausing compute charges on Basic clusters.
+
+**Config:** `js/config.js` — `API_BASE`, `OIDC_ISSUER`, `OIDC_CLIENT_ID`. Injected at runtime via a Helm ConfigMap when deployed through the chart, so values do not need to be edited for each environment.
+
+---
+
+## 4. Backend
+
+FastAPI application. All endpoints require a valid JWT except the health check.
+
+### Auth (`app/core/auth.py`)
+
+- `get_current_user()` — validates JWT against IdP JWKS, returns decoded claims
+- `require_admin()` — additionally asserts `admin` role in the configured roles claim
+- JWKS fetched on startup, cached, auto-refreshed on key rotation
+
+### Routers
+
+**`app/routers/users.py`**
+- `GET /api/v1/users/me` — auto-provisions user on first login, returns user context + resolved effective limits via `_resolve_limits()`
+- `GET /api/v1/users/deploy-options` — deploy form options: CIDRs, shapes, K8s versions, node images, active templates (filtered by user's IdP roles via `required_role`), pricing
+
+**`app/routers/clusters.py`**
+- `GET /api/v1/clusters` — user's active clusters (includes `estimated_monthly_cost`)
+- `POST /api/v1/clusters` — deploy: validates limits, resolves template policies (destroy protection, TTL), allocates CIDR, creates cluster + job records, starts Terraform runner
+- `GET /api/v1/clusters/:id` — cluster detail + `ssh_key_available` + `estimated_monthly_cost` + `cost_breakdown`
+- `GET /api/v1/clusters/:id/kubeconfig` — stored kubeconfig YAML
+- `GET /api/v1/clusters/:id/sshkey` — SSH private key (PEM)
+- `POST /api/v1/clusters/:id/scale` — scale node pools (nodes, OCPU, RAM, storage), add or remove pools (both Basic and Enhanced)
+- `DELETE /api/v1/clusters/:id` — destroy (enforces destroy protection — admin + `?force=true` required for protected clusters)
+- `GET /api/v1/clusters/admin/:id/kubeconfig` — admin: kubeconfig for any cluster
+- `GET /api/v1/clusters/admin/:id/sshkey` — admin: SSH key for any cluster
+
+**`app/routers/jobs.py`**
+- `GET /api/v1/jobs/:id/logs` — SSE stream of Terraform stdout, line by line
+
+**`app/routers/admin.py`**
+- `GET/PUT /api/v1/admin/config` — platform-wide config
+- `GET/PUT /api/v1/admin/config/cluster-type` — tier toggle
+- `GET/POST /api/v1/admin/config/cidrs` + `DELETE` + `PATCH` — CIDR pool management
+- `GET/POST /api/v1/admin/config/shapes` + `DELETE` + `PATCH` — allowed VM shapes
+- `GET/POST /api/v1/admin/config/k8s-versions` + `DELETE` + `PATCH` — allowed Kubernetes versions
+- `GET/POST /api/v1/admin/config/images` + `DELETE` + `PATCH` — allowed node images
+- `GET /api/v1/admin/clusters` — all clusters across all users (includes `estimated_monthly_cost`)
+- `GET /api/v1/admin/users` — all users with overrides + effective limits
+- `PATCH /api/v1/admin/users/:id` — set/reset per-user limit overrides
+- `GET /api/v1/admin/stats` — platform stats (includes `estimated_monthly_spend`)
+- `GET /api/v1/admin/templates` — list all cluster templates (including inactive)
+- `POST /api/v1/admin/templates` — create template
+- `PATCH /api/v1/admin/templates/:id` — update template
+- `DELETE /api/v1/admin/templates/:id` — permanently delete template
+- `GET /api/v1/admin/audit` — audit log with filters
+
+### Limit resolution (`app/routers/users.py`)
+
+`_resolve_limits(user, config)` — single source of truth for effective limits. Returns per-user override if set (not `NULL`), otherwise falls back to global config value. Used by both `/users/me` and `/admin/users`.
+
+---
+
+## 5. Database schema
+
+### `users`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | UUID PK | |
+| `keycloak_id` | String | IdP `sub` claim — unique index |
+| `username` | String | |
+| `email` | String | |
+| `cluster_limit` | Integer | Inherited from global config on creation |
+| `is_active` | Boolean | |
+| `override_pool_max` | Integer nullable | NULL = inherit global |
+| `override_node_max` | Integer nullable | |
+| `override_cpu_max` | Integer nullable | |
+| `override_ram_max` | Integer nullable | |
+| `override_storage_max` | Integer nullable | |
+| `override_cluster_type` | String nullable | NULL = inherit global |
+| `created_at` | Timestamp | |
+
+### `clusters`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | UUID PK | |
+| `user_id` | UUID FK → users | |
+| `name` | String | e.g. `analytics-cluster` |
+| `status` | String | `provisioning` \| `running` \| `error` \| `destroying` \| `destroyed` |
+| `cidr` | String | Allocated /24 |
+| `vcn_cidr` | String | |
+| `k8s_version` | String | |
+| `region` | String | |
+| `compartment` | String | |
+| `compartment_ocid` | String | |
+| `cluster_type` | String | `BASIC_CLUSTER` \| `ENHANCED_CLUSTER` |
+| `node_shape` | String | |
+| `image_id` | String nullable | OCI node image OCID — NULL = auto-select |
+| `ocid` | String | OKE cluster OCID |
+| `vcn_ocid` | String | |
+| `subnet_ocid` | String | |
+| `api_endpoint` | String | |
+| `kubeconfig` | Text | Stored after provisioning |
+| `ssh_private_key` | Text | PEM — stored after provisioning |
+| `template_id` | UUID FK → cluster_templates | Template used for provisioning (nullable) |
+| `destroy_protection` | Boolean | Inherited from template — prevents user destroy |
+| `ttl_hours` | Integer nullable | Time-to-live from template |
+| `ttl_expires_at` | Timestamp nullable | Computed at deploy time from TTL |
+| `created_at` | Timestamp | |
+| `updated_at` | Timestamp | |
+
+### `node_pools`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | UUID PK | |
+| `cluster_id` | UUID FK → clusters | |
+| `name` | String | |
+| `nodes` | Integer | `0` valid — pauses compute, preserves pool config |
+| `cpu` | Integer | OCPU |
+| `ram` | Integer | GB |
+| `storage` | Integer | GB |
+| `status` | String | |
+| `ocid` | String | Node pool OCID |
+
+### `jobs`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | UUID PK | |
+| `cluster_id` | UUID FK → clusters | |
+| `user_id` | UUID FK → users | |
+| `operation` | String | `deploy` \| `scale` \| `destroy` |
+| `status` | String | `running` \| `success` \| `error` |
+| `logs` | Text | Accumulated Terraform output |
+| `started_at` | Timestamp | |
+| `finished_at` | Timestamp | |
+| `duration_s` | Float | |
+
+### `cluster_templates`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | UUID PK | |
+| `name` | String unique | Template display name |
+| `description` | Text nullable | Short description shown on deploy form |
+| `k8s_version` | String nullable | Pre-selected K8s version |
+| `shape` | String nullable | Pre-selected VM shape |
+| `image` | String nullable | Pre-selected OCI node image OCID |
+| `pools` | JSON | `[{name, nodes, cpu, ram, storage}]` |
+| `tier_default` | String nullable | `BASIC_CLUSTER` \| `ENHANCED_CLUSTER` \| null |
+| `ttl_hours` | Integer nullable | Time-to-live for clusters created from this template |
+| `destroy_protection` | Boolean | Inherited by clusters — prevents user destroy |
+| `required_role` | String nullable | IdP role required to see/use this template |
+| `is_active` | Boolean | `false` = soft-deleted, hidden from deploy form |
+| `sort_order` | Integer | Controls display position (lower = first) |
+| `created_at` | Timestamp | |
+| `updated_at` | Timestamp | |
+
+### `config` (single row)
+Global platform configuration — region, compartment, limits, CIDR pool, allowed shapes/versions/images, cluster tier, pricing overrides.
+
+The `pricing` JSON column stores optional rate overrides for cost estimation. When empty, OCI PAYG defaults are used (OCPU: $0.025/hr, RAM: $0.0015/GB/hr, Storage: $0.0255/GB/mo, Enhanced CP: $0.10/hr). Admins can override rates for custom contracts.
+
+### `audit_log`
+Append-only record of every operation — user, operation, cluster name, status, duration.
+
+---
+
+## 6. Terraform layer
+
+### Module (`terraform/module/`)
+
+Reusable OKE module. Called once per cluster provisioning job.
+
+**Resources created:**
+- `tls_private_key` — RSA 4096-bit SSH key for worker node access
+- `oci_identity_compartment` — isolated per cluster
+- `oci_core_vcn`
+- `oci_core_subnet`
+- `oci_core_internet_gateway`
+- `oci_core_route_table`
+- `oci_core_security_list` — OKE-required ports
+- `oci_containerengine_cluster` — `type = var.cluster_type` (`BASIC_CLUSTER` or `ENHANCED_CLUSTER`)
+- `oci_containerengine_node_pool` — one per pool (1–3 pools by default), SSH public key injected
+
+**Data sources:**
+- `oci_identity_availability_domains` — region AD discovery
+- `oci_containerengine_node_pool_option` — latest OL8 image lookup (fallback when no `image_id` configured)
+- `oci_containerengine_cluster_kube_config` — kubeconfig YAML (uses OCI CLI token helper)
+
+**Architecture-aware image selection:** When `image_id` is empty, the module filters available OKE images by the requested shape's architecture — ARM shapes (`VM.Standard.A*`) map to `aarch64` images, GPU shapes map to `Gen2-GPU` variants, and all other shapes map to plain x86_64. This prevents mismatches that caused nodes to fail to launch.
+
+**Key variables:**
+- `cluster_type` — `BASIC_CLUSTER` or `ENHANCED_CLUSTER`, set from platform config
+- `image_id` — OCI node image OCID; empty string = auto-select latest matching the shape architecture
+- `pool_count`, `node_count`, `node_shape`, `ocpu_count`, `memory_in_gbs` per pool
+- `vcn_ocid`, `compartment_ocid`, `subnet_ocid` — optional overrides for existing infrastructure
+
+When override OCIDs are provided, the corresponding resources are skipped and the module wires up to the existing infrastructure instead.
+
+### Runner template (`terraform/runner-template/`)
+
+A thin wrapper module copied per provisioning job. The backend copies this template to `terraform/runner/{job_id}/`, writes `job.tfvars`, then executes `terraform init && terraform plan && terraform apply`.
+
+**State path:** `{user_id}/{cluster_id}/terraform.tfstate` in the `infragate-tfstate` OCI Object Storage bucket — enables safe concurrent operations and clean destroy.
+
+### Terraform service (`backend/app/services/terraform.py`)
+
+FastAPI ↔ Terraform bridge:
+- Copies runner template to `terraform/runner/{job_id}/`
+- Writes `job.tfvars` with cluster parameters + OCI credentials
+- Runs `terraform init → plan → apply` as an async subprocess
+- Streams stdout line-by-line via SSE to the frontend log viewer
+- Parses `terraform output -json` — stores OCIDs, API endpoint, kubeconfig, SSH private key in the database
+- Updates cluster status: `provisioning` → `running` (or `error`)
+- On destroy: releases CIDR back to pool, cleans up runner directory
+- On scale: updates pool records in DB, rewrites tfvars, re-applies
+
+---
+
+## 7. Provisioning flow
+
+```
+User (browser)
+    │
+    │  OIDC login (PKCE) — via your existing IdP
+    ▼
+Your Identity Provider  ─────────────────► JWT issued
+    │
+    │  POST /api/v1/clusters  (Bearer JWT)
+    ▼
+Infragate API (FastAPI)
+    │  1. Validate JWT against IdP JWKS
+    │  2. Resolve effective limits (per-user override or global config)
+    │  3. Check cluster limit
+    │  4. Allocate CIDR from pool
+    │  5. Write cluster record (status: provisioning)
+    │  6. Write job record (operation: deploy)
+    │  7. Copy runner-template → terraform/runner/{job_id}/
+    │  8. Write job.tfvars (cluster params + cluster_type)
+    │  9. terraform init + plan + apply (subprocess)
+    │  10. Stream stdout line-by-line via SSE → browser log viewer
+    │  11. Parse outputs → store OCIDs, endpoint, kubeconfig, SSH key in DB
+    │  12. Update cluster status: running
+    ▼
+OCI
+    ├── oci_identity_compartment
+    ├── oci_core_vcn
+    ├── oci_core_subnet
+    ├── oci_core_internet_gateway
+    ├── oci_core_route_table
+    ├── oci_core_security_list
+    ├── oci_containerengine_cluster   (BASIC or ENHANCED)
+    └── oci_containerengine_node_pool (per pool)
+```
+
+---
+
+## 8. Identity provider integration
 
 Infragate authenticates users via standard **OpenID Connect (PKCE)** and validates **Bearer JWTs** on every API request. It does not ship its own user directory and does not require a specific identity provider.
 
-### 2.1 How it works
+### 8.1 How it works
 
 1. The frontend redirects the user to your IdP's authorization endpoint
 2. After login, the IdP issues a JWT access token
@@ -44,7 +336,7 @@ Infragate authenticates users via standard **OpenID Connect (PKCE)** and validat
 
 No user migration or directory sync is required.
 
-### 2.2 Required JWT claims
+### 8.2 Required JWT claims
 
 | Claim | Type | Description |
 |---|---|---|
@@ -64,7 +356,7 @@ No user migration or directory sync is required.
 
 A typical enterprise setup creates roles matching environment tiers — `testing`, `uat`, `production` — so admins can offer DEV/TEST/UAT/PROD cluster templates with progressively restricted access. Users without any custom role can still deploy using templates that have no `required_role` set, or use the "Custom" option if enabled. See [GUIDE.md — Environment-tier gating](./GUIDE.md#environment-tier-gating-with-roles) for a full walkthrough.
 
-### 2.3 IdP client configuration
+### 8.3 IdP client configuration
 
 | Setting | Value |
 |---|---|
@@ -75,7 +367,7 @@ A typical enterprise setup creates roles matching environment tiers — `testing
 | Logout redirect URI | `https://infragate.your-domain.com` |
 | Access token format | JWT |
 
-### 2.4 Provider-specific notes
+### 8.4 Provider-specific notes
 
 **Keycloak**
 - Create a realm (e.g. `infragate`) or use an existing one
@@ -99,18 +391,18 @@ A typical enterprise setup creates roles matching environment tiers — `testing
 **Google Workspace**
 - Create an OAuth 2.0 client ID (Web application) in Google Cloud Console
 - Add the authorized redirect URI
-- Google does not support custom roles in the access token — use the `ADMIN_EMAILS` fallback (see Section 8)
+- Google does not support custom roles in the access token — use the `ADMIN_EMAILS` fallback (see Section 15)
 - Set `OIDC_ISSUER=https://accounts.google.com`
 
 ---
 
-## 3. Existing OCI infrastructure
+## 9. Existing OCI infrastructure
 
-### 3.1 Required OCI service account
+### 9.1 Required OCI service account
 
 **IAM user:** `infragate-svc` (or any name you prefer)
 
-**API key:** Generate an RSA key pair. Store the private key securely — see Section 9.
+**API key:** Generate an RSA key pair. Store the private key securely — see Section 16.
 
 **Group and policy:**
 
@@ -127,7 +419,7 @@ Allow group infragate-svc-group to read objectstorage-namespaces in tenancy
 
 **Customer Secret Key:** Generate an S3-compatible key on the `infragate-svc` user for Terraform state access.
 
-### 3.2 Using existing VCNs, compartments, or subnets
+### 9.2 Using existing VCNs, compartments, or subnets
 
 Users can supply existing OCIDs via the **Advanced** tab in the deploy form:
 
@@ -139,7 +431,7 @@ Users can supply existing OCIDs via the **Advanced** tab in the deploy form:
 
 Any combination is supported. When using an existing subnet, verify CIDR ranges do not overlap with existing VCN allocations.
 
-### 3.3 CIDR pool management
+### 9.3 CIDR pool management
 
 Infragate manages a pool of /24 CIDR ranges allocated on cluster creation and released on destroy. Pre-populate the pool to reflect your allocations:
 
@@ -152,11 +444,11 @@ curl -X POST https://infragate.your-domain.com/api/v1/admin/config/cidrs \
 
 ---
 
-## 4. Resource limits and user overrides
+## 10. Resource limits and user overrides
 
 Infragate has a two-tier limit system. Global config sets the baseline for all users. Per-user overrides take precedence when set.
 
-### 4.1 Global limits
+### 10.1 Global limits
 
 Set via the admin panel or `PUT /api/v1/admin/config`:
 
@@ -170,7 +462,9 @@ Set via the admin panel or `PUT /api/v1/admin/config`:
 | `storage_max` | 50 | Max boot volume per node (GB) — minimum 50 (OCI hard floor) |
 | `cluster_type` | BASIC_CLUSTER | Cluster tier for all new clusters |
 
-### 4.2 Per-user overrides
+Node counts accept `0` on both deploy and scale — lets users keep a cluster around without running compute. Basic control planes stay free, so a zero-node Basic cluster has no OCI compute charges.
+
+### 10.2 Per-user overrides
 
 Admins can override any limit for a specific user via the admin panel or API. When an override is set it takes precedence over the global value. `null` means the user inherits the global default.
 
@@ -194,7 +488,7 @@ PATCH /api/v1/admin/users/:id
 { "reset_overrides": true }
 ```
 
-### 4.3 Effective limits
+### 10.3 Effective limits
 
 `GET /api/v1/users/me` returns the resolved effective limits — the values actually enforced for that user. The frontend uses these to set deploy form constraints. Changes take effect on next page load or login.
 
@@ -212,7 +506,7 @@ PATCH /api/v1/admin/users/:id
 
 ---
 
-## 5. Cluster tiers
+## 11. Cluster tiers
 
 | | Basic (`BASIC_CLUSTER`) | Enhanced (`ENHANCED_CLUSTER`) |
 |---|---|---|
@@ -224,7 +518,7 @@ PATCH /api/v1/admin/users/:id
 
 **OKE → Cluster → Node Pool → Nodes → Cordon & drain → Terminate**
 
-The UI shows a warning when scaling a Basic cluster. The API returns `400` if a scale operation is attempted on a Basic cluster programmatically.
+The UI shows a warning when scaling a Basic cluster. The API returns `400` if an unsupported scale operation is attempted on a Basic cluster programmatically.
 
 **Switching tiers:** `PUT /api/v1/admin/config/cluster-type` or the admin panel toggle. Applies to all new clusters — existing clusters retain the tier they were provisioned with.
 
@@ -232,18 +526,18 @@ The UI shows a warning when scaling a Basic cluster. The API returns `400` if a 
 
 ---
 
-## 6. API integration
+## 12. API reference
 
 Every action available in the UI is also available via REST.
 
-### 6.1 Authentication
+### 12.1 Authentication
 
 ```bash
 curl https://infragate.your-domain.com/api/v1/clusters \
   -H "Authorization: Bearer $TOKEN"
 ```
 
-### 6.2 Deploying a cluster from CI/CD
+### 12.2 Deploying a cluster from CI/CD
 
 ```bash
 RESPONSE=$(curl -s -X POST https://infragate.your-domain.com/api/v1/clusters \
@@ -267,12 +561,12 @@ curl -N -H "Authorization: Bearer $TOKEN" \
   https://infragate.your-domain.com$STREAM_URL
 ```
 
-### 6.3 Endpoint reference
+### 12.3 Endpoint reference
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
 | GET | `/api/v1/users/me` | User | User context + effective limits |
-| GET | `/api/v1/users/deploy-options` | User | Deploy form options: CIDRs, shapes, K8s versions, node images, active templates (filtered by user's `realm_access.roles` vs template `required_role`), pricing |
+| GET | `/api/v1/users/deploy-options` | User | Deploy form options: CIDRs, shapes, K8s versions, node images, active templates (filtered by user's IdP roles vs template `required_role`), pricing |
 | GET | `/api/v1/clusters` | User | List user's clusters (includes `estimated_monthly_cost`) |
 | POST | `/api/v1/clusters` | User | Deploy cluster — optional `template_id` for template-based deploy (server validates resource values match template definition) — returns job_id + SSE stream URL |
 | GET | `/api/v1/clusters/:id` | User | Cluster detail, OCIDs, API endpoint, tier, ssh_key_available, `estimated_monthly_cost`, `cost_breakdown` |
@@ -317,27 +611,148 @@ Full OpenAPI documentation is available at `/docs` on any running Infragate inst
 
 ---
 
-## 7. Deployment
+## 13. Helm configuration
+
+Infragate ships four Helm values files, each serving a distinct role in the deployment pipeline:
+
+| File | Role | Committed to repo | When to use |
+|---|---|---|---|
+| `values.yaml` | Chart defaults | ✅ Yes | Never used directly — Helm reads it automatically as the base layer |
+| `values-oci.yaml` | Single-node k3s template | ✅ Yes | Copy this to create your own `values-dev.yaml` for k3s deployments |
+| `values-oke.yaml` | Existing OKE cluster | ✅ Yes | Pass to `helm upgrade` with `-f` when deploying to an existing OKE cluster |
+| `values-dev.yaml` | Your deployment values | ✅ Yes | Pass to `helm upgrade` with `-f` for your environment |
+
+### `values.yaml` — Chart defaults
+
+The canonical reference for every configurable field. Contains all parameters with placeholder values, inline documentation, and sensible defaults. Helm merges this automatically before any `-f` overrides. Operators should read this file to understand the full set of available options, but never edit it directly for a specific deployment.
+
+### `values-oci.yaml` — k3s deployment template
+
+A production-ready starting point for single-node OCI k3s deployments. Pre-configured with:
+
+- GHCR image references (`ghcr.io/solvialab/infragate-api`, `ghcr.io/solvialab/infragate-frontend`) — swap to GitLab Container Registry by changing `image.repository` if you build through GitLab CI instead
+- SSE-optimised nginx proxy timeouts for Terraform log streaming
+- Control-plane tolerations for single-node scheduling
+- TLS disabled by default (enabled after cert-manager setup)
+
+To deploy on k3s:
+
+```bash
+cp deploy/helm/values-oci.yaml deploy/helm/values-dev.yaml
+# Edit values-dev.yaml with your domain, TLS settings, etc.
+```
+
+### `values-oke.yaml` — Existing OKE cluster
+
+A production-ready values file for deploying Infragate into an existing OKE cluster. Key differences from `values-oci.yaml`:
+
+- OCI Block Volume storage class (`oci-bv`) for PostgreSQL persistence
+- `pullPolicy: IfNotPresent` (OKE nodes pull from GHCR or GitLab CR directly)
+- No control-plane tolerations (OKE worker nodes accept all pods)
+- nginx ingress class with OCI load balancer annotations
+
+Use this directly — no copy needed:
+
+```bash
+helm upgrade --install infragate deploy/helm/ -n infragate \
+  -f deploy/helm/values-oke.yaml \
+  --set global.domain=infragate.example.com \
+  --set postgresql.auth.password=YOUR_DB_PASSWORD \
+  ...
+```
+
+### `values-dev.yaml` — Your deployment values
+
+Your environment-specific configuration. Created by copying `values-oci.yaml` and customising it with your domain, TLS settings, and any environment-specific overrides.
+
+Sensitive values (database passwords, OCI credentials, S3 keys) are never stored in values files. Pass them at deploy time via `--set`:
+
+```bash
+helm upgrade --install infragate ./deploy/helm \
+  -n infragate \
+  -f deploy/helm/values-dev.yaml \
+  --set postgresql.auth.password=<DB_PASSWORD> \
+  --set api.oci.tenancyOcid=ocid1.tenancy... \
+  ...
+```
+
+### Layering order
+
+Helm merges values files in order, with later files overriding earlier ones:
+
+```
+values.yaml (chart defaults)
+  └── values-dev.yaml (-f override)
+        └── --set flags (highest priority)
+```
+
+This separation ensures the chart ships with complete, documented defaults while each deployment environment maintains its own configuration without modifying committed files.
+
+### Private registry pull secrets
+
+For private GHCR or GitLab Container Registry images, create a pull secret in the target namespace and reference it through `imagePullSecrets` in your values override:
+
+```bash
+kubectl create secret docker-registry infragate-pull \
+  --docker-server=ghcr.io \
+  --docker-username=<github-user> \
+  --docker-password=<github-pat> \
+  --namespace infragate
+```
+
+```yaml
+imagePullSecrets:
+  - name: infragate-pull
+```
+
+Substitute `registry.gitlab.com`, your GitLab username, and a deploy token when pulling from GitLab Container Registry.
+
+---
+
+## 14. Deployment
 
 Infragate supports three deployment paths. Choose the one that fits your environment:
 
 | Path | Best for | Guide |
 |---|---|---|
-| **Existing OKE cluster** | Teams with an existing Kubernetes cluster on OCI (recommended) | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) |
+| **Existing OKE cluster** | Teams with an existing Kubernetes cluster on OCI (recommended for production) | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) |
 | **Single-node k3s** | Dev/test, Always Free tier, single-VM setups | [GUIDE.md — k3s](./GUIDE.md#single-node-k3s-deployment) |
-| **OCI Marketplace (planned)** | One-click deployment via Resource Manager — coming in a future release | [GUIDE.md — Marketplace](./GUIDE.md#marketplace-deployment) |
+| **OCI Marketplace (planned)** | One-click deployment via Resource Manager — coming in a future release | Coming in a future release |
 
-All paths use the same Helm chart with different values files:
+### 14.1 OKE vs k3s — full differences
 
-| Values file | Target |
-|---|---|
-| `values-oke.yaml` | Existing OKE cluster — OCI Block Volume storage, nginx ingress |
-| `values-oci.yaml` | Single-node k3s — control-plane tolerations, local storage |
-| `values.yaml` | Chart defaults — all fields documented, used as base layer |
+Both paths deploy the same application from the same Helm chart. The values files differ only where the runtime platform genuinely differs:
 
-Container images are built by CI and pushed to your container registry on every commit (`dev-latest` for DEV, `latest` for main). CI pipelines are included for both GitHub Actions (GHCR) and GitLab CI (GitLab CR). The Helm chart supports `imagePullSecrets` for private registries. No local builds needed.
+| Concern | OKE (existing cluster) | k3s (single-node VM) |
+|---|---|---|
+| Values file | `deploy/helm/values-oke.yaml` | `deploy/helm/values-oci.yaml` |
+| Ingress controller | **ingress-nginx** installed separately with OCI flexible Load Balancer annotations | **Traefik** bundled with k3s (ships enabled, no extra install) |
+| Chart `ingress.className` | `nginx` | `traefik` |
+| Load balancer | OCI Flexible LB provisioned by the `ingress-nginx` Service (type `LoadBalancer`) | k3s `klipper-lb` binds directly to the VM's ports 80/443 |
+| TLS | cert-manager + ClusterIssuer (Let's Encrypt or corporate CA) | cert-manager on a single-node VM, or terminate TLS at Cloudflare |
+| Storage class | `oci-bv` (OCI Block Volume) | `local-path` (k3s default, node-local disk) |
+| PostgreSQL volume floor | 50 GB (OCI BV minimum) | 20 GB typical |
+| Image pull policy | `IfNotPresent` (nodes pull once, re-use across restarts) | `Always` (single VM, easier to roll latest tag) |
+| Scheduling | No tolerations — OKE has dedicated worker nodes | Control-plane tolerations — pods must tolerate the single-node taint |
+| OS firewall | Managed by OCI (security lists / NSGs on the cluster subnets) | Managed on the VM itself (`firewalld` / `ufw`) — must open 80, 443, 6443, plus trust the CNI interfaces (`cni0`, `flannel.1`) |
+| Horizontal scale | OKE can scale worker pool via the OCI Console or autoscaler | Single node — scale up = bigger VM shape |
 
-### 7.1 Environment variables
+> **Important:** Do not cross the ingress choice. ingress-nginx on k3s means disabling bundled Traefik and patching the controller for host networking; Traefik on OKE means writing `IngressRoute` CRDs and losing the nginx-based SSE proxy config shipped with the chart. Keep each path on its native controller.
+
+### 14.2 Values files
+
+| Values file | Target | Committed to repo |
+|---|---|---|
+| `values.yaml` | Chart defaults — every field documented, used as base layer | ✅ |
+| `values-oke.yaml` | Existing OKE cluster — OCI Block Volume storage, nginx ingress, no tolerations | ✅ |
+| `values-oci.yaml` | Single-node k3s — Traefik ingress, local-path storage, control-plane tolerations | ✅ |
+| `values-dev.yaml` | Your environment-specific copy — customise domain, TLS, image tags | ✅ (template) |
+
+### 14.3 Container images
+
+Container images are built by CI and pushed to your container registry on every commit (`dev-latest` / `dev-<sha>` for DEV, `latest` / `<sha>` for main). CI pipelines are included for both **GitHub Actions (GHCR)** at `.github/workflows/ci.yml` and **GitLab CI (GitLab Container Registry)** at `.gitlab-ci.yml`. The Helm chart supports `imagePullSecrets` for private registries. No local builds are required for operators — pull the published images directly.
+
+### 14.4 Environment variables
 
 When deploying via Helm, all environment variables below are set automatically through the `values-*.yaml` files and `--set` flags. This reference is for teams integrating Infragate into custom deployment pipelines or running outside of Helm.
 
@@ -372,7 +787,7 @@ APP_ENV=production
 ADMIN_EMAILS=you@yourcompany.com,colleague@yourcompany.com
 ```
 
-### 7.2 OCI private key
+### 14.5 OCI private key
 
 Mount the `infragate-svc` private key into the container at `OCI_PRIVATE_KEY_PATH`. On Kubernetes:
 
@@ -382,7 +797,7 @@ kubectl create secret generic infragate-oci-key \
   --namespace infragate
 ```
 
-### 7.3 Frontend
+### 14.6 Frontend
 
 The frontend is a single `index.html` with accompanying `css/` and `js/` assets. Served by nginx in the `infragate-frontend` container. Runtime OIDC configuration is injected via a Helm ConfigMap — no manual `config.js` edits needed when deploying with Helm.
 
@@ -396,7 +811,7 @@ const OIDC_CLIENT_ID = 'infragate-portal';
 
 ---
 
-## 8. Configuration reference
+## 15. Configuration reference
 
 All settings are manageable at runtime via the admin panel or API — no redeployment required.
 
@@ -421,7 +836,7 @@ All settings are manageable at runtime via the admin panel or API — no redeplo
 
 ---
 
-## 9. Security considerations
+## 16. Security considerations
 
 **OCI private key** — store in a secrets manager (HashiCorp Vault, OCI Vault, AWS Secrets Manager, Azure Key Vault). Never commit to version control or bake into a container image.
 
@@ -439,8 +854,11 @@ All settings are manageable at runtime via the admin panel or API — no redeplo
 
 **Audit log** — every provisioning, scaling, and destroy operation is recorded with user identity, operation, cluster name, outcome, and duration. The log is append-only and available to admins at `GET /api/v1/admin/audit`.
 
-**Least privilege** — the IAM policy in Section 3.1 grants only the permissions Infragate needs. Do not use a tenancy-admin user as the service account.
+**Least privilege** — the IAM policy in Section 9.1 grants only the permissions Infragate needs. Do not use a tenancy-admin user as the service account.
+
+**Supply chain** — images are built and signed by the reference GitHub Actions and GitLab CI pipelines. For highly regulated environments, mirror published images into your own registry (OCIR, Harbor, Artifactory) and pin by SHA256 digest rather than tag.
 
 ---
 
+For user and admin workflow see [README.md](./README.md).
 For deployment assistance or enterprise support, contact [support@infragate.cloud](mailto:support@infragate.cloud).
