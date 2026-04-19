@@ -1510,7 +1510,7 @@
         <i class="fas fa-tag text-xs"></i> Pricing
       </div>
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Simple, transparent pricing</h2>
-      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">One product, all features, no per-user metering. Pick the tier that matches your support needs — not your feature list.</p>
+      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">One product, all features, no per-user metering. Tiers differ on <strong class="text-gray-800 dark:text-gray-200">license, support SLA, image distribution, deployment, and compliance</strong> — not on feature gates.</p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6 md:gap-8">
@@ -1527,9 +1527,9 @@
         <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>All features unlocked</span></li>
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Self-serve docs &amp; setup guides</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>GitHub Issues (best-effort)</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Latest builds, public GHCR images</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">Commercial managed-service use not permitted</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Community support — GitHub Issues (best-effort)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Public GHCR images · rolling releases</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">Non-commercial · no production or managed-service use</span></li>
         </ul>
         <a href="/docs/" class="block text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition">Get the docs</a>
       </div>
@@ -1545,13 +1545,14 @@
           </div>
           <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Billed annually · $36,000 / year</div>
         </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For platform teams at SMB and mid-market orgs running one OCI tenancy.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For platform teams at SMB and mid-market orgs running one OCI tenancy in production.</p>
         <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Community</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Unlimited clusters &amp; users</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support · 48h SLA</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Version pinning &amp; minor upgrades</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private GHCR PAT · per-customer rotation</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Commercial &amp; production license</strong> — unlocks managed-service &amp; customer-facing use</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support · <strong class="text-gray-800 dark:text-gray-200">48h response SLA</strong> (business hours)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private GHCR registry · per-customer PAT, rotated</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Version pinning · minor-upgrade assistance (non-breaking)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Security advisories · early private notice before public disclosure</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Onboarding session · architect-led kickoff call</span></li>
         </ul>
         <button onclick="openDemoModal('poc')" class="block text-center px-5 py-3 text-sm font-semibold rounded-full btn-solid-premium cursor-pointer">Start a POC</button>
       </div>
@@ -1568,11 +1569,13 @@
         <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For regulated enterprises, banks, government, and healthcare. Multi-tenancy, compliance, managed install.</p>
         <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Business</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>4h SLA · named support contact</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Managed install · multi-tenancy</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private / mirrored registry &amp; air-gapped delivery</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance support · SOC 2 Q&amp;A, security questionnaires</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>LTS pinning · architect hours</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">4h response SLA</strong> · named support engineer · shared Slack / Teams channel</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Managed install</strong> — we deploy Infragate into your tenancy end-to-end</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Multi-tenancy · multiple OCI tenancies · sub-org scoping</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Air-gapped / mirrored registry delivery · LTS pinning</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance pack · SOC 2 Q&amp;A · security questionnaires · DPA</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Gatekeeper platform copilot · early access at launch</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Quarterly architect hours · roadmap input</span></li>
         </ul>
         <button onclick="openDemoModal('enterprise')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Contact us</button>
       </div>
