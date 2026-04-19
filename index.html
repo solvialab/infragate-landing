@@ -1578,30 +1578,62 @@
       </div>
     </div>
 
-    <div class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-      Design-partner discount available for the first production customers — <button onclick="openDemoModal('partner')" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline font-medium cursor-pointer bg-transparent border-0 p-0">reach out</button> if you want to help shape the roadmap.
-    </div>
   </div>
 </section>
 
 
-<!-- Design-partner CTA -->
-<section class="py-14 md:py-18 px-4 sm:px-6 lg:px-8 overflow-hidden">
-  <div class="max-w-4xl mx-auto gradient-bg-premium animated-gradient-bg rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 text-center shadow-2xl reveal scale-up relative overflow-hidden">
+<!-- Founding Customer Program -->
+<section class="py-14 md:py-18 px-4 sm:px-6 lg:px-8 overflow-hidden" id="founding">
+  <div class="max-w-5xl mx-auto gradient-bg-premium animated-gradient-bg rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl reveal scale-up relative overflow-hidden">
     <div class="blob" style="width:180px;height:180px;background:#5BB8D8;top:-40px;right:-20px;opacity:0.1;animation-delay:-2s"></div>
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold uppercase tracking-wider mb-5 reveal" style="transition-delay:0.1s">
-      <i class="fas fa-star text-amber-300 text-xs"></i> Design-partner programme · limited spots
+
+    <div class="text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 text-xs font-semibold uppercase tracking-wider mb-5 reveal" style="transition-delay:0.1s">
+        <i class="fas fa-star text-amber-300 text-xs"></i> Founding Customer Program · 5 spots · limited
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-white reveal" style="transition-delay:0.15s">Help shape Infragate.<br class="hidden sm:block"> Get in before the rest.</h2>
+      <p class="text-gray-200 mt-4 text-lg max-w-2xl mx-auto reveal" style="transition-delay:0.3s">
+        A small group of production teams helping us build the first year of the roadmap. Not a discount — an invitation.
+      </p>
     </div>
-    <h2 class="text-3xl md:text-4xl font-bold text-white reveal" style="transition-delay:0.15s">Be one of our first production customers</h2>
-    <p class="text-gray-200 mt-4 text-lg max-w-2xl mx-auto reveal" style="transition-delay:0.3s">
-      <span class="font-semibold text-white">50% off Business</span> — $18,000/year for a 6-month commitment — in exchange for monthly feedback calls and the right to publish a sanitized case study. You help shape the roadmap; we make sure you succeed.
+
+    <!-- What founding customers get -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 reveal" style="transition-delay:0.4s">
+      <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+          <i class="fas fa-percentage text-amber-300"></i>
+        </div>
+        <h3 class="text-white font-semibold text-sm mb-1">50% off Business</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Locked for the first 12 months. 6-month minimum commitment. Pricing discussed on the intro call.</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+          <i class="fas fa-headset text-amber-300"></i>
+        </div>
+        <h3 class="text-white font-semibold text-sm mb-1">Direct line to the team</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Monthly roadmap calls, private Slack / email with engineering. Your feedback shapes what ships next.</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm relative">
+        <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider text-amber-200 bg-amber-500/20 px-2 py-0.5 rounded-full">Coming soon</span>
+        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+          <i class="fas fa-wand-magic-sparkles text-amber-300"></i>
+        </div>
+        <h3 class="text-white font-semibold text-sm mb-1">Gatekeeper AI — early access</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">AI-assisted cluster configuration, powered by OCI Generative AI. Ships in-tenancy. Founding customers get it first.</p>
+      </div>
+    </div>
+
+    <!-- In exchange -->
+    <p class="text-gray-300 text-sm text-center mt-8 max-w-2xl mx-auto reveal" style="transition-delay:0.5s">
+      In exchange: monthly feedback calls and the right to publish a sanitized case study. That's it.
     </p>
-    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-8 reveal" style="transition-delay:0.45s">
-      <button onclick="openDemoModal('partner')" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer cta-btn">
-        <i class="fas fa-paper-plane"></i> Apply as design partner
+
+    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-8 reveal" style="transition-delay:0.55s">
+      <button onclick="openDemoModal('founding')" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer cta-btn">
+        <i class="fas fa-paper-plane"></i> Apply for a founding spot
       </button>
     </div>
-    <p class="text-gray-300 text-sm mt-6 reveal" style="transition-delay:0.55s">Not ready yet? <a href="#pricing" class="text-white hover:underline">See standard pricing</a></p>
+    <p class="text-gray-300 text-sm text-center mt-6 reveal" style="transition-delay:0.6s">Not ready for a commitment? <a href="#pricing" class="text-white hover:underline">See standard pricing</a></p>
   </div>
 </section>
 
@@ -1660,14 +1692,14 @@
       successMessage: 'Your enquiry has been submitted.<br>An Enterprise contact will reach out shortly.',
       subject: 'Infragate Enterprise Enquiry'
     },
-    partner: {
-      title: 'Apply as a design partner',
-      subtitle: '50% off Business for 6 months in exchange for monthly feedback + a sanitized case study. Limited spots.',
+    founding: {
+      title: 'Apply for a founding spot',
+      subtitle: '5 founding customer spots. 50% off Business, direct line to the team, Gatekeeper AI early access. 6-month minimum.',
       messageLabel: 'Tell us about your team',
       messagePlaceholder: 'Team size, current OCI usage, what would success look like in 6 months?',
       submitText: 'Submit application',
       successMessage: 'Your application has been received.<br>We\'ll review and reach out within a few business days.',
-      subject: 'Infragate Design Partner Application'
+      subject: 'Infragate Founding Customer Application'
     }
   };
 
