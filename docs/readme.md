@@ -122,12 +122,14 @@ Kubernetes version changes are handled via a separate **Upgrade** action.
 
 1. In **My Clusters**, click **Destroy**
 2. Infragate runs `terraform plan -destroy` and shows the exact resources that will be removed
-3. Confirm — `terraform destroy` runs and all OCI resources are cleaned up
+3. Confirm — `terraform destroy` runs and cluster-scoped OCI resources are cleaned up
 4. The CIDR range is returned to the pool and available for reuse
 
 Destroy is permanent and cannot be undone.
 
 > **Destroy protection:** Clusters created from a template with destroy protection enabled cannot be destroyed by regular users. An admin must override the protection with the `?force=true` query parameter.
+>
+> **Destroy behavior note:** Cluster compartments are intentionally **not auto-deleted** (to avoid breaking shared/multi-cluster setups). In Object Storage, only the destroyed cluster's `.tfstate` object is removed; the user-level prefix/folder is kept for other clusters.
 
 ### Cluster detail
 
@@ -391,6 +393,7 @@ Both use the same tagging scheme (`latest` / `dev-latest` + commit SHA) for main
 | 6 — Wire frontend | ✅ Complete | Frontend connected to live API |
 | 7 — Cluster templates | ✅ Complete | Admin-managed templates, deploy form selector, destroy protection, TTL |
 | 8 — Cost visibility | ✅ Complete | Live cost estimation across deploy form, dashboard, detail page, admin panels, and templates |
+| 9 — Lifecycle validation (k3s) | ✅ Complete | End-to-end verified on single-node k3s VM: deploy, scale, upgrade k8s, destroy, and TTL auto-cleanup |
 
 ---
 
