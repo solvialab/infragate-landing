@@ -14,7 +14,7 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 - **BYON scope behavior** - `Existing Compartment OCIe` alone reuses only the compartment. Infragate does not auto-discover existing VCN/subnet objects inside that compartment; leave VCN/subnet blank only when you want Infragate to create a fresh network stack there.
 - **Advanced override guardrails** - Advanced OCIe fields validate resource-type prefixes and provide OCI-backed autocomplete for compartments, VCNs, and subnets to reduce typo/copy-paste errors before deploy.
 - **Shared compartment pattern** — for multiple clusters in one compartment, use a dedicated BYO compartment OCIe in Advanced for every cluster in that shared domain; avoid reusing an auto-created per-cluster compartment as a shared target.
-- **CIeR pool management** — admins pre-populate a pool of /24 ranges; each cluster allocates one on deploy and releases it on destroy
+- **CIDR pool management** — admins pre-populate a pool of /24 ranges; each cluster allocates one on deploy and releases it on destroy
 - **Multi-pool support** — configure 1–N node pools per cluster, each with independent node count, OCPU, RAM, and storage sizing
 - **Shape sync from OCI** - Admin Configuration includes **Sync from OCI** for VM shapes, pulling OKE-compatible shapes for the current region/tenancy and merging them into `allowed_shapes` while preserving existing labels/toggles
 - **Sync fallback behavior** - if OCI shape sync is unavailable (credentials/policy/network), existing `allowed_shapes` remain unchanged and admins can continue with manual shape curation from `oci ce node-pool-options get --node-pool-option-id all`
@@ -27,17 +27,17 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 ## Cluster templates
 
 - **Pre-configured profiles** — admins create templates that encode K8s version, VM shape, node image, pool layout, tier, TTL, and destroy protection
-- **eeploy form pre-fill + lock** — selecting a template pre-fills and locks resource fields (pools, nodes, CPU, RAM, storage, pool names, and add/remove pool controls). Users can still set cluster name, CIeR, compartment, and advanced overrides. Select "Custom" to unlock all fields and configure manually with limit enforcement
+- **Deploy form pre-fill + lock** — selecting a template pre-fills and locks resource fields (pools, nodes, CPU, RAM, storage, pool names, and add/remove pool controls). Users can still set cluster name, CIDR, compartment, and advanced overrides. Select "Custom" to unlock all fields and configure manually with limit enforcement
 - **Template values can exceed user limits** — templates represent admin-pre-approved configurations, so template-defined values are not clamped to the user's personal limits. The lock prevents users from editing these values
-- **eestroy protection** — template policy that prevents users from destroying clusters without admin override (`?force=true`)
-- **Time-to-live (TTL)** — optional expiry in hours, enforced at deploy time; also available on custom deploys without a template
+- **Destroy protection** — template policy that prevents users from destroying clusters without admin override (`?force=true`)
+- **Time-to-live (TTL)** — optional expiry in hours, enforced at deploy time; when TTL is reached, Infragate automatically triggers destroy/cleanup. Also available on custom deploys without a template
 - **Live cost preview** — add/edit modal shows estimated monthly and hourly cost that updates as you change pools, shape, or tier
 - **Template shape/K8s guardrail** — template modal uses the same shape-aware compatibility filtering as deploy; save/update re-validates selected shape+K8s and blocks incompatible combinations
 - **Role-based access** — restrict templates to users with a specific Keycloak realm role. This enables environment-tier gating across your organisation:
 
   | Template | Required role | Who sees it |
   |---|---|---|
-  | eEV — Small | *(none)* | All users |
+| DEV — Small | *(none)* | All users |
   | TEST — Medium | `testing` | QA engineers and testers |
   | UAT — Large | `uat` | Release managers and senior engineers |
   | PROe — HA | `production` | Production team only |
@@ -55,12 +55,12 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 
 | Surface | What's shown |
 |---|---|
-| eeploy form — eeployment Summary | Estimated monthly and hourly cost, updates live as you configure pools |
-| eeploy plan confirm modal | Estimated monthly cost in the resource plan |
+| Deploy form — Deployment Summary | Estimated monthly and hourly cost, updates live as you configure pools |
+| Deploy plan confirm modal | Estimated monthly cost in the resource plan |
 | eashboard cluster cards | Estimated monthly cost per cluster |
 | Cluster detail page | Monthly cost + full breakdown (per-pool cost, control plane cost, total with hourly rate) |
 | Admin — All Clusters table | Monthly + hourly cost per cluster |
-| Admin — Stats bar | Lifecycle status cards (online, provisioning, upgrading, destroying, failed, total) plus CIeRs used and monthly spend |
+| Admin — Stats bar | Lifecycle status cards (online, provisioning, upgrading, destroying, failed, total) plus CIDRs used and monthly spend |
 | Admin — Cluster Templates table | Monthly + hourly cost per template |
 | Admin — Template add/edit modal | Live cost preview that updates on pool/shape/tier changes |
 
@@ -82,16 +82,18 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **Change preview** — review all changes before applying (current vs. new values, new pools highlighted, removed pools shown)
 - **Separate K8s upgrade flow** — Kubernetes version upgrades use a dedicated Upgrade action/modal (not the scale flow)
 - **Enhanced tier** — full in-place scaling via OKE API, no manual node cycling
-- **Basic tier** — adding/removing nodes or node pools is automatic; changing shape/OCPU/RAM/storage on existing nodes requires manual OCI Console cycling (portal warns users)
+- **Basic tier** — adding/removing nodes or node pools is automatic; changing shape/OCPU/RAM/storage requires rolling node cycling (`N -> 2N -> N` after new nodes are `Ready/Active`)
 
 ## Kubernetes upgrades
 
-- **eedicated action** — available from cluster detail and dashboard actions
+- **Dedicated action** — available from cluster detail and dashboard actions
 - **Shape-aware + allowlist-aware** — upgrade options are filtered to OCI-compatible versions enabled by admin config
 - **Sequential minors only** — direct upgrades allow same/next minor only; skip-minor upgrades are blocked with explicit error
-- **Control plane + node-pool target update** — upgrade action updates cluster Kubernetes and node-pool target version/image; existing workers are refreshed via rolling scale/replace
+- **Control plane + node-pool target update** — upgrade action updates cluster Kubernetes and node-pool target version/image
+- **Basic upgrade behavior** — perform rolling worker refresh per pool (`N -> 2N -> N`) after new nodes are `Ready/Active`
+- **Enhanced upgrade behavior** — fully automated rollout (control plane + workers), no manual cycling required
 - **Tier guidance in UI** — Basic and Enhanced show upgrade-specific notes with rollout guidance
-- **eynamic Basic rollout guidance** — Basic upgrade modal reads live pool/node counts and renders exact per-pool steps (for example `1 -> 2 -> 1` or `3 -> 6 -> 3`) instead of a static example
+- **Dynamic Basic rollout guidance** — Basic upgrade modal reads live pool/node counts and renders exact per-pool steps (for example `1 -> 2 -> 1` or `3 -> 6 -> 3`) instead of a static example
 
 ---
 
@@ -99,8 +101,8 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 
 - **Status tracking** — real-time status across all views: provisioning, scaling, upgrading, destroying, running, error, destroyed
 - **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. eetail page shows full expiry timestamp and remaining time
-- **eestroy protection** — protected clusters show a red "Protected" badge on dashboard cards and detail page. Non-admin users cannot destroy protected clusters (button disabled + 403 from API). Admins see a "Force eestroy" option that overrides protection via `?force=true`
-- **eestroy with cleanup** — `terraform destroy` removes all OCI resources; CIeR returned to pool for reuse
+- **Destroy protection** — protected clusters show a red "Protected" badge on dashboard cards and detail page. Non-admin users cannot destroy protected clusters (button disabled + 403 from API). Admins see a "Force Destroy" option that overrides protection via `?force=true`
+- **Destroy with cleanup** — `terraform destroy` removes all OCI resources; CIDR returned to pool for reuse
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
 - **Kubeconfig download** — available on the detail page once the cluster is running; uses OCI CLI exec plugin
 - **SSH key download** — Terraform-generated private key available on the detail page
@@ -135,9 +137,9 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 Five dedicated admin pages accessible to users with the `admin` role:
 
 ### All Clusters
-- Every cluster across all users with status, owner, CIeR, K8s version, tier, resources, cost, and age
-- Stats bar: online, provisioning (includes scaling), upgrading k8s, destroying, failed, total, CIeRs used, monthly spend
-- Actions: detail view, scale, destroy, new cluster (bypasses user quotas)
+- Every cluster across all users with status, owner, CIDR, K8s version, tier, resources, cost, and age
+- Stats bar: online, provisioning (includes scaling), upgrading k8s, destroying, failed, total, CIDRs used, monthly spend
+- Actions: details, scale, upgrade k8s, destroy, and state-based view logs; plus new cluster (bypasses user quotas)
 
 ### Users & Limits
 - All users with cluster count, limit, and per-user override badges
@@ -146,7 +148,7 @@ Five dedicated admin pages accessible to users with the `admin` role:
 
 ### Configuration
 - Platform-wide settings: region, compartment, cluster tier, state bucket, namespace
-- CIeR pool: add/remove /24 ranges with allocation status
+- CIDR pool: add/remove /24 ranges with allocation status
 - VM shapes: sync from OCI, then optionally add custom shapes with display labels
 - K8s versions: manage available versions (deploy form shows only versions compatible with the currently selected shape/region)
 - Node images: add OCI compute images with display labels, enable/disable, auto-select fallback when no images configured
@@ -178,20 +180,20 @@ Five dedicated admin pages accessible to users with the `admin` role:
 
 ## Testing & CI
 
-- **87 automated tests** — business logic, validation rules, API contracts, access control, and cost estimation
+- **107 automated tests** — business logic, validation rules, API contracts, access control, and cost estimation
 - **Zero external dependencies** — in-memory SQLite with mocked auth; no database server, IdP, or OCI access needed to run tests
-- **Coverage areas** — user provisioning, limit resolution, admin config CRUe, cluster templates, cost engine (basic/enhanced tiers, multi-pool, custom pricing)
-- **CI pipeline** — GitHub Actions and GitLab CI run the full suite with coverage on every push to `main`/`eEV` and on PRs/MRs to `main`
+- **Coverage areas** — user provisioning, limit resolution, admin config CRUD, cluster templates, cost engine (basic/enhanced tiers, multi-pool, custom pricing)
+- **Reference CI pipeline (maintainer-owned)** — GitHub Actions and GitLab CI run validation and publish images for maintainer release flow; customer operators consume published image tags/digests
 
 ---
 
-## eeployment options
+## Deployment options
 
 Two first-class deployment paths, each tuned to its target environment. Both use the same Helm chart and the same upstream container images — the difference is the values file, which configures the right ingress controller, storage class, and scheduling for each platform.
 
 | | **Existing OKE cluster** | **Single-node k3s on OCI VM** |
 |---|---|---|
-| **Best for** | Production, enterprise OKE users | eev/test, demos, Always Free tier |
+| **Best for** | Production, enterprise OKE users | Dev/test, demos, Always Free tier |
 | **Values file** | `values-oke.yaml` | `values-oci.yaml` |
 | **Ingress** | ingress-nginx with OCI flexible Load Balancer (installed separately) | Traefik (bundled with k3s, `className: traefik`, no extra install) |
 | **Storage class** | `oci-bv` (OCI Block Volume) | `local-path` (k3s default) |
@@ -203,7 +205,7 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 | **Validation playbook** | Available during evaluation/POC | Available during evaluation/POC |
 
 - **Any Kubernetes** — the Helm chart also works on any K8s cluster that has an ingress controller and a default StorageClass; use `values.yaml` as a starting point and override for your environment
-- **CI/Ce with any container registry** — GitHub Actions (GHCR) and GitLab CI (GitLab Container Registry) pipelines included out of the box. Images tagged `dev-latest` for eEV branch, `latest` for main. Helm chart supports `imagePullSecrets` for private registries (GitLab CR, OCIR, eocker Hub, etc.)
+- **Image delivery with any container registry** — release images can be consumed from GHCR or mirrored into your private registry (OCIR, GitLab CR, Harbor, Docker Hub, etc.). Helm chart supports `imagePullSecrets` for private registries.
 - **OCI Marketplace (planned)** — one-click "Launch Stack" deployment from OCI Console is planned for a future release
 
 ---
