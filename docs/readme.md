@@ -149,7 +149,10 @@ Admin access is granted via your identity provider through role assignment — s
 A full view of every cluster across all users — status, owner, CIDR, K8s version, tier, resource counts, estimated cost (monthly + hourly), and age. The stats cards show online, provisioning, upgrading k8s, destroying, failed, total, CIDRs used, and monthly spend. From this view admins can:
 
 - Click **Details** on any cluster to open its full detail view including kubeconfig and SSH key download
+- Click **Scale** on Active/Error clusters to adjust pools, nodes, and per-node resources
+- Click **Upgrade k8s** on Active/Error clusters to upgrade Kubernetes version
 - Click **Destroy** to destroy any cluster regardless of owner
+- Click **View logs** while an operation is running or after a failure
 - Click **New Cluster** to provision a cluster outside of normal user quotas
 
 ### Users & limits
@@ -200,7 +203,7 @@ Dedicated admin page for creating and managing cluster templates — pre-configu
 | Node image | Pre-selected OCI compute image (optional — auto-selects latest OKE image if not set) |
 | Node pools | Pre-defined pool layout — name, node count, OCPU, RAM, storage per pool |
 | Tier default | Suggested cluster tier — Basic or Enhanced (suggestion only, not enforced) |
-| TTL | Optional time-to-live in hours — clusters expire after this duration |
+| TTL | Optional time-to-live in hours — when reached, Infragate automatically starts cluster destroy/cleanup |
 | Destroy protection | When enabled, users cannot destroy clusters created from this template without admin approval |
 | Required role | Keycloak realm role — only users with this role can see and use the template (leave empty for all users) |
 | Sort order | Controls display position in the deploy form (lower numbers appear first) |
@@ -230,16 +233,22 @@ The admin configures the cluster tier for the entire platform. Individual users 
 | Cluster Autoscaler | ❌ | ✅ |
 | Best for | Dev/test, cost-sensitive teams | Production, automated scaling |
 
-**Basic cluster scaling:** Both Basic and Enhanced clusters support full scaling — nodes, OCPU, RAM, and storage. In Basic clusters, adding/removing nodes or node pools is automatic and does not require manual rotation. Manual cycling is required only when changing per-node resources (shape, OCPU, RAM, storage):
+**Basic cluster scaling:** Both Basic and Enhanced clusters support full scaling — nodes, OCPU, RAM, and storage. In Basic clusters, adding/removing nodes or node pools is automatic and does not require manual rotation. Manual cycling is required when changing per-node resources (shape, OCPU, RAM, storage), and is also recommended after a Kubernetes upgrade so workers pick up the new target image/version.
 
 **OKE → Cluster → Node Pool → Nodes → Cordon & drain → Terminate**
 
-The portal shows a clear warning when scaling a Basic cluster.
+Recommended rolling cycle for each affected Basic node pool (current size = `N`):
+1. Scale from `N` to `2N`
+2. Wait until the additional `N` nodes are `Ready/Active`
+3. Scale back from `2N` to `N` (OKE removes extra nodes automatically)
+4. Verify workloads and node health before moving to the next pool
 
-**Kubernetes version upgrades:** Use **Upgrade** on a running cluster. This updates the control plane and also updates node-pool target Kubernetes/image configuration. Existing workers are not force-replaced by the upgrade action:
+The portal shows tier-specific warnings/messages for this flow.
+
+**Kubernetes version upgrades:** Use **Upgrade k8s** on a running cluster. This updates the control plane and node-pool target Kubernetes/image configuration:
 - Direct upgrades are limited to the same or next minor version (for example `1.33.x -> 1.34.x`; not `1.33.x -> 1.35.x`).
-- Basic: perform rolling worker refresh with scaling; the Upgrade modal now shows live per-pool steps based on current node counts (for example `1 -> 2 -> 1`, `2 -> 4 -> 2`, `3 -> 6 -> 3`).
-- Enhanced: use a rolling node replacement strategy to move workers to the new version with minimal downtime.
+- Basic: perform rolling worker refresh per pool (`N -> 2N -> N`) after nodes become `Ready/Active`; the Upgrade modal shows live per-pool steps based on current node counts.
+- Enhanced: rollout is fully automated (control plane plus worker refresh), no manual cycling required.
 
 **Switching tiers:** Admins can switch the platform tier at any time in Configuration. The change applies to all new clusters — existing clusters retain the tier they were provisioned with.
 
@@ -342,17 +351,17 @@ pip install -r requirements.txt
 pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 ```
 
-87 automated tests covering user provisioning, limit resolution, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
+107 automated tests covering user provisioning, limit resolution, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
 
-### CI pipeline
+### CI pipeline (maintainer-owned)
 
-Infragate ships with CI/CD pipelines for both GitHub and GitLab:
+Infragate includes reference CI/CD pipelines for maintainers on GitHub and GitLab. These pipelines validate the repo and publish release images. Customer operators typically do not run these pipelines — they deploy versioned images from GHCR, OCIR, or an internal mirror.
 
 **GitHub Actions** (`.github/workflows/ci.yml`):
 
 | Job | What it validates |
 |---|---|
-| `test` | 87 Python unit tests with coverage |
+| `test` | 107 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `docker-build-push` | Build + push images to GHCR (`dev-latest` on DEV, `latest` on main) |
 | `terraform-validate` | Core module and runner template |
@@ -361,12 +370,12 @@ Infragate ships with CI/CD pipelines for both GitHub and GitLab:
 
 | Job | What it validates |
 |---|---|
-| `test` | 87 Python unit tests with coverage |
+| `test` | 107 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `build-api` / `build-frontend` | Build + push images to GitLab Container Registry |
 | `terraform-validate` | Core module and runner template |
 
-Both use the same tagging scheme (`latest` / `dev-latest` + commit SHA). The Helm chart's `imagePullSecrets` support makes it work with any private container registry.
+Both use the same tagging scheme (`latest` / `dev-latest` + commit SHA) for maintainer release flow. For customer environments, prefer pinned release tags or digests from your approved registry. The Helm chart's `imagePullSecrets` support makes this work with any private container registry.
 
 ---
 
