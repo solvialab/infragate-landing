@@ -539,16 +539,16 @@
       </a>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-heading">Deployment</div>
-      <a class="sidebar-link" data-page="guide">
-        <i class="fas fa-rocket text-xs w-4"></i> Deployment Guide
-      </a>
-      <a class="sidebar-link" data-page="integration">
-        <i class="fas fa-plug text-xs w-4"></i> Enterprise Integration
-      </a>
-      <a class="sidebar-link" data-page="testing">
-        <i class="fas fa-vial text-xs w-4"></i> Testing & Validation
-      </a>
+      <div class="sidebar-heading">Available during evaluation/POC</div>
+      <div class="sidebar-link" style="opacity:.75; cursor:default;">
+        <i class="fas fa-lock text-xs w-4"></i> Deployment Runbooks
+      </div>
+      <div class="sidebar-link" style="opacity:.75; cursor:default;">
+        <i class="fas fa-lock text-xs w-4"></i> Enterprise Integration
+      </div>
+      <div class="sidebar-link" style="opacity:.75; cursor:default;">
+        <i class="fas fa-lock text-xs w-4"></i> Testing & Validation
+      </div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-heading">Resources</div>
@@ -580,8 +580,8 @@
               <div class="text-gray-500 dark:text-gray-400">Architecture, features, requirements, and deployment overview.</div>
             </div>
             <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
-              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Customer Docs (Gated)</div>
-              <div class="text-gray-500 dark:text-gray-400">Detailed install runbooks, upgrade playbooks, and support procedures.</div>
+              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Customer Docs</div>
+              <div class="text-gray-500 dark:text-gray-400">Available during evaluation/POC: detailed install runbooks, upgrade playbooks, and support procedures.</div>
             </div>
             <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
               <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Private / Internal Docs</div>
@@ -624,10 +624,7 @@
   // â”€â”€ Config
   var PAGES = [
     { id: 'readme', title: 'Overview', icon: 'fa-home' },
-    { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' },
-    { id: 'guide', title: 'Deployment Guide', icon: 'fa-rocket' },
-    { id: 'integration', title: 'Enterprise Integration', icon: 'fa-plug' },
-    { id: 'testing', title: 'Testing & Validation', icon: 'fa-vial' }
+    { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' }
   ];
   var pageCache = {};
   var currentPage = null;
@@ -737,7 +734,7 @@
 
     function render(md) {
       // Map known .md files to docs page hashes (with optional #anchor)
-      var knownPages = { readme: 1, features: 1, guide: 1, integration: 1, testing: 1 };
+      var knownPages = { readme: 1, features: 1 };
       md = md.replace(/\(\.\/([A-Z_]+)\.md(#[^)]+)?\)/gi, function(m, name, anchor) {
         var lower = name.toLowerCase();
         if (knownPages[lower]) return '(#' + lower + (anchor ? '/' + anchor.substring(1) : '') + ')';
@@ -1110,6 +1107,10 @@
 </script>
 </body>
 </html>
+
+
+
+
 
 
 
