@@ -1,8 +1,8 @@
 # Infragate
 
-**Internal Developer Platform for Oracle Cloud — automated OKE lifecycle management for teams.**
+**OCI-native Internal Developer Platform (IDP) for OKE on Oracle Cloud â€” automated lifecycle management and governance for platform teams.**
 
-Infragate is an internal developer platform that lets engineers spin up, scale, and tear down managed Kubernetes clusters on OCI without needing cloud console access, IAM knowledge, or Terraform expertise. A cluster is ready in minutes — no tickets, no waiting.
+Infragate is a self-hosted internal developer platform (IDP) that lets engineers spin up, scale, and tear down managed Kubernetes clusters on OCI without needing cloud console access, IAM knowledge, or Terraform expertise. A cluster is ready in minutes â€” no tickets, no waiting.
 
 ---
 
@@ -13,7 +13,7 @@ Infragate is an internal developer platform that lets engineers spin up, scale, 
 3. [Admin guide](#3-admin-guide)
 4. [Cluster tiers](#4-cluster-tiers)
 5. [Resource limits](#5-resource-limits)
-6. [Access — kubeconfig and SSH](#6-access--kubeconfig-and-ssh)
+6. [Access â€” kubeconfig and SSH](#6-access--kubeconfig-and-ssh)
 7. [Networking](#7-networking)
 8. [Testing & CI](#8-testing--ci)
 9. [Deployment phases](#9-deployment-phases)
@@ -23,7 +23,7 @@ Infragate is an internal developer platform that lets engineers spin up, scale, 
 
 ## 1. Quick start
 
-Pick the deployment path that matches your environment — both use the same Helm chart with different values files, tuned for the ingress controller, storage class, and networking model of each target.
+Pick the deployment path that matches your environment â€” both use the same Helm chart with different values files, tuned for the ingress controller, storage class, and networking model of each target.
 
 | | **Existing OKE cluster** *(recommended for production)* | **Single-node k3s on an OCI VM** |
 |---|---|---|
@@ -35,11 +35,12 @@ Pick the deployment path that matches your environment — both use the same Hel
 | Values file | `deploy/helm/values-oke.yaml` | `deploy/helm/values-oci.yaml` |
 | Chart values `ingress.className` | `nginx` | `traefik` |
 | Setup time | ~30 min (cluster exists) | ~15 min |
-| Guide | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) | [GUIDE.md — k3s](./GUIDE.md#single-node-k3s-deployment) |
+| Guide | [GUIDE.md â€” OKE](./GUIDE.md#existing-oke-cluster-deployment) | [GUIDE.md â€” k3s](./GUIDE.md#single-node-k3s-deployment) |
+| Testing playbook | [TESTING.md â€” Path B](./TESTING.md#3-path-b-existing-oke-cluster) | [TESTING.md â€” Path A](./TESTING.md#2-path-a-k3s-on-oci-vm) |
 
 ### Existing OKE cluster (recommended)
 
-For teams that already have an OKE cluster — deploy Infragate via Helm in minutes:
+For teams that already have an OKE cluster â€” deploy Infragate via Helm in minutes:
 
 ```bash
 helm upgrade --install infragate deploy/helm/ -n infragate \
@@ -73,7 +74,7 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
   --set api.oci.parentCompartmentOcid=ocid1.compartment...
 ```
 
-OCI credentials are still required — Infragate calls the OCI API to provision OKE clusters regardless of where Infragate itself runs. See [GUIDE.md — OCI service account setup](./GUIDE.md#5-oci-service-account-setup) for how to generate the API key, S3 Customer Secret Key, and Terraform state bucket.
+OCI credentials are still required â€” Infragate calls the OCI API to provision OKE clusters regardless of where Infragate itself runs. See [GUIDE.md â€” OCI service account setup](./GUIDE.md#5-oci-service-account-setup) for how to generate the API key, S3 Customer Secret Key, and Terraform state bucket.
 
 > Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for Helm chart access and onboarding support.
 
@@ -89,38 +90,39 @@ See [GUIDE.md](./GUIDE.md) for the full step-by-step deployment guide.
 
 ### Signing in
 
-Infragate uses your organisation's existing identity provider (Keycloak, Azure AD, Okta, Google Workspace, or any OIDC-compliant IdP). Click **Log In** — you are redirected to your IdP's login page and returned to the portal after authentication. No separate Infragate account is needed.
+Infragate uses your organisation's existing identity provider (Keycloak, Azure AD, Okta, Google Workspace, or any OIDC-compliant IdP). Click **Log In** â€” you are redirected to your IdP's login page and returned to the portal after authentication. No separate Infragate account is needed.
 
 ### Deploying a cluster
 
 1. Navigate to **Deploy** from the top nav
-2. *(Optional)* Select a **Cluster template** — pre-configured profiles created by your admin that pre-fill and lock resource fields (pools, nodes, CPU, RAM, storage). Choose "Custom" to configure everything manually with your account's limits enforced
-3. Enter a **Cluster name** — this becomes the base name for all OCI resources (`{name}-cluster`, `{name}-vcn`, etc.)
-4. Choose a **CIDR range** from the available pool — each cluster gets its own /24
-5. Select a **Kubernetes version**, **VM shape**, and **Node image** (locked if the template defines them; otherwise user-selectable — image defaults to auto-select if none configured)
-6. If using "Custom" mode, configure one or more **Node pools** — each pool has a name, node count, OCPU, RAM, and storage, constrained by your account's effective limits
-7. *(Optional)* Use the **Advanced tab** to bring existing OCI infrastructure — your own VCN, compartment, or subnet
-8. Review the **Deployment Summary** — shows all resources that will be created, plus live estimated monthly and hourly cost
+2. *(Optional)* Select a **Cluster template** â€” pre-configured profiles created by your admin that pre-fill and lock resource fields (pools, nodes, CPU, RAM, storage). Choose "Custom" to configure everything manually with your account's limits enforced
+3. Enter a **Cluster name** â€” this becomes the base name for all OCI resources (`{name}-cluster`, `{name}-vcn`, etc.)
+4. Choose a **CIDR range** from the available pool â€” each cluster gets its own /24
+5. Select a **Kubernetes version**, **VM shape**, and **Node image** (locked if the template defines them; otherwise user-selectable â€” image defaults to auto-select if none configured)
+6. If using "Custom" mode, configure one or more **Node pools** â€” each pool has a name, node count, OCPU, RAM, and storage, constrained by your account's effective limits
+7. *(Optional)* Use the **Advanced tab** to bring existing OCI infrastructure â€” your own VCN, compartment, or subnet
+8. Review the **Deployment Summary** â€” shows all resources that will be created, plus live estimated monthly and hourly cost
 9. Click **Deploy**
 
 Infragate runs `terraform apply` and streams the live output in the portal. The cluster appears in **My Clusters** once provisioning completes.
 
-> The deploy form enforces your account's effective limits — maximum pools, nodes, OCPU, RAM, and storage. If a limit prevents you from deploying, contact your admin to request a higher limit.
+> The deploy form enforces your account's effective limits â€” maximum pools, nodes, OCPU, RAM, and storage. If a limit prevents you from deploying, contact your admin to request a higher limit.
 
 ### Scaling a cluster
 
 1. In **My Clusters**, click **Scale** on a running cluster
-2. Adjust resources per pool — nodes, OCPU, RAM, and storage
+2. Adjust resources per pool â€” nodes, OCPU, RAM, and storage
 3. Add new node pools or remove existing ones as needed
 4. Review the change preview and click **Apply**
 
-Scaling behaviour depends on the cluster tier configured by your admin — see [Cluster tiers](#4-cluster-tiers).
+Scaling behaviour depends on the cluster tier configured by your admin â€” see [Cluster tiers](#4-cluster-tiers).
+Kubernetes version changes are handled via a separate **Upgrade** action.
 
 ### Destroying a cluster
 
 1. In **My Clusters**, click **Destroy**
 2. Infragate runs `terraform plan -destroy` and shows the exact resources that will be removed
-3. Confirm — `terraform destroy` runs and all OCI resources are cleaned up
+3. Confirm â€” `terraform destroy` runs and all OCI resources are cleaned up
 4. The CIDR range is returned to the pool and available for reuse
 
 Destroy is permanent and cannot be undone.
@@ -131,20 +133,20 @@ Destroy is permanent and cannot be undone.
 
 Click **Details** on any cluster card to see:
 
-- **Cluster information** — name, status, K8s version, region, CIDR, compartment, VM shape, cluster tier, estimated monthly cost, OCID
-- **Node pools** — pool name, node count, OCPU, RAM, storage, and status per pool
-- **Cost breakdown** — per-pool monthly cost, control plane cost (Enhanced tier), and total with hourly rate
-- **Access** — kubeconfig download and SSH key download (see [Section 5](#5-access--kubeconfig-and-ssh))
+- **Cluster information** â€” name, status, K8s version, region, CIDR, compartment, VM shape, cluster tier, estimated monthly cost, OCID
+- **Node pools** â€” pool name, node count, OCPU, RAM, storage, and status per pool
+- **Cost breakdown** â€” per-pool monthly cost, control plane cost (Enhanced tier), and total with hourly rate
+- **Access** â€” kubeconfig download and SSH key download (see [Section 5](#5-access--kubeconfig-and-ssh))
 
 ---
 
 ## 3. Admin guide
 
-Admin access is granted via your identity provider through role assignment — see [INTEGRATION.md](./INTEGRATION.md). Admins have a separate panel accessible from the top nav.
+Admin access is granted via your identity provider through role assignment â€” see [INTEGRATION.md](./INTEGRATION.md). Admins have a separate panel accessible from the top nav.
 
 ### All clusters
 
-A full view of every cluster across all users — status, owner, CIDR, K8s version, tier, resource counts, estimated cost (monthly + hourly), and age. The stats bar shows total estimated monthly spend across all active clusters. From this view admins can:
+A full view of every cluster across all users â€” status, owner, CIDR, K8s version, tier, resource counts, estimated cost (monthly + hourly), and age. The stats cards show online, provisioning, upgrading k8s, destroying, failed, total, CIDRs used, and monthly spend. From this view admins can:
 
 - Click **Details** on any cluster to open its full detail view including kubeconfig and SSH key download
 - Click **Destroy** to destroy any cluster regardless of owner
@@ -159,72 +161,89 @@ Lists every user who has signed into Infragate. For each user, admins can:
 - Click **Edit Limits** to set per-user overrides for any combination of: cluster limit, pool max, node max, OCPU, RAM, storage, and cluster tier
 - Reset all overrides at once to revert the user to global platform defaults
 
-Limit changes take effect on the user's next page load or login — no restart required.
+Limit changes take effect on the user's next page load or login â€” no restart required.
 
 ### Configuration
 
-Platform-wide settings manageable at runtime — no redeployment needed:
+Platform-wide settings manageable at runtime â€” no redeployment needed:
 
 | Setting | Description |
 |---|---|
-| Cluster tier | Basic (free) or Enhanced (~$0.10/hr) — applies to all new clusters |
+| Cluster tier | Basic (free) or Enhanced (~$0.10/hr) â€” applies to all new clusters |
 | Cluster limit | Default max active clusters per user |
 | Node pool limit | Max pools per cluster |
 | Nodes per pool | Max nodes per pool |
 | OCPU / RAM / Storage | Max compute per node |
 | CIDR pool | Add, remove, and enable/disable /24 ranges available for cluster allocation |
-| VM shapes | Add, remove, and enable/disable shapes in the deploy form |
+| VM shapes | Sync from OCI, plus add/remove/enable/disable shapes in the deploy form |
 | K8s versions | Add, remove, and enable/disable Kubernetes versions |
 | Node images | Add, remove, and enable/disable OCI compute images for worker node pools |
 
+> Note: Shape and image availability is region- and tenancy-specific. In **Admin â†’ Configuration**, use **Sync from OCI** in the VM Shapes section first, then curate/label as needed. For CLI verification, fetch current OKE node pool options in the target region:
+>
+> `oci ce node-pool-options get --node-pool-option-id all --profile <PROFILE>`
+>
+> Use the returned `shapes` and `sources` lists as the source of truth for VM shapes and node images.
+>
+> If **Sync from OCI** is unavailable, Infragate keeps existing shape config unchanged and you can continue with manual curation from the CLI output above. Sync uses the API pod OCI service account credentials/policies (not the browser/user profile).
+>
+> Deploy form behavior: Kubernetes versions are filtered by the currently selected VM shape and region. Users only see versions that are both OCI-compatible for that shape (based on OKE node image availability) and enabled in Admin Configuration. If compatibility lookup is unavailable, the K8s list is not shown (fail-closed) and deploy is blocked until validation succeeds. If a version is missing, either enable it in Admin Configuration or choose a shape that supports it.
+
 ### Cluster templates
 
-Dedicated admin page for creating and managing cluster templates — pre-configured profiles that appear as selectable cards on the deploy form. Templates encode:
+Dedicated admin page for creating and managing cluster templates â€” pre-configured profiles that appear as selectable cards on the deploy form. Templates encode:
 
 | Setting | Description |
 |---|---|
-| K8s version | Pre-selected Kubernetes version (optional — user selects if not set) |
+| K8s version | Pre-selected Kubernetes version (optional â€” user selects if not set) |
 | VM shape | Pre-selected node shape (optional) |
-| Node image | Pre-selected OCI compute image (optional — auto-selects latest OKE image if not set) |
-| Node pools | Pre-defined pool layout — name, node count, OCPU, RAM, storage per pool |
-| Tier default | Suggested cluster tier — Basic or Enhanced (suggestion only, not enforced) |
-| TTL | Optional time-to-live in hours — clusters expire after this duration |
+| Node image | Pre-selected OCI compute image (optional â€” auto-selects latest OKE image if not set) |
+| Node pools | Pre-defined pool layout â€” name, node count, OCPU, RAM, storage per pool |
+| Tier default | Suggested cluster tier â€” Basic or Enhanced (suggestion only, not enforced) |
+| TTL | Optional time-to-live in hours â€” clusters expire after this duration |
 | Destroy protection | When enabled, users cannot destroy clusters created from this template without admin approval |
-| Required role | Keycloak realm role — only users with this role can see and use the template (leave empty for all users) |
+| Required role | Keycloak realm role â€” only users with this role can see and use the template (leave empty for all users) |
 | Sort order | Controls display position in the deploy form (lower numbers appear first) |
 
 The templates table shows estimated monthly and hourly cost per template. The add/edit modal includes a live cost preview that updates as you change pools, shape, or tier.
 
-**Environment-tier gating** — use `required_role` to control which teams can deploy which cluster sizes. For example, create a `DEV — Small` template visible to everyone, a `TEST — Medium` template requiring a `testing` role, a `UAT — Large` template requiring a `uat` role, and a `PROD — HA` template requiring a `production` role. Users only see the templates they have access to on the deploy form. Create the roles in Keycloak under **Realm roles** and assign them to the relevant users.
+Template modal behavior: when a VM shape is selected, the K8s dropdown is filtered to versions OCI reports as compatible for that shape in the current region (node-image-backed compatibility). If compatibility lookup is unavailable, no fallback list is shown (fail-closed). Template save/update re-validates shape+K8s compatibility and blocks incompatible combinations.
+
+**Environment-tier gating** â€” use `required_role` to control which teams can deploy which cluster sizes. For example, create a `DEV â€” Small` template visible to everyone, a `TEST â€” Medium` template requiring a `testing` role, a `UAT â€” Large` template requiring a `uat` role, and a `PROD â€” HA` template requiring a `production` role. Users only see the templates they have access to on the deploy form. Create the roles in Keycloak under **Realm roles** and assign them to the relevant users.
 
 Templates can be created, edited, enabled/disabled, and permanently deleted. Disabled templates no longer appear in the deploy form but remain referenced by existing clusters. Permanently deleting a template removes it from the admin panel entirely.
 
 ### Audit Log
 
-Every provisioning, scaling, and destroy operation is recorded with user identity, operation type, cluster name, outcome, and duration. The log is append-only and filterable by user, operation, and date range.
+Every provisioning, scaling, upgrade, and destroy operation is recorded with user identity, operation type, cluster name, outcome, and duration. The log is append-only and filterable by user, operation, and date range.
 
 ---
 
 ## 4. Cluster tiers
 
-The admin configures the cluster tier for the entire platform. Individual users do not choose — they see the current tier as an informational indicator on the deploy form and on their cluster cards.
+The admin configures the cluster tier for the entire platform. Individual users do not choose â€” they see the current tier as an informational indicator on the deploy form and on their cluster cards.
 
 | | Basic | Enhanced |
 |---|---|---|
 | Cost | Free | ~$0.10/hr per cluster |
-| Node scaling | ⚠️ Full — but existing nodes require manual cycling | ✅ Full in-place |
-| Cluster Autoscaler | ❌ | ✅ |
+| Node scaling | âš ï¸ Full â€” add/remove nodes or pools is automatic; resource-profile changes require manual cycling | âœ… Full in-place |
+| Cluster Autoscaler | âŒ | âœ… |
 | Best for | Dev/test, cost-sensitive teams | Production, automated scaling |
 
-**Basic cluster scaling:** Both Basic and Enhanced clusters support full scaling — nodes, OCPU, RAM, and storage. When a Basic cluster is scaled, OKE updates the desired configuration and new nodes are provisioned automatically. However, existing nodes are not replaced in-place. To apply configuration changes to running nodes, manually cycle them via the OCI Console:
+**Basic cluster scaling:** Both Basic and Enhanced clusters support full scaling â€” nodes, OCPU, RAM, and storage. In Basic clusters, adding/removing nodes or node pools is automatic and does not require manual rotation. Manual cycling is required only when changing per-node resources (shape, OCPU, RAM, storage):
 
-**OKE → Cluster → Node Pool → Nodes → Cordon & drain → Terminate**
+**OKE â†’ Cluster â†’ Node Pool â†’ Nodes â†’ Cordon & drain â†’ Terminate**
 
 The portal shows a clear warning when scaling a Basic cluster.
 
-**Switching tiers:** Admins can switch the platform tier at any time in Configuration. The change applies to all new clusters — existing clusters retain the tier they were provisioned with.
+**Kubernetes version upgrades:** Use **Upgrade** on a running cluster. This updates the control plane and also updates node-pool target Kubernetes/image configuration. Existing workers are not force-replaced by the upgrade action:
+- Direct upgrades are limited to the same or next minor version (for example `1.33.x -> 1.34.x`; not `1.33.x -> 1.35.x`).
+- Basic: perform rolling worker refresh with scaling; the Upgrade modal now shows live per-pool steps based on current node counts (for example `1 -> 2 -> 1`, `2 -> 4 -> 2`, `3 -> 6 -> 3`).
+- Enhanced: use a rolling node replacement strategy to move workers to the new version with minimal downtime.
 
-**Per-user tier override:** Admins can give a specific user Enhanced access while keeping the global default as Basic — useful for individual teams that need production-grade scaling without upgrading the entire platform.
+**Switching tiers:** Admins can switch the platform tier at any time in Configuration. The change applies to all new clusters â€” existing clusters retain the tier they were provisioned with.
+
+**Per-user tier override:** Admins can give a specific user Enhanced access while keeping the global default as Basic â€” useful for individual teams that need production-grade scaling without upgrading the entire platform.
 
 ---
 
@@ -234,42 +253,42 @@ Limits cascade: global config sets the baseline for all users, per-user override
 
 | Limit | Global default | Per-user override |
 |---|---|---|
-| Clusters per user | Inherited from config | ✅ |
-| Node pools per cluster | 3 | ✅ |
-| Nodes per pool | 3 | ✅ |
-| OCPU per node | 1 | ✅ |
-| RAM per node | 12 GB | ✅ |
-| Storage per node | 50 GB | ✅ |
-| Cluster tier | BASIC_CLUSTER | ✅ |
+| Clusters per user | Inherited from config | âœ… |
+| Node pools per cluster | 3 | âœ… |
+| Nodes per pool | 3 | âœ… |
+| OCPU per node | 1 | âœ… |
+| RAM per node | 12 GB | âœ… |
+| Storage per node | 50 GB | âœ… |
+| Cluster tier | BASIC_CLUSTER | âœ… |
 
 The deploy form always reflects the user's current effective limits. If a user hits a limit, the form shows a clear message with a link to contact support. Limits can be raised at any time by an admin without restarting the platform.
 
 ---
 
-## 6. Access — kubeconfig and SSH
+## 6. Access â€” kubeconfig and SSH
 
 ### Kubeconfig
 
-Available on the cluster detail page once the cluster is running. The kubeconfig uses the OCI CLI exec plugin (`oci ce cluster generate-token`) — users need the [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm) installed locally.
+Available on the cluster detail page once the cluster is running. The kubeconfig uses the OCI CLI exec plugin (`oci ce cluster generate-token`) â€” users need the [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm) installed locally.
 
 ```bash
 export KUBECONFIG=~/oke-myname-cluster-kubeconfig.yaml
 kubectl get nodes
 ```
 
-Admins can download the kubeconfig for any cluster from **All Clusters → Details**.
+Admins can download the kubeconfig for any cluster from **All Clusters â†’ Details**.
 
 ### SSH key
 
 The SSH private key for cluster nodes is generated by Terraform at provisioning time and made available on the cluster detail page.
 
-> ⚠️ **Save the SSH key when you first see it.** Store it in a safe location — for security it may not be retrievable after the first download.
+> âš ï¸ **Save the SSH key when you first see it.** Store it in a safe location â€” for security it may not be retrievable after the first download.
 
 ```bash
 ssh -i ~/oke-myname-cluster-key.pem opc@<node-private-ip>
 ```
 
-Admins can download SSH keys for any cluster from **All Clusters → Details**.
+Admins can download SSH keys for any cluster from **All Clusters â†’ Details**.
 
 ---
 
@@ -283,7 +302,7 @@ By default, Infragate creates a full network stack per cluster:
 - A **private worker subnet** (/24)
 - An **internet gateway** for egress
 - A **route table** routing `0.0.0.0/0` to the IGW
-- A **security list** with OKE-required ingress/egress rules — worker node ports, API server access, node-to-node communication
+- A **security list** with OKE-required ingress/egress rules â€” worker node ports, API server access, node-to-node communication
 
 ### Bringing your own network
 
@@ -291,15 +310,25 @@ Users can supply existing OCIDs via the **Advanced tab** in the deploy form. Inf
 
 | Override | Effect |
 |---|---|
-| Existing VCN OCID | Uses your VCN — skips VCN, IGW, and route table creation |
-| Existing Compartment OCID | Places resources in your compartment — skips compartment creation |
-| Existing Subnet OCID | Places nodes in your subnet — skips subnet and security list creation |
+| Existing VCN OCID | Uses your VCN â€” skips VCN, IGW, and route table creation |
+| Existing Compartment OCID | Places resources in your compartment â€” skips compartment creation |
+| Existing Subnet OCID | Places nodes in your subnet â€” skips subnet and security list creation |
 
 Any combination is supported.
 
+Important behavior: `Existing Compartment OCID` does **not** auto-discover an existing VCN or subnet from that compartment. If VCN/subnet fields are left empty, Infragate creates a new VCN/subnets/network stack inside the provided compartment.
+
+Advanced override UX guardrails: OCID fields validate type prefixes (`ocid1.vcn.`, `ocid1.compartment.`, `ocid1.subnet.`) and provide OCI-backed autocomplete lists for compartments, VCNs, and subnets.
+
+> Shared compartment guidance: if you want multiple clusters in one compartment, use a dedicated BYO compartment via `Existing Compartment OCID` for all those clusters. Do not reuse a compartment that was auto-created for another cluster as a shared target.
+
+> Note: If you deploy with existing VCN/subnet overrides, Infragate does not manage route tables for those existing resources. Your existing network must already provide equivalent private-subnet egress required for OKE worker node registration: route `0.0.0.0/0` to a NAT Gateway (or equivalent corporate egress path) and route `all-<region>-services-in-oracle-services-network` to a Service Gateway. This is a routing requirement, not an "open ingress" security rule.
+
+> âš ï¸ **Drift behaviour.** Infragate-created VCN, subnet, IGW, route table, and security list resources are fully managed by the cluster's Terraform state â€” manual edits in the OCI Console will be overwritten on the next apply. BYO resources (existing VCN / subnet / compartment) are referenced read-only and never modified.
+
 ### Custom security rules
 
-Infragate's default security list covers the ports required by OKE. For custom ingress/egress rules — exposing specific node ports, restricting egress to corporate CIDRs, or integrating with existing NSGs — the recommended approach is to **bring your own subnet** via the Advanced tab with your security configuration already applied. Infragate uses your subnet and skips creating its own security list entirely, giving your network team full control without adding UI complexity.
+Infragate's default security list covers the ports required by OKE. For custom ingress/egress rules â€” exposing specific node ports, restricting egress to corporate CIDRs, or integrating with existing NSGs â€” the recommended approach is to **bring your own subnet** via the Advanced tab with your security configuration already applied. Infragate uses your subnet and skips creating its own security list entirely, giving your network team full control without adding UI complexity.
 
 ---
 
@@ -313,7 +342,7 @@ pip install -r requirements.txt
 pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 ```
 
-87 automated tests covering user provisioning, limit resolution, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
+87 automated tests covering user provisioning, limit resolution, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), and API contracts. Tests run against an in-memory SQLite database with mocked authentication â€” no external services required.
 
 ### CI pipeline
 
@@ -345,14 +374,14 @@ Both use the same tagging scheme (`latest` / `dev-latest` + commit SHA). The Hel
 
 | Phase | Status | Description |
 |---|---|---|
-| 1 — OCI Foundation | ✅ Complete | IAM, compartment, Object Storage, service account |
-| 2 — Terraform Module | ✅ Complete | Module validated with real `terraform plan` against OCI |
-| 3 — Container Host | ✅ Complete | k3s on OCI ARM instance in eu-frankfurt-1 |
-| 4 — Identity Integration | ✅ Complete | OIDC config, realm/client setup |
-| 5 — FastAPI | ✅ Complete | Full backend with Terraform runner integration |
-| 6 — Wire frontend | ✅ Complete | Frontend connected to live API |
-| 7 — Cluster templates | ✅ Complete | Admin-managed templates, deploy form selector, destroy protection, TTL |
-| 8 — Cost visibility | ✅ Complete | Live cost estimation across deploy form, dashboard, detail page, admin panels, and templates |
+| 1 â€” OCI Foundation | âœ… Complete | IAM, compartment, Object Storage, service account |
+| 2 â€” Terraform Module | âœ… Complete | Module validated with real `terraform plan` against OCI |
+| 3 â€” Container Host | âœ… Complete | k3s on OCI ARM instance in eu-frankfurt-1 |
+| 4 â€” Identity Integration | âœ… Complete | OIDC config, realm/client setup |
+| 5 â€” FastAPI | âœ… Complete | Full backend with Terraform runner integration |
+| 6 â€” Wire frontend | âœ… Complete | Frontend connected to live API |
+| 7 â€” Cluster templates | âœ… Complete | Admin-managed templates, deploy form selector, destroy protection, TTL |
+| 8 â€” Cost visibility | âœ… Complete | Live cost estimation across deploy form, dashboard, detail page, admin panels, and templates |
 
 ---
 
@@ -379,5 +408,7 @@ Infragate is licensed under the [Business Source License 1.1](./LICENSE).
 
 For a complete feature overview see [FEATURES.md](./FEATURES.md).
 For integration, deployment, stack architecture, and API reference see [INTEGRATION.md](./INTEGRATION.md).
+For end-to-end validation and the testing matrix see [TESTING.md](./TESTING.md).
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
