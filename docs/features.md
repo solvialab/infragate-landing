@@ -102,7 +102,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **Status tracking** — real-time status across all views: provisioning, scaling, upgrading, destroying, running, error, destroyed
 - **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. eetail page shows full expiry timestamp and remaining time
 - **Destroy protection** — protected clusters show a red "Protected" badge on dashboard cards and detail page. Non-admin users cannot destroy protected clusters (button disabled + 403 from API). Admins see a "Force Destroy" option that overrides protection via `?force=true`
-- **Destroy with cleanup** — `terraform destroy` removes all OCI resources; CIDR returned to pool for reuse
+- **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; compartments are retained by design, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
 - **Kubeconfig download** — available on the detail page once the cluster is running; uses OCI CLI exec plugin
 - **SSH key download** — Terraform-generated private key available on the detail page
