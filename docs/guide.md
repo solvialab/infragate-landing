@@ -1,10 +1,10 @@
-# Infragate â€” Deployment Guide
+# Infragate — Deployment Guide
 
 This guide covers three deployment paths:
 
-- **[Existing OKE cluster (recommended)](#existing-oke-cluster-deployment)** â€” deploy Infragate into an existing Oracle Kubernetes Engine cluster using Helm. Best for enterprise teams that already manage their own OKE infrastructure.
-- **[Single-node k3s](#single-node-k3s-deployment)** â€” step-by-step guide for deploying on a single OCI VM with k3s. Ideal for dev/test, demos, or Always Free tier.
-- **[OCI Marketplace (planned)](#marketplace-deployment)** â€” one-click "Launch Stack" from the OCI Console. Coming in a future release.
+- **[Existing OKE cluster (recommended)](#existing-oke-cluster-deployment)** — deploy Infragate into an existing Oracle Kubernetes Engine cluster using Helm. Best for enterprise teams that already manage their own OKE infrastructure.
+- **[Single-node k3s](#single-node-k3s-deployment)** — step-by-step guide for deploying on a single OCI VM with k3s. Ideal for dev/test, demos, or Always Free tier.
+- **[OCI Marketplace (planned)](#marketplace-deployment)** — one-click "Launch Stack" from the OCI Console. Coming in a future release.
 
 ---
 
@@ -24,7 +24,7 @@ Deploy Infragate into an existing OKE cluster. This path is for teams that alrea
 | **S3 compatibility credentials** | Customer Secret Keys for Terraform state |
 | **Domain name** | DNS A record pointing to the OCI load balancer IP |
 
-### Step 1 â€” Install ingress-nginx (if not present)
+### Step 1 — Install ingress-nginx (if not present)
 
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -35,7 +35,7 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
   --set controller.service.annotations."service\.beta\.kubernetes\.io/oci-load-balancer-shape-flex-max"=100
 ```
 
-### Step 2 â€” Create namespace and secrets
+### Step 2 — Create namespace and secrets
 
 ```bash
 kubectl create namespace infragate
@@ -45,7 +45,7 @@ kubectl create secret generic infragate-oci-key \
   -n infragate
 ```
 
-### Step 3 â€” Deploy with Helm
+### Step 3 — Deploy with Helm
 
 ```bash
 helm upgrade --install infragate deploy/helm/ \
@@ -71,14 +71,14 @@ The `values-oke.yaml` file is pre-configured for OKE with:
 - nginx ingress class with SSE proxy timeouts
 - No control-plane tolerations (OKE worker nodes accept all pods)
 
-### Step 4 â€” Verify pods are running
+### Step 4 — Verify pods are running
 
 ```bash
 kubectl get pods -n infragate
 # All pods should show Running and 1/1 Ready
 ```
 
-### Step 5 â€” Configure DNS
+### Step 5 — Configure DNS
 
 Get the load balancer IP:
 
@@ -89,7 +89,7 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller \
 
 Create a DNS A record pointing your domain to this IP.
 
-### Step 6 â€” Configure Keycloak and Infragate
+### Step 6 — Configure Keycloak and Infragate
 
 Follow the same Keycloak setup and Infragate configuration steps as the k3s deployment (Sections 9-11 below).
 
@@ -99,7 +99,7 @@ Follow the same Keycloak setup and Infragate configuration steps as the k3s depl
 # Pull latest chart changes
 git pull
 
-# Upgrade â€” Helm performs a rolling update
+# Upgrade — Helm performs a rolling update
 helm upgrade infragate deploy/helm/ -n infragate \
   -f deploy/helm/values-oke.yaml \
   --reuse-values \
@@ -135,7 +135,7 @@ Deploy Infragate on a single OCI VM running k3s at `dev.infragate.cloud`. This g
 6. [Container images](#6-container-images)
 7. [Create secrets](#7-create-secrets)
 8. [Deploy with Helm](#8-deploy-with-helm)
-9. [Configure Keycloak](#9-configure-keycloak) â€” Option A (deploy your own) / Option B (bring your own)
+9. [Configure Keycloak](#9-configure-keycloak) — Option A (deploy your own) / Option B (bring your own)
 10. [Enable HTTPS](#10-enable-https)
 11. [Configure Infragate](#11-configure-infragate)
 12. [Verify](#12-verify)
@@ -148,7 +148,7 @@ Deploy Infragate on a single OCI VM running k3s at `dev.infragate.cloud`. This g
 | Item | Details |
 |---|---|
 | OCI account | Active tenancy with OKE enabled |
-| Domain | `dev.infragate.cloud` â€” DNS A record pointed at the VM's public IP |
+| Domain | `dev.infragate.cloud` — DNS A record pointed at the VM's public IP |
 | SSH key pair | For VM access |
 | Infragate repo | Cloned locally or on the VM |
 
@@ -163,32 +163,32 @@ Create a compute instance in OCI. The Always Free Ampere A1 shape works well.
 | Setting | Value |
 |---|---|
 | Shape | VM.Standard.A1.Flex (ARM64) |
-| OCPUs | 2â€“4 |
-| Memory | 12â€“24 GB |
+| OCPUs | 2–4 |
+| Memory | 12–24 GB |
 | OS | Oracle Linux 8 or Ubuntu 22.04 |
 | Boot volume | 100 GB |
 | VCN | New or existing |
 
 **Open these ports in the VCN security list:**
 
-Ingress rules (stateful) â€” Source Port Range: All, Destination Port as listed:
+Ingress rules (stateful) — Source Port Range: All, Destination Port as listed:
 
 | Direction | Destination Port | Protocol | Source CIDR | Purpose |
 |---|---|---|---|---|
 | Ingress | 22 | TCP | `<YOUR_PUBLIC_IP>/32` | SSH access |
 | Ingress | 80 | TCP | 0.0.0.0/0 | HTTP (redirects to HTTPS) |
-| Ingress | 443 | TCP | 0.0.0.0/0 | HTTPS â€” all web traffic |
+| Ingress | 443 | TCP | 0.0.0.0/0 | HTTPS — all web traffic |
 | Ingress | 6443 | TCP | `<YOUR_PUBLIC_IP>/32` | Kubernetes API (optional, for remote kubectl) |
 
 > `<YOUR_PUBLIC_IP>` = the public IP of your workstation or office network (the machine you SSH from). This restricts SSH and K8s API access to your location only. Find it with `curl ifconfig.me`. Use `0.0.0.0/0` instead if you need access from anywhere (less secure).
 
-Egress rules (stateful) â€” Source Port Range: All, Destination Port: All:
+Egress rules (stateful) — Source Port Range: All, Destination Port: All:
 
 | Direction | Destination Port | Protocol | Destination CIDR | Purpose |
 |---|---|---|---|---|
 | Egress | All | All | 0.0.0.0/0 | Allow all outbound (Terraform needs to reach OCI APIs, Helm repos, container registries) |
 
-> OCI security lists are **stateful** by default â€” response traffic for allowed ingress rules is automatically permitted without an explicit egress rule. The "allow all outbound" egress rule is needed for the VM to initiate connections (apt/dnf updates, Terraform API calls, image pulls).
+> OCI security lists are **stateful** by default — response traffic for allowed ingress rules is automatically permitted without an explicit egress rule. The "allow all outbound" egress rule is needed for the VM to initiate connections (apt/dnf updates, Terraform API calls, image pulls).
 >
 > **Important:** The egress rule must use **All Protocols**, not just TCP. Kubernetes pods need UDP/53 for DNS resolution. If you set egress to TCP only, pod DNS will fail and cert-manager, image pulls, and Terraform will break.
 
@@ -206,7 +206,7 @@ sudo firewall-cmd --permanent --add-port=6443/tcp
 sudo firewall-cmd --permanent --zone=trusted --add-source=10.42.0.0/16
 sudo firewall-cmd --permanent --zone=trusted --add-source=10.43.0.0/16
 
-# Trust CNI interfaces â€” required for inter-pod communication
+# Trust CNI interfaces — required for inter-pod communication
 # Without this, traefik returns 502 (firewalld blocks pod-to-pod traffic on the bridge)
 sudo firewall-cmd --zone=trusted --add-interface=cni0 --permanent
 sudo firewall-cmd --zone=trusted --add-interface=flannel.1 --permanent
@@ -257,7 +257,7 @@ sudo rpm -i https://rpm.rancher.io/k3s/stable/common/centos/8/noarch/k3s-selinux
 
 ### 3.2 Install k3s
 
-k3s ships with Traefik as the bundled ingress controller â€” the `values-oci.yaml` chart values file is already wired for `className: traefik`, so no separate ingress install is needed.
+k3s ships with Traefik as the bundled ingress controller — the `values-oci.yaml` chart values file is already wired for `className: traefik`, so no separate ingress install is needed.
 
 ```bash
 curl -sfL https://get.k3s.io | sh -
@@ -315,7 +315,7 @@ kubectl get pods -A
 
 ### 3.5 Verify Traefik ingress is running
 
-k3s brings up Traefik automatically in the `kube-system` namespace â€” no separate install or host-networking patch is needed. Confirm it is running and listening on ports 80/443 of the node:
+k3s brings up Traefik automatically in the `kube-system` namespace — no separate install or host-networking patch is needed. Confirm it is running and listening on ports 80/443 of the node:
 
 ```bash
 kubectl get pods -n kube-system | grep traefik
@@ -367,7 +367,7 @@ kubectl run dns-test --rm -it --image=busybox --restart=Never -- nslookup acme-v
 ```
 
 > If DNS resolution fails (SERVFAIL / "no route to host"), check:
-> 1. **VCN egress rule** must use **All Protocols** (not just TCP) â€” pods need UDP/53 for DNS
+> 1. **VCN egress rule** must use **All Protocols** (not just TCP) — pods need UDP/53 for DNS
 > 2. **OS firewall** must trust the pod/service CIDRs (see Section 2)
 
 ---
@@ -412,10 +412,10 @@ OCI manages users under **Identity Domains** (per compartment). Each tenancy has
 4. Click **Create user**
 5. First name: `Infragate`, Last name: `Service`
 6. Username: `infragate-svc`
-7. Email: use a shared team address (required by Domains â€” e.g. `infragate-svc@yourdomain.com`)
+7. Email: use a shared team address (required by Domains — e.g. `infragate-svc@yourdomain.com`)
 8. Uncheck **Use the email address as the username**
 9. Click **Create**
-10. **Copy the user OCID** from the user details page â€” you'll need it as `userOcid`
+10. **Copy the user OCID** from the user details page — you'll need it as `userOcid`
 
 > If your tenancy still uses the legacy Identity (no Domains), go to **Identity & Security** > **Users** > **Create User** > select **IAM User** instead.
 
@@ -471,13 +471,13 @@ Allow any-user to use tag-namespaces in tenancy where request.user.id = '<infrag
 1. In the Default domain, go to **Users** > click `infragate-svc`
 2. In the left sidebar under **Resources**, click **API keys**
 3. Click **Add API key** > **Generate API key pair**
-4. Click **Download private key** â€” save as `oci_api_key.pem`
+4. Click **Download private key** — save as `oci_api_key.pem`
 5. Click **Add**
 6. Note from the **Configuration File Preview**:
-   - `tenancy` â€” tenancy OCID
-   - `user` â€” user OCID (this is the **infragate-svc** OCID, not your personal account)
-   - `fingerprint` â€” key fingerprint
-   - `region` â€” e.g. `eu-frankfurt-1`
+   - `tenancy` — tenancy OCID
+   - `user` — user OCID (this is the **infragate-svc** OCID, not your personal account)
+   - `fingerprint` — key fingerprint
+   - `region` — e.g. `eu-frankfurt-1`
 
 Copy the key to the VM:
 
@@ -511,8 +511,8 @@ chmod 600 ~/.oci/oci_api_key.pem
 4. Click **Generate secret key**
 5. Name: `infragate-tfstate-s3`
 6. Click **Generate secret key**
-7. **Copy the Secret Key immediately** â€” it's shown only once. This is your `s3SecretKey`.
-8. **Copy the Access Key** from the table â€” this is your `s3AccessKey`.
+7. **Copy the Secret Key immediately** — it's shown only once. This is your `s3SecretKey`.
+8. **Copy the Access Key** from the table — this is your `s3AccessKey`.
 
 > If using legacy Identity (no Domains): **Identity & Security** > **Users** > `infragate-svc` > **Customer Secret Keys**.
 
@@ -606,7 +606,7 @@ ssh opc@<VM_PUBLIC_IP> "mkdir -p ~/.oci && chmod 700 ~/.oci"
 scp /path/to/oci_api_key.pem opc@<VM_PUBLIC_IP>:~/.oci/oci_api_key.pem
 ```
 
-Verify the key is there, then create the secret. The namespace will be created by Helm in the next step â€” we use `--create-namespace` here just in case you run this before Helm:
+Verify the key is there, then create the secret. The namespace will be created by Helm in the next step — we use `--create-namespace` here just in case you run this before Helm:
 
 ```bash
 ls -la ~/.oci/oci_api_key.pem
@@ -631,13 +631,13 @@ kubectl annotate namespace infragate meta.helm.sh/release-name=infragate meta.he
 
 ### 8.1 Create your values file
 
-The Helm chart ships with three values files (see [INTEGRATION.md â€” Helm configuration](./INTEGRATION.md#13-helm-configuration) for details):
+The Helm chart ships with three values files (see [INTEGRATION.md — Helm configuration](./INTEGRATION.md#13-helm-configuration) for details):
 
 | File | Purpose |
 |---|---|
-| `values.yaml` | Chart defaults â€” all fields documented, never edit directly |
-| `values-oci.yaml` | OCI deployment template â€” copy this to get started |
-| `values-dev.yaml` | Your environment config â€” domain, TLS, and deployment-specific settings |
+| `values.yaml` | Chart defaults — all fields documented, never edit directly |
+| `values-oci.yaml` | OCI deployment template — copy this to get started |
+| `values-dev.yaml` | Your environment config — domain, TLS, and deployment-specific settings |
 
 Create your values file by copying the OCI template:
 
@@ -710,13 +710,13 @@ Replace the placeholder values below. All `api.oci.*` credentials come from the 
 |---|---|
 | `<DB_PASSWORD>` | Choose a password for PostgreSQL |
 | `<KC_ADMIN_PASSWORD>` | Choose a password for Keycloak admin console |
-| `tenancyOcid` | Section 5.3 â€” Configuration File Preview â†’ `tenancy` |
-| `userOcid` | Section 5.3 â€” Configuration File Preview â†’ `user` (the **infragate-svc** user OCID, not your personal account) |
-| `fingerprint` | Section 5.3 â€” Configuration File Preview â†’ `fingerprint` (of the **infragate-svc** API key) |
-| `namespace` | Section 5.4 â€” Object Storage Namespace (under Tenancy Details) |
-| `parentCompartmentOcid` | Section 5.6 â€” Parent compartment OCID |
-| `s3AccessKey` | Section 5.5 â€” Customer Secret Key access key |
-| `s3SecretKey` | Section 5.5 â€” Customer Secret Key secret key |
+| `tenancyOcid` | Section 5.3 — Configuration File Preview â†’ `tenancy` |
+| `userOcid` | Section 5.3 — Configuration File Preview â†’ `user` (the **infragate-svc** user OCID, not your personal account) |
+| `fingerprint` | Section 5.3 — Configuration File Preview â†’ `fingerprint` (of the **infragate-svc** API key) |
+| `namespace` | Section 5.4 — Object Storage Namespace (under Tenancy Details) |
+| `parentCompartmentOcid` | Section 5.6 — Parent compartment OCID |
+| `s3AccessKey` | Section 5.5 — Customer Secret Key access key |
+| `s3SecretKey` | Section 5.5 — Customer Secret Key secret key |
 
 ```bash
 helm upgrade --install infragate ./deploy/helm \
@@ -766,8 +766,8 @@ kubectl describe pod -n infragate <pod-name>
 
 Choose **one** of the two options below:
 
-- **Option A** â€” Deploy your own Keycloak (included in Helm chart, good for dev/testing)
-- **Option B** â€” Bring your own Keycloak (enterprise environments with an existing IdP)
+- **Option A** — Deploy your own Keycloak (included in Helm chart, good for dev/testing)
+- **Option B** — Bring your own Keycloak (enterprise environments with an existing IdP)
 
 ---
 
@@ -832,17 +832,17 @@ Same as above, but skip step 5 (no admin role). These users can deploy clusters 
 
 The OIDC issuer URL must be reachable from both the browser and the API pod. The Helm chart already includes a `/auth/` location block in the nginx ConfigMap (`deploy/helm/templates/configmap-nginx.yaml`) that proxies to the in-cluster Keycloak.
 
-Verify it looks like this (no `/auth/` suffix on `proxy_pass` â€” Keycloak 24+ serves at the root):
+Verify it looks like this (no `/auth/` suffix on `proxy_pass` — Keycloak 24+ serves at the root):
 
 ```nginx
-# Keycloak â€” reverse proxy for OIDC (login, token exchange, discovery)
+# Keycloak — reverse proxy for OIDC (login, token exchange, discovery)
 location /auth/ {
     proxy_pass http://infragate-keycloak:8080/;
     ...
 }
 ```
 
-> `location /auth/` strips the `/auth` prefix before forwarding. A request to `/auth/realms/infragate` becomes `/realms/infragate` on Keycloak, which is correct for Keycloak 24+. Do **not** use `proxy_pass .../auth/;` â€” that would produce `/auth/realms/infragate` on Keycloak, which no longer exists.
+> `location /auth/` strips the `/auth` prefix before forwarding. A request to `/auth/realms/infragate` becomes `/realms/infragate` on Keycloak, which is correct for Keycloak 24+. Do **not** use `proxy_pass .../auth/;` — that would produce `/auth/realms/infragate` on Keycloak, which no longer exists.
 
 This makes the issuer URL `https://dev.infragate.cloud/auth/realms/infragate`, which matches the `api.oidc.issuer` in the values file. No changes needed if you deployed using the Helm chart as-is.
 
@@ -852,7 +852,7 @@ This makes the issuer URL `https://dev.infragate.cloud/auth/realms/infragate`, w
 
 Use this option if your organization already runs a Keycloak instance (or any OIDC-compatible IdP that supports PKCE). Infragate only needs:
 
-1. A **public OIDC client** (no client secret â€” the frontend uses Authorization Code + PKCE)
+1. A **public OIDC client** (no client secret — the frontend uses Authorization Code + PKCE)
 2. A **realm role** named `admin` to distinguish platform admins from regular users
 3. The JWT `sub` claim as the stable user identifier
 4. Realm roles exposed in the token under `realm_access.roles`
@@ -873,7 +873,7 @@ Log into your Keycloak admin console and navigate to the realm you want to use (
 1. **Clients > Create client**
 2. Client ID: `infragate-portal`
 3. Client type: **OpenID Connect**
-4. Client authentication: **Off** (public client â€” PKCE is used instead of a client secret)
+4. Client authentication: **Off** (public client — PKCE is used instead of a client secret)
 5. **Next** > Standard flow: **On**, Direct access grants: **On** > **Next**
 6. Access settings:
    - Root URL: `https://dev.infragate.cloud`
@@ -890,7 +890,7 @@ Log into your Keycloak admin console and navigate to the realm you want to use (
 3. **Save**
 4. Assign this role to users who should have platform admin access
 
-Infragate checks for `admin` in the `realm_access.roles` array of the JWT. Users without this role are regular users â€” they can deploy clusters but cannot access the admin panel.
+Infragate checks for `admin` in the `realm_access.roles` array of the JWT. Users without this role are regular users — they can deploy clusters but cannot access the admin panel.
 
 #### 9B.4 Verify token structure
 
@@ -898,10 +898,10 @@ Infragate expects these claims in the JWT access token:
 
 | Claim | Used for |
 |---|---|
-| `sub` | Unique user identifier (Keycloak UUID) â€” stored as `keycloak_id` in DB |
+| `sub` | Unique user identifier (Keycloak UUID) — stored as `keycloak_id` in DB |
 | `preferred_username` | Display name in the UI |
 | `email` | Stored on first login |
-| `realm_access.roles` | Array of strings â€” checked for `"admin"` role |
+| `realm_access.roles` | Array of strings — checked for `"admin"` role |
 
 Most Keycloak installations include these by default. If you use custom mappers or a different IdP, verify the token contains these claims.
 
@@ -915,10 +915,10 @@ keycloak:
 
 api:
   oidc:
-    # The public issuer URL â€” must match the `iss` claim in the JWT
+    # The public issuer URL — must match the `iss` claim in the JWT
     # and be reachable from the user's browser (for OIDC discovery + login redirect)
     issuer: https://keycloak.yourcompany.com/realms/infragate
-    # Internal URL â€” used by the API pod to fetch JWKS keys
+    # Internal URL — used by the API pod to fetch JWKS keys
     # Set this if the public issuer URL is not reachable from inside the cluster
     # (e.g., split-horizon DNS, or Keycloak is behind a different ingress)
     # Leave empty if the public URL works from inside the cluster too
@@ -946,7 +946,7 @@ api:
     internalUrl: http://keycloak.internal.yourcompany.com:8080/realms/infragate
 ```
 
-> The `issuer` must match the `iss` claim in the JWT exactly. The `internalUrl` is only used by the backend to fetch JWKS signing keys â€” it does not appear in tokens.
+> The `issuer` must match the `iss` claim in the JWT exactly. The `internalUrl` is only used by the backend to fetch JWKS signing keys — it does not appear in tokens.
 
 #### 9B.6 Remove the /auth proxy block
 
@@ -977,7 +977,7 @@ If this returns a JSON object with `"keys": [...]`, the connection is working. I
 
 #### 9B.8 Create users
 
-Users are auto-provisioned in the Infragate database on their first login (`GET /api/v1/users/me`). You do not need to create them manually in Infragate â€” just ensure they exist in your Keycloak realm and assign the `admin` role to platform administrators.
+Users are auto-provisioned in the Infragate database on their first login (`GET /api/v1/users/me`). You do not need to create them manually in Infragate — just ensure they exist in your Keycloak realm and assign the `admin` role to platform administrators.
 
 ---
 
@@ -1078,12 +1078,12 @@ kubectl delete challenge,order,certificaterequest -n infragate --all
 
 ## 11. Configure Infragate
 
-All platform configuration is done through the **Admin UI** â€” no curl commands needed.
+All platform configuration is done through the **Admin UI** — no curl commands needed.
 
 ### 11.1 Log in as admin
 
 1. Open `https://dev.infragate.cloud`
-2. Click **Log In** â€” you are redirected to Keycloak
+2. Click **Log In** — you are redirected to Keycloak
 3. Log in with the admin user created in Section 9.5
 
 Because this user has the `admin` realm role in Keycloak, the navigation bar shows admin links (All clusters, Users & limits, Configuration, Audit log) instead of the regular user navigation.
@@ -1092,11 +1092,11 @@ Because this user has the `admin` realm role in Keycloak, the navigation bar sho
 
 The admin navigation links are shown directly in the top navigation bar:
 
-- **All clusters** â€” overview of every cluster across all users, stats (online, provisioning, upgrading k8s, destroying, failed, total, CIDRs used, monthly spend), cost per cluster, deploy/scale/destroy actions
-- **Users & limits** â€” user list, cluster limits, per-user overrides
-- **Configuration** â€” platform settings (this is what we need now)
-- **Cluster templates** â€” pre-configured cluster profiles for the deploy form, with estimated cost per template
-- **Audit log** â€” append-only record of every operation
+- **All clusters** — overview of every cluster across all users, stats (online, provisioning, upgrading k8s, destroying, failed, total, CIDRs used, monthly spend), cost per cluster, deploy/scale/destroy actions
+- **Users & limits** — user list, cluster limits, per-user overrides
+- **Configuration** — platform settings (this is what we need now)
+- **Cluster templates** — pre-configured cluster profiles for the deploy form, with estimated cost per template
+- **Audit log** — append-only record of every operation
 
 ### 11.3 Configuration tab
 
@@ -1104,7 +1104,7 @@ Click **Configuration**. This page lets you set up everything the platform needs
 
 **CIDR Pool**
 
-Add /24 CIDR ranges that Infragate can allocate to clusters. Type a CIDR (e.g. `10.120.1.0/24`) into the input field and click **Add CIDR**. Add as many as you need â€” each cluster consumes one.
+Add /24 CIDR ranges that Infragate can allocate to clusters. Type a CIDR (e.g. `10.120.1.0/24`) into the input field and click **Add CIDR**. Add as many as you need — each cluster consumes one.
 
 **OCI Settings**
 
@@ -1140,7 +1140,7 @@ Common shapes:
 
 **Node Images**
 
-*(Optional)* Add OCI compute images for worker node pools. If no images are configured, OKE auto-selects the latest compatible image. To pin a specific image, paste the image OCID (e.g. `ocid1.image.oc1.eu-frankfurt-1.aaaa...`) and add a display label (e.g. "Oracle Linux 8 â€” OKE 1.32").
+*(Optional)* Add OCI compute images for worker node pools. If no images are configured, OKE auto-selects the latest compatible image. To pin a specific image, paste the image OCID (e.g. `ocid1.image.oc1.eu-frankfurt-1.aaaa...`) and add a display label (e.g. "Oracle Linux 8 — OKE 1.32").
 
 For OKE worker nodes, prefer OKE node pool options as the authoritative source, not generic Compute image lists:
 
@@ -1175,21 +1175,21 @@ Click **+ Add template** to create a new template:
 |---|---|
 | Template name | Display name shown on the deploy form card |
 | Description | Short description shown below the name |
-| K8s version | Pre-selected version (optional â€” user selects if left blank) |
+| K8s version | Pre-selected version (optional — user selects if left blank) |
 | VM shape | Pre-selected shape (optional) |
-| Node image | Pre-selected OCI compute image (optional â€” auto-selects latest OKE image if left blank) |
-| Node pools | Pre-defined pool layout â€” click "Add pool" to define pools with name, nodes, OCPU, RAM, storage |
-| Default tier | Suggested cluster tier â€” Basic or Enhanced (optional) |
-| TTL | Time-to-live in hours â€” clusters expire after this duration (optional) |
+| Node image | Pre-selected OCI compute image (optional — auto-selects latest OKE image if left blank) |
+| Node pools | Pre-defined pool layout — click "Add pool" to define pools with name, nodes, OCPU, RAM, storage |
+| Default tier | Suggested cluster tier — Basic or Enhanced (optional) |
+| TTL | Time-to-live in hours — clusters expire after this duration (optional) |
 | Destroy protection | When enabled, clusters created from this template cannot be destroyed without admin approval |
-| Required role | Keycloak realm role â€” only users with this role see this template on the deploy form. Leave empty to make the template available to all users |
+| Required role | Keycloak realm role — only users with this role see this template on the deploy form. Leave empty to make the template available to all users |
 | Sort order | Controls card position in the deploy form (lower numbers appear first) |
 
 The templates table shows estimated monthly and hourly cost for each template. When adding or editing a template, a live cost preview updates as you change pools, shape, or tier.
 
 Template guardrail: in the template modal, selecting a VM shape filters K8s options to OCI-compatible versions for that shape/region. The backend enforces the same compatibility on template create/update.
 
-Templates can be edited at any time. **Disable** removes a template from the deploy form without deleting it â€” existing clusters that were created from the template retain their reference. **Delete** permanently removes the template from the admin panel.
+Templates can be edited at any time. **Disable** removes a template from the deploy form without deleting it — existing clusters that were created from the template retain their reference. **Delete** permanently removes the template from the admin panel.
 
 When a user selects a template on the deploy form, the pool configuration, K8s version, shape, and node image are pre-filled and locked. Destroy protection and TTL policies are applied server-side at deploy time and cannot be overridden by the user.
 
@@ -1199,18 +1199,18 @@ Use `required_role` to control which teams can provision which cluster types. A 
 
 | Template | Required role | TTL | Destroy protection | Intended audience |
 |---|---|---|---|---|
-| DEV â€” Small | *(none)* | 72h | No | All developers â€” lightweight clusters for local testing |
-| TEST â€” Medium | `testing` | 168h | No | QA engineers â€” integration and regression testing |
-| UAT â€” Large | `uat` | *(none)* | Yes | Release managers â€” pre-production validation |
-| PROD â€” HA | `production` | *(none)* | Yes | Production team â€” full HA with destroy protection |
+| DEV — Small | *(none)* | 72h | No | All developers — lightweight clusters for local testing |
+| TEST — Medium | `testing` | 168h | No | QA engineers — integration and regression testing |
+| UAT — Large | `uat` | *(none)* | Yes | Release managers — pre-production validation |
+| PROD — HA | `production` | *(none)* | Yes | Production team — full HA with destroy protection |
 
 **Setup steps:**
 
-1. **Create roles in Keycloak** â€” go to **Realm roles > Create role** and create `testing`, `uat`, and `production` roles (the DEV template has no role requirement, so all users can see it)
-2. **Assign roles to users** â€” go to **Users > [user] > Role mapping > Assign role** and grant the appropriate roles. A user can have multiple roles (e.g. a senior engineer might have both `testing` and `uat`)
-3. **Set `required_role` on each template** â€” in the Infragate admin panel under **Cluster templates**, edit each template and set the role field
+1. **Create roles in Keycloak** — go to **Realm roles > Create role** and create `testing`, `uat`, and `production` roles (the DEV template has no role requirement, so all users can see it)
+2. **Assign roles to users** — go to **Users > [user] > Role mapping > Assign role** and grant the appropriate roles. A user can have multiple roles (e.g. a senior engineer might have both `testing` and `uat`)
+3. **Set `required_role` on each template** — in the Infragate admin panel under **Cluster templates**, edit each template and set the role field
 
-Users only see the templates they have access to on the deploy form. Restricted templates don't appear at all â€” no error messages, no greyed-out cards. The API enforces the same check server-side, so role bypassing via direct API calls is not possible.
+Users only see the templates they have access to on the deploy form. Restricted templates don't appear at all — no error messages, no greyed-out cards. The API enforces the same check server-side, so role bypassing via direct API calls is not possible.
 
 **Available K8s Versions**
 
@@ -1229,10 +1229,10 @@ Go to **Users & limits**. Click **Edit Limits** on a user to set per-user limit 
 
 ### 12.1 End-to-end check
 
-1. Open `https://dev.infragate.cloud` â€” landing page loads
-2. **Log In** â€” redirects to Keycloak, log in
+1. Open `https://dev.infragate.cloud` — landing page loads
+2. **Log In** — redirects to Keycloak, log in
 3. As admin, the **All clusters** page loads (regular users see **My Clusters**)
-4. Click **Deploy** â€” form shows configured shapes, images, K8s versions, and limits
+4. Click **Deploy** — form shows configured shapes, images, K8s versions, and limits
 5. As admin, the navigation bar shows admin links (All clusters, Users & limits, etc.)
 
 ### 12.2 API health
@@ -1250,7 +1250,7 @@ kubectl get pods -n infragate -o wide
 
 ### 12.4 Test deploy
 
-Deploy a test cluster through the UI to confirm Terraform can reach OCI and provision resources. Watch the live log stream â€” it should show `terraform init`, `plan`, and `apply` output in real time.
+Deploy a test cluster through the UI to confirm Terraform can reach OCI and provision resources. Watch the live log stream — it should show `terraform init`, `plan`, and `apply` output in real time.
 
 ---
 
@@ -1329,7 +1329,7 @@ cat infragate-backup.sql | kubectl exec -i -n infragate infragate-postgresql-0 -
 
 ### Keycloak production mode
 
-The Helm chart runs Keycloak in **production mode** (`start` instead of `start-dev`). This enables theme caching, token caching, and JVM optimizations â€” login/logout redirects are significantly faster.
+The Helm chart runs Keycloak in **production mode** (`start` instead of `start-dev`). This enables theme caching, token caching, and JVM optimizations — login/logout redirects are significantly faster.
 
 Key differences from dev mode:
 - First boot takes ~60-90s (one-time config build), subsequent startups are faster
@@ -1369,7 +1369,7 @@ kubectl delete namespace infragate
 
 ## Marketplace Deployment
 
-> **Status: Planned** â€” OCI Marketplace listing is planned for a future release. The deployment flow below documents the intended experience. For now, use the [Existing OKE cluster](#existing-oke-cluster-deployment) or [Single-node k3s](#single-node-k3s-deployment) paths.
+> **Status: Planned** — OCI Marketplace listing is planned for a future release. The deployment flow below documents the intended experience. For now, use the [Existing OKE cluster](#existing-oke-cluster-deployment) or [Single-node k3s](#single-node-k3s-deployment) paths.
 
 ### What the customer gets
 
@@ -1381,7 +1381,7 @@ When the Marketplace listing is live, an OCI customer clicking **Launch Stack** 
 | **Networking** | VCN, subnets (API, node, LB), internet gateway, route tables, security lists (or uses existing) |
 | **IAM** | Dynamic group for OKE nodes + IAM policies for image pulling |
 | **Ingress** | NGINX ingress controller with OCI flexible load balancer |
-| **Infragate** | Full Helm release â€” API, frontend, PostgreSQL, Keycloak (optional) |
+| **Infragate** | Full Helm release — API, frontend, PostgreSQL, Keycloak (optional) |
 | **Secrets** | OCI API key mounted as Kubernetes secret, auto-generated DB and Keycloak passwords |
 
 ### Customer prerequisites
@@ -1401,7 +1401,7 @@ Customers upgrade by re-running the Resource Manager Stack with updated containe
 
 1. OCI Console > Resource Manager > Stacks > Select Infragate stack
 2. Edit variables > Update `api_image_tag` and `frontend_image_tag` to new version
-3. Click "Apply" â€” Helm performs a rolling update
+3. Click "Apply" — Helm performs a rolling update
 
 ---
 
