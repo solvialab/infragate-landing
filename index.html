@@ -132,9 +132,182 @@
     @media (min-width: 768px) {
       .stat-number { font-size: 2.8rem; }
     }
+                /* Premium section pills (enterprise badge style) */
+    .section-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.34rem 0.72rem;
+      border-radius: 8px;
+      border: 1px solid #d6e0e8;
+      background: #f8fafc;
+      color: #3b5265;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+      transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+    }
+    .section-pill:hover {
+      border-color: #b9c7d3;
+      background: #f2f6fa;
+      color: #2a4154;
+    }
+    .section-pill::before {
+      display: none;
+      content: '';
+    }
+    .section-pill.no-dot::before {
+      display: none;
+    }
+    .dark .section-pill {
+      border-color: #324556;
+      background: #0f1a26;
+      color: #a7bbcc;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+        .dark .section-pill:hover {
+      border-color: #3f5568;
+      background: #132132;
+      color: #bfd0de;
+    }
+
+    /* Comparison table polish */
+    .compare-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+    .compare-table th,
+    .compare-table td {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+      vertical-align: top;
+    }
+    .compare-table th:not(:first-child),
+    .compare-table td:not(:first-child) {
+      border-left: 1px solid #e8edf2;
+    }
+    .dark .compare-table th:not(:first-child),
+    .dark .compare-table td:not(:first-child) {
+      border-left-color: #1f3140;
+    }
+    .compare-table thead th {
+      border-bottom: 1px solid #e8edf2;
+    }
+    .dark .compare-table thead th {
+      border-bottom-color: #1f3140;
+    }
+    .compare-table tbody tr:nth-child(even) {
+      background: rgba(148, 163, 184, 0.07);
+    }
+    .dark .compare-table tbody tr:nth-child(even) {
+      background: rgba(30, 41, 59, 0.34);
+    }
+    .compare-positive {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-weight: 600;
+      color: #355a72;
+      line-height: 1.45;
+    }
+    .compare-positive i {
+      font-size: 0.72rem;
+      color: #54748a;
+      flex-shrink: 0;
+    }
+    .dark .compare-positive {
+      color: #8fb8cb;
+    }
+    .dark .compare-positive i {
+      color: #7ea6b9;
+    }
+
+    /* Light theme contrast hardening */
+    html:not(.dark) body {
+      color: #0f172a;
+      background: #f3f6fa;
+    }
+    html:not(.dark) .text-gray-400 {
+      color: #536170 !important;
+    }
+    html:not(.dark) .text-gray-500 {
+      color: #425062 !important;
+    }
+    html:not(.dark) .text-gray-600 {
+      color: #2f3b4c !important;
+    }
+    html:not(.dark) .text-gray-700 {
+      color: #172233 !important;
+    }
+    html:not(.dark) .border-gray-100 {
+      border-color: #cfd9e4 !important;
+    }
+    html:not(.dark) .border-gray-200 {
+      border-color: #b7c6d6 !important;
+    }
+    html:not(.dark) .bg-gray-50 {
+      background-color: #eef3f8 !important;
+    }
+    html:not(.dark) .glass-card {
+      background: #ffffff;
+      border-color: #bfd0df;
+      box-shadow: 0 8px 20px -14px rgba(15, 23, 42, 0.5);
+    }
+    html:not(.dark) .glass-card:hover {
+      border-color: #98afc3;
+      box-shadow: 0 18px 34px -20px rgba(15, 23, 42, 0.4);
+    }
+    html:not(.dark) .section-pill {
+      border-color: #b2c3d2;
+      background: #e6eef5;
+      color: #2a4154;
+    }
+    html:not(.dark) .section-pill:hover {
+      border-color: #93a9bd;
+      background: #dde8f2;
+      color: #23394b;
+    }
+    html:not(.dark) .compare-table th:not(:first-child),
+    html:not(.dark) .compare-table td:not(:first-child) {
+      border-left-color: #c9d7e4;
+    }
+    html:not(.dark) .compare-table thead th {
+      color: #2c3f52;
+      border-bottom-color: #c5d3e1;
+    }
+    html:not(.dark) .compare-table tbody tr:nth-child(even) {
+      background: rgba(125, 147, 171, 0.16);
+    }
+
+    html:not(.dark) .ga-today-card {
+      background: #e2f3e8;
+      border-color: #97c6a8 !important;
+      box-shadow: 0 10px 22px -16px rgba(26, 95, 58, 0.45);
+    }
+    html:not(.dark) .ga-today-chip {
+      background: #f3fbf6 !important;
+      border-color: #8ebea1 !important;
+      color: #1f6b41 !important;
+    }
+    html:not(.dark) section.bg-white,
+    html:not(.dark) div.bg-white#statsSection {
+      background-color: #f6f9fc !important;
+    }
+    /* Typography polish (enterprise tone) */
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+    body { line-height: 1.6; letter-spacing: 0.002em; }
+    h1, h2, h3 { letter-spacing: -0.018em; line-height: 1.14; }
+    h4 { letter-spacing: -0.01em; line-height: 1.22; }
+    p { line-height: 1.68; }
+    li { line-height: 1.58; }
+    .nav-item, .mobile-nav-item { font-weight: 500; letter-spacing: 0.004em; }
+    .btn-solid-premium, .btn-outline-premium { letter-spacing: 0.01em; }
+    .stat-number { letter-spacing: -0.02em; }
     /* === WILD ANIMATIONS === */
     @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(40px); }
+      from { opacity: 0; transform: translateY(22px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeSlideDown {
@@ -230,14 +403,14 @@
     /* Scroll reveal base */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
     }
-    .reveal.from-left { transform: translateX(-40px); }
-    .reveal.from-right { transform: translateX(40px); }
-    .reveal.from-below { transform: translateY(40px); }
-    .reveal.scale-up { transform: scale(0.9); }
-    .reveal.rotate-in { transform: rotate(-5deg) scale(0.9); }
+    .reveal.from-left { transform: translateX(-22px); }
+    .reveal.from-right { transform: translateX(22px); }
+    .reveal.from-below { transform: translateY(22px); }
+    .reveal.scale-up { transform: scale(0.98); }
+    .reveal.rotate-in { transform: rotate(-2deg) scale(0.98); }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0) translateX(0) scale(1) rotate(0deg);
@@ -247,13 +420,13 @@
     .blob {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.15;
-      animation: blob-morph 12s ease-in-out infinite, float 10s ease-in-out infinite;
+      filter: blur(92px);
+      opacity: 0.08;
+      animation: blob-morph 20s ease-in-out infinite, float 24s ease-in-out infinite;
       pointer-events: none;
       z-index: -1;
     }
-    .dark .blob { opacity: 0.08; }
+    .dark .blob { opacity: 0.05; }
     .blob-1 { width: 400px; height: 400px; background: #1C5D7A; top: -100px; right: -100px; animation-delay: 0s; }
     .blob-2 { width: 300px; height: 300px; background: #10b981; bottom: -50px; left: -80px; animation-delay: -3s; }
     .blob-3 { width: 350px; height: 350px; background: #8b5cf6; top: 50%; left: 50%; animation-delay: -5s; }
@@ -265,7 +438,7 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: shimmer 4.5s linear infinite;
+      animation: shimmer 8s linear infinite;
     }
     .dark .shimmer-text {
       background: linear-gradient(90deg, #5BB8D8 0%, #7DD3FC 25%, #ffffff 50%, #7DD3FC 75%, #5BB8D8 100%);
@@ -281,7 +454,7 @@
 
     /* Icon bounce on card hover */
     .glass-card:hover .feature-icon i {
-      animation: bounce-subtle 0.5s ease;
+      animation: none;
     }
     /* FinOps / Identity / Admin card hover lift */
     .hover-lift {
@@ -296,11 +469,11 @@
     }
     /* Admin card icon wiggle on hover */
     .border-l-4:hover > i {
-      animation: wiggle 0.4s ease;
+      animation: none;
     }
     /* Identity card icon bounce on hover */
     .border:hover > i.fas {
-      animation: bounce-subtle 0.5s ease;
+      animation: none;
     }
 
     /* 3D tilt card */
@@ -312,7 +485,7 @@
 
     /* Gradient border animation */
     .animated-border {
-      animation: border-dance 6s ease-in-out infinite;
+      animation: border-dance 16s ease-in-out infinite;
     }
 
     /* Floating particles container */
@@ -332,7 +505,7 @@
       height: 4px;
       background: rgba(28, 93, 122, 0.3);
       border-radius: 50%;
-      animation: floatSlow 8s ease-in-out infinite;
+      animation: floatSlow 16s ease-in-out infinite;
     }
     .dark .particle {
       background: rgba(91, 184, 216, 0.2);
@@ -355,7 +528,7 @@
     .stat-card {
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .stat-card.active {
       opacity: 1;
@@ -395,7 +568,7 @@
       opacity: 1;
       transform: translateY(0);
     }
-    /* $0 stat - no counter, inherits card fade */
+    /* Lifecycle-ops stat uses count-up like other metric cards */
     @keyframes counter-pop {
       0% { transform: scale(1); }
       40% { transform: scale(1.2); }
@@ -470,25 +643,25 @@
       transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
     }
     .cta-btn:hover {
-      transform: translateY(-2px) scale(1.03);
+      transform: translateY(-1px) scale(1.01);
       box-shadow: 0 12px 32px -8px rgba(0,0,0,0.25);
     }
 
     /* Stagger children */
     .stagger-children > * {
       opacity: 0;
-      transform: translateY(20px) scale(0.97);
-      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(12px) scale(0.99);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .stagger-children.visible > *:nth-child(1) { transition-delay: 0s; }
-    .stagger-children.visible > *:nth-child(2) { transition-delay: 0.12s; }
-    .stagger-children.visible > *:nth-child(3) { transition-delay: 0.24s; }
-    .stagger-children.visible > *:nth-child(4) { transition-delay: 0.18s; }
-    .stagger-children.visible > *:nth-child(5) { transition-delay: 0.3s; }
-    .stagger-children.visible > *:nth-child(6) { transition-delay: 0.36s; }
-    .stagger-children.visible > *:nth-child(7) { transition-delay: 0.42s; }
-    .stagger-children.visible > *:nth-child(8) { transition-delay: 0.48s; }
-    .stagger-children.visible > *:nth-child(9) { transition-delay: 0.54s; }
+    .stagger-children.visible > *:nth-child(2) { transition-delay: 0.08s; }
+    .stagger-children.visible > *:nth-child(3) { transition-delay: 0.16s; }
+    .stagger-children.visible > *:nth-child(4) { transition-delay: 0.24s; }
+    .stagger-children.visible > *:nth-child(5) { transition-delay: 0.32s; }
+    .stagger-children.visible > *:nth-child(6) { transition-delay: 0.4s; }
+    .stagger-children.visible > *:nth-child(7) { transition-delay: 0.48s; }
+    .stagger-children.visible > *:nth-child(8) { transition-delay: 0.56s; }
+    .stagger-children.visible > *:nth-child(9) { transition-delay: 0.64s; }
     .stagger-children.visible > * {
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -518,6 +691,12 @@
     .dark .wave-divider::before {
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q300 0 600 20 Q900 40 1200 20 V0 H0Z' fill='%230B1120'/%3E%3C/svg%3E");
     }
+    html:not(.dark) .wave-divider::before {
+      display: none;
+    }
+    html:not(.dark) .wave-divider {
+      border-top: 1px solid #cfd9e4;
+    }
 
     /* === MOBILE ANIMATION ADJUSTMENTS === */
     @media (max-width: 767px) {
@@ -546,7 +725,7 @@
       /* Ensure no horizontal overflow at root */
       html, body { overflow-x: hidden; position: relative; width: 100%; }
 
-      /* Disable 3D tilt on touch — flat hover only */
+      /* Disable 3D tilt on touch - flat hover only */
       .tilt-card {
         transform-style: flat !important;
         perspective: none !important;
@@ -596,7 +775,7 @@
       .reveal.from-right { transform: translateX(20px); }
     }
 
-    /* Respect prefers-reduced-motion — kill all animations */
+    /* Respect prefers-reduced-motion - kill all animations */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -716,7 +895,7 @@
       overflow-y: auto;
       padding: 2rem;
       box-shadow: 0 25px 60px rgba(0,0,0,0.2);
-      transform: translateY(20px) scale(0.97);
+      transform: translateY(12px) scale(0.99);
       transition: transform 0.25s ease;
     }
     .dark .modal-content {
@@ -736,12 +915,12 @@
       transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
       background: white;
-      color: #1f2937;
+      color: #172233;
     }
     .dark .modal-content input,
     .dark .modal-content textarea {
       background: #0F172A;
-      border-color: #334155;
+      border-color: #2c3f52;
       color: #e2e8f0;
     }
     .modal-content input:focus,
@@ -758,7 +937,7 @@
       display: block;
       font-size: 0.8125rem;
       font-weight: 600;
-      color: #374151;
+      color: #2f3b4c;
       margin-bottom: 0.375rem;
     }
     .dark .modal-content label { color: #cbd5e1; }
@@ -781,7 +960,7 @@
     }
     .theme-toggle:hover {
       background: #f3f4f6;
-      color: #374151;
+      color: #2f3b4c;
     }
     .dark .theme-toggle:hover {
       background: #1e293b;
@@ -924,11 +1103,13 @@
       <a href="#" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})" class="flex items-center gap-2">
         <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 md:w-9 md:h-9"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
         <span class="font-bold text-xl md:text-2xl tracking-tight text-gray-800 dark:text-white">Infragate</span>
-        <span class="hidden md:inline-block ml-3 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700" style="opacity:0;animation:fadeSlideUp 0.5s ease-out 0.6s forwards">OCI Native</span>
+        <span class="hidden md:inline-block ml-3 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700" style="opacity:0;animation:fadeSlideUp 0.5s ease-out 0.6s forwards">OCI Native</span>
       </a>
       <div class="hidden lg:flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-400" id="desktopNav">
         <a href="#features" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Features</a>
+        
         <a href="#why-infragate" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Why Infragate</a>
+        <a href="#ga-roadmap" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">GA vs Roadmap</a>
         <a href="#pricing" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Pricing</a>
       </div>
       <div class="flex items-center gap-2 sm:gap-3">
@@ -950,7 +1131,9 @@
     <!-- Mobile/tablet menu -->
     <div id="mobileNav" class="mobile-nav flex-col gap-3 pb-4 lg:hidden">
       <a href="#features" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Features</a>
+      
       <a href="#why-infragate" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Why Infragate</a>
+      <a href="#ga-roadmap" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">GA vs Roadmap</a>
       <a href="#pricing" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Pricing</a>
       <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
         <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
@@ -970,10 +1153,10 @@
     <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
       <div class="max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white reveal from-left text-center lg:text-left">
-          Internal Developer Platform for <span class="shimmer-text">Oracle Cloud</span>
+          Internal Developer Platform for <span class="shimmer-text">OKE on Oracle Cloud</span>
         </h1>
         <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="transition-delay: 0.15s;">
-          Infragate is a complete platform for OKE clusters lifecycle management — provisioning, scaling, cost governance, and access control through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
+          Infragate is an OCI-native Internal Developer Platform for OKE lifecycle management - provisioning, scaling, cost governance, and access control through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
         </p>
         <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
           <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-full cursor-pointer cta-btn">Book a 20-min demo</button>
@@ -992,7 +1175,7 @@
             <div class="w-3 h-3 rounded-full bg-red-500" style="animation:scaleIn 0.3s ease 0.5s both"></div>
             <div class="w-3 h-3 rounded-full bg-yellow-500" style="animation:scaleIn 0.3s ease 0.65s both"></div>
             <div class="w-3 h-3 rounded-full bg-green-500" style="animation:scaleIn 0.3s ease 0.8s both"></div>
-            <span class="text-gray-400 text-xs ml-2">terraform apply — streaming</span>
+            <span class="text-gray-400 text-xs ml-2">Terraform output replay (sanitized)</span>
           </div>
           <div id="terraformOutput" class="p-4 text-gray-300 text-sm font-mono space-y-1 bg-[#0F172A] h-[280px] md:h-[320px] overflow-hidden">
           </div>
@@ -1009,12 +1192,12 @@
     <div class="flex flex-col md:flex-row items-center justify-center md:justify-between gap-3 md:gap-6 text-sm text-gray-600 dark:text-gray-400">
       <div class="flex items-center gap-2.5 text-center md:text-left">
         <i class="fas fa-cloud text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
-        <span>Built on Oracle Cloud — native to <strong class="text-gray-800 dark:text-gray-200">OKE</strong>, <strong class="text-gray-800 dark:text-gray-200">IAM</strong>, <strong class="text-gray-800 dark:text-gray-200">VCN</strong>, and <strong class="text-gray-800 dark:text-gray-200">Object Storage</strong></span>
+        <span>Built on Oracle Cloud - native to <strong class="text-gray-800 dark:text-gray-200">OKE</strong>, <strong class="text-gray-800 dark:text-gray-200">IAM</strong>, <strong class="text-gray-800 dark:text-gray-200">VCN</strong>, and <strong class="text-gray-800 dark:text-gray-200">Object Storage</strong></span>
       </div>
       <div class="hidden md:block h-5 w-px bg-gray-200 dark:bg-gray-700"></div>
       <div class="flex items-center gap-2.5 text-center md:text-left">
         <i class="fas fa-tag text-emerald-600 dark:text-emerald-400"></i>
-        <span class="font-semibold text-gray-800 dark:text-gray-200"><span class="text-emerald-600 dark:text-emerald-400">No markup</span> on OCI resources — billed directly by Oracle</span>
+        <span class="font-semibold text-gray-800 dark:text-gray-200"><span class="text-emerald-600 dark:text-emerald-400">No markup</span> on OCI resources - billed directly by Oracle</span>
       </div>
     </div>
   </div>
@@ -1025,20 +1208,20 @@
 <section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden">
   <div class="blob" style="width:250px;height:250px;background:#8b5cf6;top:20%;right:-40px;animation-delay:-6s"></div>
   <div class="text-center max-w-2xl mx-auto mb-10 reveal">
-    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full">Platform capabilities</span>
+    <span class="section-pill">Platform capabilities</span>
     <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4 text-gray-900 dark:text-white">Complete cluster lifecycle<br>at your fingertips</h2>
-    <p class="text-gray-600 dark:text-gray-400">From one-click provisioning to multi-pool scaling, TTL expiry, and cost governance — Infragate brings enterprise control to OKE.</p>
+    <p class="text-gray-600 dark:text-gray-400">From one-click provisioning to multi-pool scaling, TTL expiry, and cost governance - Infragate brings enterprise control to OKE.</p>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 stagger-children text-center sm:text-left">
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-mouse-pointer text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">One-click deploy</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Engineers provision fully managed OKE clusters with automatic compartment, VCN, subnet, security list, and node pool creation — no manual steps.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Engineers provision fully managed OKE clusters with automatic compartment, VCN, subnet, security list, and node pool creation - no manual steps.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-layer-group text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
-      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Multi-pool scaling</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Add or remove node pools, adjust OCPU, RAM, and storage per pool from the UI. Change preview shows current vs. new values before applying.</p>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Scaling + K8s upgrades</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Add or remove node pools, adjust OCPU, RAM, and storage per pool from the UI. Dedicated Kubernetes upgrade flow supports safer version moves with guided worker refresh.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-chart-simple text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -1053,7 +1236,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-network-wired text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">CIDR pool management</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Admin-managed /24 ranges — each cluster consumes one on deploy and releases on destroy. No overlaps, automatic allocation.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Admin-managed /24 ranges - each cluster consumes one on deploy and releases on destroy. No overlaps, automatic allocation.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-key text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -1063,7 +1246,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-terminal text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Live Terraform streaming</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Watch <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">terraform init</code>, <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">plan</code>, and <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">apply</code> output stream in real time via SSE during deploy, scale, and destroy.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Watch <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">terraform init</code>, <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">plan</code>, and <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">apply</code> output stream in real time via SSE during deploy, scale, upgrade, and destroy.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -1073,7 +1256,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Resource limits</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Two-tier limit system: global defaults + per-user overrides. Covers clusters, pools, nodes, OCPU, RAM, storage, and tier. Visual feedback when limits are reached.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Two-tier limit system: global defaults + per-user overrides. Covers clusters, pools, nodes, OCPU, RAM, storage, and tier, with shape-aware Kubernetes compatibility checks.</p>
     </div>
   </div>
 </section>
@@ -1084,12 +1267,12 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
       <div>
-        <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-white dark:bg-gray-800 px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 reveal block w-fit mx-auto md:mx-0">Cluster templates &amp; RBAC</span>
+        <span class="section-pill reveal mx-auto md:mx-0">Cluster templates &amp; RBAC</span>
         <h2 class="text-3xl md:text-4xl font-bold mt-5 mb-5 text-gray-900 dark:text-white reveal text-center md:text-left" style="transition-delay:0.1s">Golden paths with role-based gating</h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-6 reveal text-center md:text-left" style="transition-delay:0.2s">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields — users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations.</p>
+        <p class="text-gray-600 dark:text-gray-400 mb-6 reveal text-center md:text-left" style="transition-delay:0.2s">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields - users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations.</p>
         <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm reveal scale-up mx-auto md:mx-0 max-w-lg" style="transition-delay:0.3s">
           <div class="flex flex-wrap justify-between items-center gap-2">
-            <span class="font-bold text-gray-800 dark:text-white">Template: PROD — HA</span>
+            <span class="font-bold text-gray-800 dark:text-white">Template: PROD - HA</span>
             <span class="text-xs bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-1 rounded-full border border-amber-200 dark:border-amber-700">requires: production</span>
           </div>
           <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
@@ -1098,7 +1281,7 @@
             <span><i class="fas fa-server text-[#1C5D7A] dark:text-[#5BB8D8]"></i> VM.Standard3.Flex</span>
             <span><i class="fas fa-layer-group text-[#1C5D7A] dark:text-[#5BB8D8]"></i> <span data-count-to="3" data-count-suffix=" node pools" data-count-duration="800">3 node pools</span></span>
           </div>
-          <p class="text-xs text-gray-400 dark:text-gray-500 mt-3"><i class="fas fa-eye-slash"></i> Users without the <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">production</code> role never see this template — clean UI, no error messages.</p>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mt-3"><i class="fas fa-eye-slash"></i> Users without the <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">production</code> role never see this template - clean UI, no error messages.</p>
         </div>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 reveal from-right" style="transition-delay:0.2s">
@@ -1108,19 +1291,19 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 stagger-children">
           <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">DEV — Small</span>
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">DEV - Small</span>
             <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">No role required &rarr; all users</div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">TEST — Medium</span>
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">TEST - Medium</span>
             <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">testing</code> &rarr; QA team</div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">UAT — Large</span>
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">UAT - Large</span>
             <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">uat</code> &rarr; release managers</div>
           </div>
           <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
-            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">PROD — HA</span>
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">PROD - HA</span>
             <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">production</code> &rarr; SRE only</div>
           </div>
         </div>
@@ -1133,9 +1316,9 @@
 <div id="finops" class="anchor-target"></div>
 <section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
   <div class="text-center mb-10 reveal">
-    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full">FinOps native</span>
+    <span class="section-pill">FinOps native</span>
     <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Cost visibility &amp; governance</h2>
-    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Real-time cost previews, cluster-level breakdowns, and global spend dashboards — no surprises. Both server-side and client-side cost engines produce identical results.</p>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Real-time cost previews, cluster-level breakdowns, and global spend dashboards - no surprises. Both server-side and client-side cost engines produce identical results.</p>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 stagger-children text-center sm:text-left">
     <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800/50 shadow-sm hover-lift flex flex-col items-center sm:items-start">
@@ -1176,9 +1359,9 @@
 <section class="bg-gray-50 dark:bg-gray-900/50 py-14 md:py-18 wave-divider">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-10 reveal">
-      <span class="bg-white dark:bg-gray-800 text-[#1C5D7A] dark:text-[#5BB8D8] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 uppercase tracking-wider">Admin &amp; governance</span>
+      <span class="section-pill">Admin &amp; governance</span>
       <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white"><span data-count-to="5" data-count-duration="1000">5</span> dedicated admin panels</h2>
-      <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, and audit logs — all changes take effect immediately.</p>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, and audit logs - all changes take effect immediately.</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 stagger-children text-center sm:text-left mx-auto">
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
@@ -1204,7 +1387,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-clock-rotate-left text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Audit Log</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Append-only record of every deploy, scale, destroy. Filterable by user, operation, and status.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Append-only record of every deploy, scale, upgrade, and destroy. Filterable by user, operation, status, and duration.</p>
       </div>
     </div>
   </div>
@@ -1215,14 +1398,14 @@
 <section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
   <div class="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
     <div>
-      <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full reveal block w-fit mx-auto md:mx-0">Deployment flexibility</span>
+      <span class="section-pill reveal mx-auto md:mx-0">Deployment flexibility</span>
       <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-5 text-gray-900 dark:text-white reveal text-center md:text-left" style="transition-delay:0.1s">Helm chart, OKE, or any Kubernetes</h2>
       <ul class="space-y-3 text-gray-600 dark:text-gray-400 stagger-children max-w-xl mx-auto md:mx-0">
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Existing OKE cluster</strong> — deploy into your Oracle Kubernetes Engine cluster via Helm in minutes. Pre-configured for OCI Block Volumes, nginx ingress, and OCI load balancer.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Helm chart</strong> — single chart with configurable values, ingress-nginx with OCI load balancer annotations. Supports <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">imagePullSecrets</code> for private registries.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">CI/CD pipelines</strong> — GitHub Actions (GHCR) &amp; GitLab CI (GitLab CR) included. Images tagged <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">dev-latest</code> and <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">latest</code>.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Single VM (k3s) on OCI Always Free</strong> — ARM-compatible, control-plane tolerations for single-node scheduling.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Any OIDC provider</strong> — bundled Keycloak, or connect Azure AD, Okta, Google Workspace. PKCE flow, no client secrets in frontend.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Existing OKE cluster</strong> - deploy into your Oracle Kubernetes Engine cluster via Helm in minutes. Pre-configured for OCI Block Volumes, nginx ingress, and OCI load balancer.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Helm chart</strong> - single chart with configurable values, ingress-nginx with OCI load balancer annotations. Supports <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">imagePullSecrets</code> for private registries.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Customer delivery model</strong> - plug-and-play deployment with versioned, stable releases. No customer-side CI/CD pipeline setup required.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Single VM (k3s) on OCI Always Free</strong> - ARM-compatible, control-plane tolerations for single-node scheduling.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Any OIDC provider</strong> - bundled Keycloak, or connect Azure AD, Okta, Google Workspace. PKCE flow, no client secrets in frontend.</span></li>
       </ul>
     </div>
     <!-- Deployment workflow animation -->
@@ -1264,7 +1447,7 @@
           </div>
           <div class="flex-1">
             <div class="text-white text-sm font-medium">Run test suite</div>
-            <div class="text-gray-500 text-xs"><span data-count-to="87" data-count-suffix=" automated tests passed" data-count-duration="1200">87 automated tests passed</span></div>
+            <div class="text-gray-500 text-xs"><span data-count-to="107" data-count-suffix=" automated tests passed" data-count-duration="1200">107 automated tests passed</span></div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1298,7 +1481,7 @@
         </div>
       </div>
       <div class="mt-5 bg-gray-800/50 p-3 rounded-lg text-emerald-300 text-xs">
-        <i class="fas fa-infinity mr-1"></i> Automated CI/CD with GitHub Actions &amp; GitLab CI — zero manual steps
+        <i class="fas fa-infinity mr-1"></i> Automated CI/CD with GitHub Actions &amp; GitLab CI - zero manual steps
       </div>
     </div>
   </div>
@@ -1310,7 +1493,7 @@
   <div class="blob" style="width:250px;height:250px;background:#10b981;bottom:-60px;right:-30px;animation-delay:-4s"></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-10 reveal">
-      <span class="bg-white dark:bg-gray-800 text-[#1C5D7A] dark:text-[#5BB8D8] text-xs font-bold px-3 py-1 rounded-full border border-gray-200 dark:border-gray-700 uppercase tracking-wider">Identity &amp; security</span>
+      <span class="section-pill">Identity &amp; security</span>
       <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Enterprise-grade access control</h2>
       <p class="text-gray-600 dark:text-gray-400 mt-2">Zero external dependencies. No data leaves your tenancy. No SaaS control plane.</p>
     </div>
@@ -1318,7 +1501,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-id-card text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-3 text-gray-900 dark:text-white">Any OIDC Provider</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Keycloak (bundled), Azure AD, Okta, Google Workspace — any OIDC-compliant IdP.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Keycloak (bundled), Azure AD, Okta, Google Workspace - any OIDC-compliant IdP.</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-fingerprint text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
@@ -1343,135 +1526,138 @@
 <div id="why-infragate" class="anchor-target"></div>
 <section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
   <div class="text-center mb-10">
-    <span class="text-sm font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full">OCI-First & Sovereign</span>
-    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Why Infragate — Built differently for Oracle Cloud</h2>
-    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">The only truly self-hosted, OCI-native Internal Developer Platform.<br>Everything runs in your tenancy — nothing phones home, nothing ever leaves.</p>
+    <span class="section-pill">OCI-First & Sovereign</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Why Infragate - OCI-native operating model</h2>
+    <p class="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mt-3">Designed for teams that want faster platform delivery while keeping control-plane operations, governance, and secrets management within their OCI boundary.</p>
   </div>
 
-  <!-- Sovereignty pill strip -->
   <div class="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-12">
-    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No external SaaS
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#355a72] dark:text-[#8fb8cb]"></i> Designed for OCI in-tenancy control planes
     </span>
-    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No control plane outside your tenancy
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#355a72] dark:text-[#8fb8cb]"></i> External SaaS callbacks not required
     </span>
-    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No data egress
-    </span>
-    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-50 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-      <i class="fas fa-check text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i> No third parties
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#355a72] dark:text-[#8fb8cb]"></i> Secrets retained in customer boundary
     </span>
   </div>
 
-  <div class="max-w-5xl mx-auto">
+  <div class="max-w-6xl mx-auto">
     <div class="glass-card rounded-3xl p-5 sm:p-6 md:p-10 overflow-hidden">
-      <!-- Desktop / tablet table -->
-      <table class="hidden md:table w-full text-left">
+      <table class="compare-table hidden md:table w-full text-left">
         <thead>
           <tr class="border-b border-gray-200 dark:border-gray-700">
-            <th class="pb-6 text-gray-500 dark:text-gray-400 font-medium">Sovereignty dimension</th>
+            <th class="pb-6 text-gray-500 dark:text-gray-400 font-medium">Platform dimension</th>
+            <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">DIY (Backstage + scripts)</th>
             <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">Rafay</th>
             <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">Quali (Torque)</th>
-            <th class="pb-6 text-center text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold">Infragate</th>
+            <th class="pb-6 text-center text-[#355a72] dark:text-[#8fb8cb] font-semibold">Infragate</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
           <tr>
             <td class="py-5 font-medium">Control plane location</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Inside your tenancy (self-managed)</td>
             <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor SaaS (self-host optional)</td>
             <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor SaaS</td>
-            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Inside your OCI tenancy</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Inside your OCI tenancy</span></span></td>
           </tr>
           <tr>
-            <td class="py-5 font-medium">Outbound network egress</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Required (phone-home, telemetry)</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Required (agent callbacks)</td>
-            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">None — zero outbound calls</td>
+            <td class="py-5 font-medium">Outbound egress to third-party control plane</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Depends on selected integrations</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Commonly required</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Commonly required</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Not required by default</span></span></td>
           </tr>
           <tr>
-            <td class="py-5 font-medium">Credentials &amp; secrets</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared with vendor</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared with vendor</td>
-            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Stay inside your cluster</td>
+            <td class="py-5 font-medium">Secrets and credential boundary</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Custom implementation required</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">May traverse vendor-managed services</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">May traverse vendor-managed services</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Stays within tenant or cluster boundary</span></span></td>
           </tr>
           <tr>
-            <td class="py-5 font-medium">Third-party dependencies</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor infra + subprocessors</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor infra + subprocessors</td>
-            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Zero — OCI services only</td>
+            <td class="py-5 font-medium">Governance guardrails and limits</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Custom policy and quota workflows</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available via platform policy framework</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available via platform policy framework</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Built-in global and per-user limits</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Day-2 ops effort (scale, upgrade, destroy)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">High (build and maintain workflows)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Medium</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Medium</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Low with OCI-focused workflows</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Auditability and action traceability</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Custom build required</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available in vendor platform</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available in vendor platform</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Built-in audit logs and job traces</span></span></td>
           </tr>
           <tr>
             <td class="py-5 font-medium">Air-gapped / disconnected OCI regions</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Possible with extra engineering</td>
             <td class="py-5 text-center text-gray-500 dark:text-gray-400">Limited</td>
             <td class="py-5 text-center text-gray-500 dark:text-gray-400">Limited</td>
-            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">Fully supported</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Supported with mirrored artifacts</span></span></td>
           </tr>
           <tr>
-            <td class="py-5 font-medium">Vendor breach blast radius</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared SaaS surface</td>
-            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Shared SaaS surface</td>
-            <td class="py-5 text-center font-semibold text-emerald-600 dark:text-emerald-400">None — no shared infra</td>
+            <td class="py-5 font-medium">Time to first production cluster</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Weeks to months</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Days to weeks</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Days to weeks</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Minutes to hours</span></span></td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Mobile stacked cards -->
       <div class="md:hidden space-y-4">
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
           <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Control plane location</div>
           <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">Inside tenancy (self-managed)</span></div>
             <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor SaaS (self-host optional)</span></div>
             <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor SaaS</span></div>
-            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Inside your OCI tenancy</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Inside your OCI tenancy</span></div>
           </div>
         </div>
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Outbound network egress</div>
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Outbound egress to third-party control plane</div>
           <div class="space-y-2 text-sm">
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Required (phone-home, telemetry)</span></div>
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Required (agent callbacks)</span></div>
-            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">None — zero outbound calls</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">Depends on integrations</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Commonly required</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Commonly required</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Not required by default</span></div>
           </div>
         </div>
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Credentials &amp; secrets</div>
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Governance guardrails and limits</div>
           <div class="space-y-2 text-sm">
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Shared with vendor</span></div>
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Shared with vendor</span></div>
-            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Stay inside your cluster</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">Custom policy workflows</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Platform policy framework</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Platform policy framework</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Built-in limits</span></div>
           </div>
         </div>
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Third-party dependencies</div>
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Day-2 ops effort</div>
           <div class="space-y-2 text-sm">
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor infra + subprocessors</span></div>
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor infra + subprocessors</span></div>
-            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Zero — OCI services only</span></div>
-          </div>
-        </div>
-        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Air-gapped / disconnected OCI regions</div>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Limited</span></div>
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Limited</span></div>
-            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">Fully supported</span></div>
-          </div>
-        </div>
-        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Vendor breach blast radius</div>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Shared SaaS surface</span></div>
-            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Shared SaaS surface</span></div>
-            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#1C5D7A] dark:text-[#5BB8D8] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-emerald-600 dark:text-emerald-400">None — no shared infra</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">High</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Medium</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Medium</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Low for OCI ops</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="text-center mt-10 text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-    Data privacy and sovereignty aren’t a deployment option — they’re the foundation. Infragate was built to live entirely inside your OCI tenancy from day one.
+  <div class="text-center mt-10 text-sm text-gray-500 dark:text-gray-400 max-w-3xl mx-auto">
+    Comparison reflects publicly documented default architectures and common deployment patterns as of April 24, 2026. Validate against your internal security, compliance, and operating model.
   </div>
 </section>
 
@@ -1479,19 +1665,19 @@
 <div class="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0B1120] py-12 md:py-16" id="statsSection">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 xs:grid-cols-4 gap-8 md:gap-10">
     <div class="stat-card text-center" data-stat-index="0">
-      <div class="stat-number" data-count-to="15" data-count-prefix="<" data-count-suffix=" min" data-count-duration="2500">&lt;15 min</div>
+      <div class="stat-number">10-20 min</div>
       <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
-      <div class="stat-label">Cluster provisioning</div>
+      <div class="stat-label">Typical provisioning</div>
     </div>
     <div class="stat-card text-center" data-stat-index="1">
-      <div class="stat-number" data-count-to="87" data-count-suffix="+" data-count-duration="2800">87+</div>
-      <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="87"></div></div>
+      <div class="stat-number" data-count-to="107" data-count-suffix="+" data-count-duration="2800">107+</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
       <div class="stat-label">Automated tests</div>
     </div>
     <div class="stat-card text-center" data-stat-index="2">
-      <div class="stat-number stat-number-free">$0</div>
-      <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-free" data-fill="100"></div></div>
-      <div class="stat-label">Software license</div>
+      <div class="stat-number" data-count-to="4" data-count-suffix="/4" data-count-duration="1600">4/4</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
+      <div class="stat-label">Lifecycle ops</div>
     </div>
     <div class="stat-card text-center" data-stat-index="3">
       <div class="stat-number" data-count-to="100" data-count-suffix="%" data-count-duration="3000">100%</div>
@@ -1502,36 +1688,71 @@
 </div>
 
 
+<!-- GA vs Roadmap -->
+<div id="ga-roadmap" class="anchor-target"></div>
+<section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <div class="text-center mb-10 reveal">
+    <span class="section-pill">Product maturity</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">GA today vs roadmap next</h2>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Clear separation between production capabilities and planned capabilities. Roadmap items are phased, customer-validated, and release-gated.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 stagger-children">
+    <div class="ga-today-card rounded-2xl border border-emerald-200/70 dark:border-emerald-700/60 bg-emerald-50/40 dark:bg-emerald-900/10 p-6">
+      <div class="ga-today-chip inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-white dark:bg-gray-900/70 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-700">
+        <i class="fas fa-check-circle"></i> GA today
+      </div>
+      <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Deploy, scale, Kubernetes upgrade, and destroy with live Terraform logs</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user overrides, templates, audit log, and OCI config sync</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Shape-aware Kubernetes compatibility filtering to prevent invalid deploy combinations</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>FinOps visibility: live estimates, cluster-level cost cards, and admin total spend</span></li>
+      </ul>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
+      <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full border border-[#1C5D7A]/20 dark:border-[#5BB8D8]/30">
+        <i class="fas fa-map"></i> Roadmap next
+      </div>
+      <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Gatekeeper platform copilot: continuous, state-aware recommendations powered by OCI Generative AI</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Cost watcher: idle-cluster detection, anomaly alerts, and right-sizing guidance</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Policy guardrails: drift detection, Kubernetes lifecycle risk flags, and weekly compliance digests</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Approval-gated remediation with full audit trail (suggest -> review -> apply)</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
 <!-- Pricing -->
 <section id="pricing" class="py-14 md:py-20 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-12 reveal">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 text-[#1C5D7A] dark:text-[#5BB8D8] text-xs font-semibold uppercase tracking-wider mb-4">
+      <div class="section-pill no-dot mb-4">
         <i class="fas fa-tag text-xs"></i> Pricing
       </div>
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Simple, transparent pricing</h2>
-      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">One product, all features, no per-user metering. Tiers differ on <strong class="text-gray-800 dark:text-gray-200">license, support SLA, image distribution, deployment, and compliance</strong> — not on feature gates.</p>
+      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Infragate is delivered as a private commercial product. Packaging scales with <strong class="text-gray-800 dark:text-gray-200">evaluation scope, production licensing, support response, and operating guarantees</strong>.</p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6 md:gap-8">
-      <!-- Community -->
+      <!-- Evaluation -->
       <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
         <div class="mb-5">
-          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Community</div>
+          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Evaluation</div>
           <div class="mt-3 flex items-baseline gap-1">
-            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Free</span>
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">By request</span>
           </div>
-          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">BSL 1.1 · self-serve</div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Time-boxed private trial</div>
         </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For solo devs, homelabs, evaluators, and non-production use. Full product, no feature gates.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For qualified teams evaluating fit in a controlled, non-production scope.</p>
         <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>All features unlocked</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Self-serve docs &amp; setup guides</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Community support — GitHub Issues (best-effort)</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Public GHCR images · rolling releases</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">Non-commercial · no production or managed-service use</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Guided environment setup for technical validation</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Access to evaluation runbook and onboarding checklist</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support during trial window (business hours)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private evaluation artifacts</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">No production use, redistribution, or managed-service use</span></li>
         </ul>
-        <a href="/docs/" class="block text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition">Get the docs</a>
+        <button onclick="openDemoModal('poc')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Request evaluation</button>
       </div>
 
       <!-- Business (highlighted) -->
@@ -1543,16 +1764,16 @@
             <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">$3,000</span>
             <span class="text-gray-500 dark:text-gray-400 text-sm">/ month</span>
           </div>
-          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Billed annually · $36,000 / year</div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Billed annually - $36,000 / year</div>
         </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For platform teams at SMB and mid-market orgs running one OCI tenancy in production.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For teams running Infragate in production with self-managed day-2 operations.</p>
         <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Commercial &amp; production license</strong> — unlocks managed-service &amp; customer-facing use</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support · <strong class="text-gray-800 dark:text-gray-200">48h response SLA</strong> (business hours)</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private GHCR registry · per-customer PAT, rotated</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Version pinning · minor-upgrade assistance (non-breaking)</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Security advisories · early private notice before public disclosure</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Onboarding session · architect-led kickoff call</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Commercial &amp; production license</strong> for internal and customer-facing environments</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support with <strong class="text-gray-800 dark:text-gray-200">48h response SLA</strong> (business hours)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private registry access with versioned, pinned release channel</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Versioned release channel with stable upgrade path</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Security advisories - early private notice before public disclosure</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Onboarding workshop and deployment review</span></li>
         </ul>
         <button onclick="openDemoModal('poc')" class="block text-center px-5 py-3 text-sm font-semibold rounded-full btn-solid-premium cursor-pointer">Start a POC</button>
       </div>
@@ -1564,18 +1785,18 @@
           <div class="mt-3 flex items-baseline gap-1">
             <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Custom</span>
           </div>
-          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">From $75,000 / year</div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Custom scope - SLA, compliance, and shared-operations model</div>
         </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For regulated enterprises, banks, government, and healthcare. Multi-tenancy, compliance, managed install.</p>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For regulated or mission-critical organizations that require formal operating guarantees and shared responsibility.</p>
         <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Business</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">4h response SLA</strong> · named support engineer · shared Slack / Teams channel</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Managed install</strong> — we deploy Infragate into your tenancy end-to-end</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Multi-tenancy · multiple OCI tenancies · sub-org scoping</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Air-gapped / mirrored registry delivery · LTS pinning</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance pack · SOC 2 Q&amp;A · security questionnaires · DPA</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Gatekeeper platform copilot · early access at launch</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Quarterly architect hours · roadmap input</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">4h response SLA</strong> with named support engineer and shared Slack / Teams channel</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Managed install</strong> plus upgrade planning and rollout assistance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Multi-tenancy and multiple OCI-tenancy organization scoping</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Air-gapped / mirrored registry delivery - LTS pinning</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance support pack: SOC 2 / ISO questionnaires, DPA, and audit-evidence guidance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Production incident escalation support and change-advisory guidance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Quarterly architecture and FinOps governance reviews</span></li>
         </ul>
         <button onclick="openDemoModal('enterprise')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Contact us</button>
       </div>
@@ -1592,11 +1813,11 @@
 
     <div class="text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 text-xs font-semibold uppercase tracking-wider mb-5 reveal" style="transition-delay:0.1s">
-        <i class="fas fa-star text-amber-300 text-xs"></i> Founding Customer Program · 5 spots · limited
+        <i class="fas fa-star text-amber-300 text-xs"></i> Founding Customer Program - 5 spots - limited
       </div>
       <h2 class="text-3xl md:text-4xl font-bold text-white reveal" style="transition-delay:0.15s">Help shape Infragate.<br class="hidden sm:block"> Get in before the rest.</h2>
       <p class="text-gray-200 mt-4 text-lg max-w-2xl mx-auto reveal" style="transition-delay:0.3s">
-        A small group of production teams helping us build the first year of the roadmap. Not a discount — an invitation.
+        A small group of production teams helping us build the first year of the roadmap. Early-access program with discounted pricing and direct product feedback.
       </p>
     </div>
 
@@ -1617,12 +1838,12 @@
         <p class="text-gray-300 text-xs leading-relaxed">Monthly roadmap calls, private Slack / email with engineering. Your feedback shapes what ships next.</p>
       </div>
       <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm relative">
-        <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider text-amber-200 bg-amber-500/20 px-2 py-0.5 rounded-full">Coming soon</span>
+        <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider text-amber-200 bg-amber-500/20 px-2 py-0.5 rounded-full">Roadmap v1.1</span>
         <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
           <i class="fas fa-wand-magic-sparkles text-amber-300"></i>
         </div>
-        <h3 class="text-white font-semibold text-sm mb-1">Gatekeeper — platform copilot</h3>
-        <p class="text-gray-300 text-xs leading-relaxed">Idle cluster watcher · cost anomaly alerts · policy drift detection. Powered by OCI Generative AI, runs in your tenancy. Founding customers get it first.</p>
+        <h3 class="text-white font-semibold text-sm mb-1">Gatekeeper - platform copilot</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Initial scope: cost watcher, anomaly alerts, policy drift detection, and approval-gated remediation suggestions. Powered by OCI Generative AI and designed to run in your tenancy. Founding customers get early access.</p>
       </div>
     </div>
 
@@ -1641,19 +1862,44 @@
 </section>
 
 <!-- Footer -->
-<footer class="border-t border-gray-200 dark:border-gray-800 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between items-center gap-4">
-      <div class="flex flex-col sm:flex-row items-center gap-4">
-        <div class="flex items-center gap-2">
+<footer class="border-t border-gray-200 dark:border-gray-800 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
           <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
           <span class="font-bold text-sm text-gray-800 dark:text-white">Infragate</span>
         </div>
-        <span class="text-gray-400 text-sm">&copy; 2026 Solvia Lab s.r.o.</span>
+        <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">OCI-native Internal Developer Platform for OKE lifecycle and governance.</p>
       </div>
-    <div class="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6 text-sm text-gray-400">
-      <a href="/docs/" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Documentation</a>
-      <a href="#" onclick="event.preventDefault();openSupportModal()" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Support</a>
-      <a href="https://solvialab.tech" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Solvia Lab</a>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Resources</h4>
+        <div class="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <a href="/docs/" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Documentation</a>
+          <a href="#" onclick="event.preventDefault();openSupportModal()" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Support</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Company</h4>
+        <div class="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <a href="https://solvialab.tech" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Solvia Lab</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Follow</h4>
+        <div class="flex items-center gap-2 text-gray-400">
+          <a href="https://www.linkedin.com/company/112238202/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="w-8 h-8 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 transition" title="LinkedIn"><i class="fab fa-linkedin text-sm"></i></a>
+          <a href="https://x.com/infragate_cloud" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" class="w-8 h-8 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 transition" title="X (Twitter)"><i class="fab fa-x-twitter text-sm"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span class="text-xs sm:text-sm text-gray-400">&copy; 2026 Solvia Lab s.r.o.</span>
+      <span class="text-xs text-gray-400 dark:text-gray-500">Built for enterprise OCI tenancies</span>
     </div>
   </div>
 </footer>
@@ -1666,7 +1912,7 @@
     localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
   });
 
-  // Demo / POC / Enterprise / Partner modal — shared form, context-driven copy
+  // Demo / POC / Enterprise / Partner modal - shared form, context-driven copy
   var DEMO_MODAL_CONFIGS = {
     demo: {
       title: 'Book a 20-min demo',
@@ -1679,7 +1925,7 @@
     },
     poc: {
       title: 'Start a Proof of Concept',
-      subtitle: 'Scoped 2–4 week POC. We\'ll set up a kickoff call within one business day.',
+      subtitle: 'Scoped 2-4 week POC. We\'ll set up a kickoff call within one business day.',
       messageLabel: 'Tell us about your environment',
       messagePlaceholder: 'How many OCI tenancies / clusters? What does success look like for the POC?',
       submitText: 'Request a POC',
@@ -1687,17 +1933,17 @@
       subject: 'Infragate POC Request'
     },
     enterprise: {
-      title: 'Talk to sales — Enterprise',
+      title: 'Talk to sales - Enterprise',
       subtitle: 'Tell us what you need. We\'ll respond within one business day.',
       messageLabel: 'What are you looking for?',
-      messagePlaceholder: 'Multi-tenancy, compliance support (SOC 2 / ISO), managed install, air-gapped delivery, LTS pinning…',
+      messagePlaceholder: 'Multi-tenancy, compliance support (SOC 2 / ISO), managed install, air-gapped delivery, LTS pinning...',
       submitText: 'Get in touch',
       successMessage: 'Your enquiry has been submitted.<br>An Enterprise contact will reach out shortly.',
       subject: 'Infragate Enterprise Enquiry'
     },
     founding: {
       title: 'Apply for a founding spot',
-      subtitle: '5 founding customer spots. 50% off Business, direct line to the team, early access to Gatekeeper (cost watcher · policy guardrail). 6-month minimum.',
+      subtitle: '5 founding customer spots. 50% off Business, direct access to the team, and early Gatekeeper access (cost watcher + policy guardrails + approval-gated remediation). 6-month minimum.',
       messageLabel: 'Tell us about your team',
       messagePlaceholder: 'Team size, current OCI usage, what would success look like in 6 months?',
       submitText: 'Submit application',
@@ -1865,8 +2111,8 @@
       document.getElementById('mobileNav').classList.remove('open');
     });
   });
-    // Active nav highlight on scroll — simple scroll-position approach (no IntersectionObserver)
-    var navSections = ['features','templates','finops','admin','deploy','identity'];
+    // Active nav highlight on scroll - simple scroll-position approach (no IntersectionObserver)
+    var navSections = ['features','ga-roadmap','templates','finops','admin','deploy','identity'];
     var currentActive = null;
     var isNavClick = false;
     var scrollRaf = null;
@@ -1923,77 +2169,107 @@
       });
     });
 
-  // Terraform streaming animation
+  // Terraform log replay (sanitized real runs)
   (function() {
     var container = document.getElementById('terraformOutput');
-    var lines = [
-      { html: '<span class="text-gray-500">$ terraform init</span>', delay: 600 },
-      { html: '<span class="text-gray-400">Initializing the backend...</span>', delay: 700 },
-      { html: '<span class="text-gray-400">Initializing provider plugins...</span>', delay: 900 },
-      { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/oci v5.23.0 installed</span>', delay: 600 },
-      { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/tls v4.0.5 installed</span>', delay: 500 },
-      { html: '<span class="text-gray-400">Terraform has been successfully initialized!</span>', delay: 800 },
-      { html: '', delay: 300 },
-      { html: '<span class="text-gray-500">$ terraform apply -auto-approve</span>', delay: 1100 },
-      { html: '<span class="text-yellow-400">&#9210;</span> Plan: 12 to add, 0 to change, 0 to destroy', delay: 1400 },
-      { html: '<span class="text-blue-400">&#x21BB;</span> oci_identity_compartment.cluster: Creating...', delay: 900 },
-      { html: '<span class="text-green-400">&#10003;</span> oci_identity_compartment.cluster: Creation complete <span class="text-gray-500">[1s]</span>', delay: 1200 },
-      { html: '<span class="text-blue-400">&#x21BB;</span> oci_core_vcn.infra: Creating...', delay: 1100 },
-      { html: '<span class="text-green-400">&#10003;</span> oci_core_vcn.infra: Creation complete <span class="text-gray-500">[4s]</span>', delay: 1300 },
-      { html: '<span class="text-blue-400">&#x21BB;</span> oci_core_subnet.node_subnet: Creating...', delay: 900 },
-      { html: '<span class="text-green-400">&#10003;</span> oci_core_subnet.node_subnet: Creation complete <span class="text-gray-500">[3s]</span>', delay: 1100 },
-      { html: '<span class="text-blue-400">&#x21BB;</span> oci_core_security_list.oke_sl: Creating...', delay: 800 },
-      { html: '<span class="text-green-400">&#10003;</span> oci_core_security_list.oke_sl: Creation complete <span class="text-gray-500">[1s]</span>', delay: 1000 },
-      { html: '<span class="text-blue-400">&#x21BB;</span> oke_cluster.primary: Creating...', delay: 1300 },
-      { html: '<span class="text-green-400">&#10003;</span> oke_cluster.primary: Creation complete <span class="text-gray-500">[2m12s]</span>', delay: 1700 },
-      { html: '<span class="text-blue-400">&#x21BB;</span> oke_node_pool.workers: Provisioning...', delay: 1200 },
-      { html: '<span class="text-green-400">&#10003;</span> oke_node_pool.workers: Creation complete <span class="text-gray-500">[3m45s]</span>', delay: 1800 },
-      { html: '<span class="text-blue-400">&#x21BB;</span> tls_private_key.ssh: Creating...', delay: 700 },
-      { html: '<span class="text-green-400">&#10003;</span> tls_private_key.ssh: Creation complete <span class="text-gray-500">[0s]</span>', delay: 600 },
-      { html: '', delay: 400 },
-      { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 12 added, 0 changed, 0 destroyed.</span>', delay: 900 },
-      { html: '<span class="text-gray-500 text-xs">infragate.cloud/cluster-prod-01</span>', delay: 0 }
+    var titleEl = document.querySelector('.terminal .bg-gray-800 .text-gray-400.text-xs.ml-2');
+
+    var scenarios = [
+      {
+        name: 'Deploy',
+        title: 'terraform apply - deploy replay (sanitized)',
+        lines: [
+          { html: '<span class="text-gray-500">$ terraform init</span>', delay: 500 },
+          { html: '<span class="text-gray-400">Initializing the backend...</span>', delay: 550 },
+          { html: '<span class="text-gray-400">Initializing provider plugins...</span>', delay: 650 },
+          { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/oci v6.x installed</span>', delay: 550 },
+          { html: '<span class="text-gray-500">$ terraform apply -auto-approve</span>', delay: 800 },
+          { html: '<span class="text-yellow-400">&#9210;</span> Plan: 12 to add, 0 to change, 0 to destroy', delay: 900 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_cluster.oke: Creating...</span>', delay: 700 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_cluster.oke: Creation complete <span class="text-gray-500">[19m6s]</span>', delay: 1000 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Creating...</span>', delay: 850 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Creation complete <span class="text-gray-500">[4m12s]</span>', delay: 1000 },
+          { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 12 added, 0 changed, 0 destroyed.</span>', delay: 900 },
+          { html: '<span class="text-gray-500 text-xs">sample/deploy/job.log</span>', delay: 0 }
+        ]
+      },
+      {
+        name: 'Scale',
+        title: 'terraform apply - scale replay (sanitized)',
+        lines: [
+          { html: '<span class="text-gray-500">$ terraform plan</span>', delay: 500 },
+          { html: '<span class="text-yellow-400">&#9210;</span> Plan: 1 to add, 1 to change, 0 to destroy', delay: 850 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-2"]: Creating...</span>', delay: 750 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-2"]: Creation complete <span class="text-gray-500">[2m58s]</span>', delay: 950 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifying...</span>', delay: 700 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifications complete <span class="text-gray-500">[2m0s]</span>', delay: 900 },
+          { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 1 added, 1 changed, 0 destroyed.</span>', delay: 900 },
+          { html: '<span class="text-gray-500 text-xs">sample/scale/job.log</span>', delay: 0 }
+        ]
+      },
+      {
+        name: 'Upgrade K8s',
+        title: 'terraform apply - k8s upgrade replay (sanitized)',
+        lines: [
+          { html: '<span class="text-gray-500">$ terraform apply -var kubernetes_version=v1.35.0</span>', delay: 650 },
+          { html: '<span class="text-yellow-400">&#9210;</span> Plan: 0 to add, 2 to change, 0 to destroy', delay: 900 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_cluster.oke: Modifying...</span>', delay: 750 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_cluster.oke: Modifications complete <span class="text-gray-500">[3m42s]</span>', delay: 950 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifying...</span>', delay: 800 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifications complete <span class="text-gray-500">[2m0s]</span>', delay: 950 },
+          { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 0 added, 2 changed, 0 destroyed.</span>', delay: 900 },
+          { html: '<span class="text-gray-500 text-xs">sample/upgrade/job.log</span>', delay: 0 }
+        ]
+      }
     ];
 
-    function runTerraform() {
+    var scenarioIndex = 0;
+
+    function runScenario() {
+      var scenario = scenarios[scenarioIndex % scenarios.length];
+      scenarioIndex += 1;
+      if (titleEl) titleEl.textContent = scenario.title;
+
       container.innerHTML = '';
       var i = 0;
+
       function showLine() {
-        if (i >= lines.length) {
-          setTimeout(runTerraform, 2800);
+        if (i >= scenario.lines.length) {
+          setTimeout(runScenario, 2400);
           return;
         }
+
         var div = document.createElement('div');
         div.style.opacity = '0';
-        div.style.transform = 'translateY(4px)';
-        div.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
-        div.innerHTML = lines[i].html;
-        if (i === lines.length - 1) div.classList.add('mt-2');
+        div.style.transform = 'translateY(3px)';
+        div.style.transition = 'opacity 0.28s ease, transform 0.28s ease';
+        div.innerHTML = scenario.lines[i].html;
+        if (i === scenario.lines.length - 1) div.classList.add('mt-2');
         container.appendChild(div);
-        // Keep max visible lines to prevent overflow (fewer on mobile)
+
         var maxLines = window.innerWidth >= 768 ? 12 : 8;
         if (container.children.length > maxLines) {
           var first = container.firstChild;
           first.style.opacity = '0';
-          first.style.marginTop = '-1.5rem';
-          first.style.transition = 'opacity 0.3s ease, margin-top 0.3s ease';
-          setTimeout(function() { if (first.parentNode) first.parentNode.removeChild(first); }, 300);
+          first.style.marginTop = '-1.35rem';
+          first.style.transition = 'opacity 0.22s ease, margin-top 0.22s ease';
+          setTimeout(function() { if (first.parentNode) first.parentNode.removeChild(first); }, 220);
         }
+
         requestAnimationFrame(function() {
-          requestAnimationFrame(function() {
-            div.style.opacity = '1';
-            div.style.transform = 'translateY(0)';
-          });
+          div.style.opacity = '1';
+          div.style.transform = 'translateY(0)';
         });
-        var nextDelay = lines[i].delay || 1000;
-        // Add slight randomness for natural feel
-        nextDelay += Math.floor(Math.random() * 400) - 200;
-        i++;
+
+        var nextDelay = scenario.lines[i].delay || 800;
+        i += 1;
         setTimeout(showLine, nextDelay);
       }
+
       showLine();
     }
-    runTerraform();
+
+    runScenario();
   })();
 
   // Workflow animation
@@ -2017,7 +2293,7 @@
           check.querySelector('i').style.color = 'transparent';
         } else {
           step.style.opacity = '0.3';
-          check.style.borderColor = '#4b5563';
+          check.style.borderColor = '#425062';
           check.style.background = 'transparent';
           check.querySelector('i').style.color = 'transparent';
         }
@@ -2031,9 +2307,8 @@
         }, 3000);
       } else {
         // Vary timing per step for natural feel
-        var delays = [1800, 2200, 2500, 1800, 1500];
-        var d = delays[currentStep - 1] || 1800;
-        d += Math.floor(Math.random() * 300) - 150;
+        var delays = [1500, 1900, 2100, 1500, 1300];
+        var d = delays[currentStep - 1] || 1500;
         setTimeout(animateStep, d);
       }
     }
@@ -2074,7 +2349,7 @@
     if (isMobile || prefersReducedMotion) return;
     var container = document.getElementById('particles');
     // Fewer particles on tablet, full on desktop
-    var count = window.innerWidth < 1024 ? 12 : 25;
+    var count = window.innerWidth < 1024 ? 6 : 12;
     for (var i = 0; i < count; i++) {
       var p = document.createElement('div');
       p.className = 'particle';
@@ -2089,9 +2364,9 @@
     }
   })();
 
-  // === 3D TILT EFFECT ON CARDS (desktop only — no touch) ===
+  // === 3D TILT EFFECT ON CARDS (desktop only - no touch) ===
   (function() {
-    if (isTouchDevice || prefersReducedMotion) return;
+    if (isTouchDevice || prefersReducedMotion || window.innerWidth < 1200) return;
     document.querySelectorAll('.tilt-card').forEach(function(card) {
       card.addEventListener('mousemove', function(e) {
         var rect = card.getBoundingClientRect();
@@ -2099,9 +2374,9 @@
         var y = e.clientY - rect.top;
         var centerX = rect.width / 2;
         var centerY = rect.height / 2;
-        var rotateX = ((y - centerY) / centerY) * -8;
-        var rotateY = ((x - centerX) / centerX) * 8;
-        card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-4px)';
+        var rotateX = ((y - centerY) / centerY) * -3;
+        var rotateY = ((x - centerX) / centerX) * 3;
+        card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-2px)';
       });
       card.addEventListener('mouseleave', function() {
         card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
@@ -2139,7 +2414,7 @@
     // Set initial "0" state on all non-stat-section counters
     var allCountEls = document.querySelectorAll('[data-count-to]');
     allCountEls.forEach(function(el) {
-      // Skip stats section — those are handled by the stats observer below
+      // Skip stats section - those are handled by the stats observer below
       if (el.closest('#statsSection')) return;
       var prefix = el.getAttribute('data-count-prefix') || '';
       var suffix = el.getAttribute('data-count-suffix') || '';
@@ -2213,7 +2488,7 @@
         setTimeout(function() { requestAnimationFrame(tick); }, cardIndex * 300 + 400);
       });
 
-      // $0 stat fades in naturally with its card
+      // Lifecycle-ops stat participates in normal count animation
 
       // Fill progress bars
       statBars.forEach(function(bar) {
@@ -2279,7 +2554,7 @@
     if (!isTouchDevice) return;
     document.querySelectorAll('.feature-icon').forEach(function(icon) {
       icon.addEventListener('touchstart', function() {
-        icon.querySelector('i').style.animation = 'wiggle 0.4s ease';
+        icon.querySelector('i').style.animation = 'none';
         setTimeout(function() {
           icon.querySelector('i').style.animation = '';
         }, 400);
