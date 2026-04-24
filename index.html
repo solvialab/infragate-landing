@@ -3,12 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Infragate Docs</title>
-  <meta name="description" content="Infragate documentation â€” deployment guides, features, and enterprise integration for OKE lifecycle management on Oracle Cloud.">
+  <title>Infragate | IDP for OCI</title>
+  <meta name="description" content="Infragate empowers engineering teams to provision production-grade Oracle Kubernetes Engine clusters with one click. Self-service, FinOps, and full lifecycle management.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { darkMode: 'class' };
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          screens: {
+            'xs': '400px',
+          }
+        }
+      }
+    };
+    // Apply theme before paint to prevent flash
     (function() {
       var stored = localStorage.getItem('infragate-theme');
       if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -18,434 +28,1016 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     * { font-family: 'Inter', sans-serif; }
-    body { background: #ffffff; }
+    html { scroll-behavior: auto; }
+    body { background: #ffffff; transition: background-color 0.3s ease, color 0.3s ease; overflow-x: clip !important; }
     .dark body { background: #0B1120; }
-
-    /* Sidebar */
-    .sidebar {
-      width: 272px;
-      min-height: calc(100vh - 64px);
-      border-right: 1px solid #e5e7eb;
-      background: #f9fafb;
-      transition: transform 0.3s ease;
-      position: sticky;
-      top: 64px;
-      max-height: calc(100vh - 64px);
+    .gradient-text {
+      background: linear-gradient(135deg, #0B2B3F 0%, #1C5D7A 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
-    .dark .sidebar {
-      background: #0F172A;
-      border-right-color: #1e293b;
+    .dark .gradient-text {
+      background: linear-gradient(135deg, #5BB8D8 0%, #7DD3FC 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
     }
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: #4b5563;
-      border-radius: 0.5rem;
-      transition: all 0.15s ease;
-      cursor: pointer;
+    .gradient-bg-premium {
+      background: linear-gradient(135deg, #0B2B3F 0%, #124E68 100%);
     }
-    .dark .sidebar-link { color: #9ca3af; }
-    .sidebar-link:hover { background: #e5e7eb; color: #111827; }
-    .dark .sidebar-link:hover { background: #1e293b; color: #f3f4f6; }
-    .sidebar-link.active {
-      background: #EFF6FA;
+    .dark .gradient-bg-premium {
+      background: linear-gradient(135deg, #0E2A3D 0%, #164E68 100%);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease;
+    }
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+      border-color: rgba(28, 93, 122, 0.2);
+    }
+    .dark .glass-card:hover {
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+      border-color: rgba(91, 184, 216, 0.3);
+    }
+    .btn-outline-premium {
+      border: 1px solid #1C5D7A;
       color: #1C5D7A;
-      font-weight: 600;
-    }
-    .dark .sidebar-link.active {
-      background: rgba(91, 184, 216, 0.1);
-      color: #5BB8D8;
-    }
-    .sidebar-section { margin-bottom: 1.5rem; }
-    .sidebar-heading {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #9ca3af;
-      padding: 0 0.75rem;
-      margin-bottom: 0.375rem;
-    }
-    .dark .sidebar-heading { color: #4b5563; }
-
-    /* Mobile sidebar */
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 40;
-    }
-    .sidebar-overlay.active { display: block; }
-    @media (max-width: 1023px) {
-      .sidebar {
-        position: fixed;
-        top: 64px;
-        left: 0;
-        bottom: 0;
-        z-index: 50;
-        transform: translateX(-100%);
-        box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-      }
-      .sidebar.open { transform: translateX(0); }
-    }
-
-    /* Right TOC sidebar */
-    .toc-sidebar {
-      width: 220px;
-      position: sticky;
-      top: 80px;
-      max-height: calc(100vh - 96px);
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-    .toc-item {
-      display: block;
-      padding: 0.2rem 0;
-      font-size: 0.75rem;
-      color: #6b7280;
-      text-decoration: none;
-      transition: color 0.15s;
-      line-height: 1.5;
-    }
-    .toc-item:hover { color: #1C5D7A; }
-    .dark .toc-item:hover { color: #5BB8D8; }
-    .toc-item.active { color: #1C5D7A; font-weight: 600; }
-    .dark .toc-item.active { color: #5BB8D8; }
-    .toc-item.depth-3 { padding-left: 0.75rem; }
-    @media (max-width: 1279px) {
-      .toc-sidebar { display: none; }
-    }
-    /* Mobile TOC dropdown */
-    .toc-mobile { display: none; }
-    @media (max-width: 1279px) {
-      .toc-mobile { display: block; }
-    }
-    .toc-mobile summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #6b7280;
-      padding: 0.6rem 0.75rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.5rem;
-      user-select: none;
-    }
-    .dark .toc-mobile summary { color: #9ca3af; border-color: #374151; }
-    .toc-mobile summary::-webkit-details-marker { display: none; }
-    .toc-mobile summary .toc-chevron { transition: transform 0.2s; }
-    .toc-mobile[open] summary .toc-chevron { transform: rotate(180deg); }
-    .toc-mobile .toc-mobile-list {
-      padding: 0.5rem 0.75rem;
-      max-height: 50vh;
-      overflow-y: auto;
-    }
-    .toc-mobile .toc-mobile-list a {
-      display: block;
-      padding: 0.25rem 0;
-      font-size: 0.8rem;
-      color: #6b7280;
-      text-decoration: none;
-    }
-    .dark .toc-mobile .toc-mobile-list a { color: #9ca3af; }
-    .toc-mobile .toc-mobile-list a:hover { color: #1C5D7A; }
-    .dark .toc-mobile .toc-mobile-list a:hover { color: #5BB8D8; }
-    .toc-mobile .toc-mobile-list a.active { color: #1C5D7A; font-weight: 600; }
-    .dark .toc-mobile .toc-mobile-list a.active { color: #5BB8D8; }
-    .toc-mobile .toc-mobile-list a.depth-3 { padding-left: 0.75rem; }
-
-    /* Theme toggle */
-    .theme-toggle {
-      width: 2.25rem; height: 2.25rem;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 9999px; cursor: pointer;
-      background: transparent; color: #6b7280; border: none;
       transition: all 0.2s;
     }
-    .theme-toggle:hover { background: #f3f4f6; color: #374151; }
-    .dark .theme-toggle:hover { background: #1e293b; color: #e2e8f0; }
-    .theme-toggle .fa-sun { display: none; }
-    .dark .theme-toggle .fa-sun { display: inline; }
-    .dark .theme-toggle .fa-moon { display: none; }
-
-    /* Markdown prose */
-    .prose-infragate { transition: opacity 0.2s ease; }
-    .prose-infragate.loading { opacity: 0; }
-    .prose-infragate h1 {
-      font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;
-      color: #111827; line-height: 1.2;
+    .btn-outline-premium:hover {
+      background: #1C5D7A;
+      color: white;
+      border-color: #1C5D7A;
     }
-    .dark .prose-infragate h1 { color: #f9fafb; }
-    .prose-infragate h2 {
-      font-size: 1.5rem; font-weight: 700;
-      margin-top: 2.5rem; margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid #e5e7eb;
-      color: #111827;
+    .btn-solid-premium {
+      background: #0B2B3F;
+      color: white;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(11,43,63,0.1);
     }
-    .dark .prose-infragate h2 { color: #f9fafb; border-bottom-color: #1e293b; }
-    .prose-infragate h3 {
-      font-size: 1.25rem; font-weight: 600;
-      margin-top: 2rem; margin-bottom: 0.5rem; color: #1f2937;
+    .btn-solid-premium:hover {
+      background: #1C5D7A;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(28,93,122,0.2);
     }
-    .dark .prose-infragate h3 { color: #e5e7eb; }
-    .prose-infragate h4 {
-      font-size: 1.1rem; font-weight: 600;
-      margin-top: 1.5rem; margin-bottom: 0.5rem; color: #374151;
+    .dark .btn-solid-premium {
+      background: #1C5D7A;
     }
-    .dark .prose-infragate h4 { color: #d1d5db; }
-    .prose-infragate p {
-      margin-bottom: 1rem; line-height: 1.75; color: #374151;
+    .dark .btn-solid-premium:hover {
+      background: #2980A8;
     }
-    .dark .prose-infragate p { color: #d1d5db; }
-    .prose-infragate a {
-      color: #1C5D7A; text-decoration: underline; text-underline-offset: 2px;
+    .feature-icon {
+      background: #F0F7FA;
+      border-radius: 1rem;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
     }
-    .dark .prose-infragate a { color: #5BB8D8; }
-    .prose-infragate a:hover { opacity: 0.8; }
-    .prose-infragate strong { color: #111827; }
-    .dark .prose-infragate strong { color: #f9fafb; }
-    .prose-infragate ul, .prose-infragate ol {
-      margin-bottom: 1rem; padding-left: 1.5rem; color: #374151;
+    .dark .feature-icon {
+      background: rgba(28, 93, 122, 0.2);
     }
-    .dark .prose-infragate ul, .dark .prose-infragate ol { color: #d1d5db; }
-    .prose-infragate ul { list-style-type: disc; }
-    .prose-infragate ol { list-style-type: decimal; }
-    .prose-infragate li { margin-bottom: 0.375rem; line-height: 1.7; }
-    .prose-infragate li > ul, .prose-infragate li > ol {
-      margin-top: 0.375rem; margin-bottom: 0;
+    .glass-card:hover .feature-icon {
+      background: #E2F0F5;
+      transform: scale(1.05);
     }
-    .prose-infragate code {
-      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', monospace;
-      font-size: 0.85em; background: #f3f4f6; color: #1C5D7A;
-      padding: 0.15em 0.4em; border-radius: 0.25rem;
+    .dark .glass-card:hover .feature-icon {
+      background: rgba(28, 93, 122, 0.35);
     }
-    .dark .prose-infragate code { background: #1e293b; color: #5BB8D8; }
-    .prose-infragate pre {
-      margin-bottom: 1.25rem; border-radius: 0.75rem;
-      overflow-x: auto; background: #0F172A;
-      border: 1px solid #1e293b; position: relative;
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #0B2B3F, #1C5D7A);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
-    .prose-infragate pre code {
-      display: block; padding: 1rem 1.25rem;
-      background: transparent; color: #e2e8f0;
-      font-size: 0.8125rem; line-height: 1.7;
+    .dark .stat-number {
+      background: linear-gradient(135deg, #5BB8D8, #7DD3FC);
+      -webkit-background-clip: text;
+      background-clip: text;
     }
-    .prose-infragate blockquote {
-      border-left: 4px solid #1C5D7A;
-      padding: 0.75rem 1rem; margin-bottom: 1rem;
-      background: #f0f7fa; border-radius: 0 0.5rem 0.5rem 0;
-      color: #374151;
+    @media (min-width: 768px) {
+      .stat-number { font-size: 2.8rem; }
     }
-    .dark .prose-infragate blockquote {
-      border-left-color: #5BB8D8;
-      background: rgba(91, 184, 216, 0.08); color: #d1d5db;
+                /* Premium section pills (enterprise badge style) */
+    .section-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.34rem 0.72rem;
+      border-radius: 8px;
+      border: 1px solid #d6e0e8;
+      background: #f8fafc;
+      color: #3b5265;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+      transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
     }
-    .prose-infragate blockquote p { margin-bottom: 0; }
-    .prose-infragate hr {
-      border: none; border-top: 1px solid #e5e7eb; margin: 2rem 0;
+    .section-pill:hover {
+      border-color: #b9c7d3;
+      background: #f2f6fa;
+      color: #2a4154;
     }
-    .dark .prose-infragate hr { border-top-color: #1e293b; }
-    .prose-infragate table {
-      width: 100%; margin-bottom: 1.25rem;
-      border-collapse: collapse; font-size: 0.875rem;
-      display: block; overflow-x: auto;
+    .section-pill::before {
+      display: none;
+      content: '';
     }
-    .prose-infragate th {
-      text-align: left; padding: 0.625rem 0.75rem; font-weight: 600;
-      color: #111827; background: #f3f4f6;
-      border-bottom: 2px solid #e5e7eb; white-space: nowrap;
+    .section-pill.no-dot::before {
+      display: none;
     }
-    .dark .prose-infragate th {
-      color: #f9fafb; background: #1e293b; border-bottom-color: #334155;
+    .dark .section-pill {
+      border-color: #324556;
+      background: #0f1a26;
+      color: #a7bbcc;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
     }
-    .prose-infragate td {
-      padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e7eb; color: #374151;
-    }
-    .dark .prose-infragate td { border-bottom-color: #1e293b; color: #d1d5db; }
-    .prose-infragate img {
-      max-width: 100%; border-radius: 0.5rem; margin: 1rem 0;
+        .dark .section-pill:hover {
+      border-color: #3f5568;
+      background: #132132;
+      color: #bfd0de;
     }
 
-    /* Heading anchors */
-    .prose-infragate h2, .prose-infragate h3 { position: relative; }
-    .heading-anchor {
-      position: absolute; left: -1.5rem; top: 50%; transform: translateY(-50%);
-      color: #cbd5e1; text-decoration: none; font-weight: 400;
-      opacity: 0; transition: opacity 0.15s;
+    /* Comparison table polish */
+    .compare-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+    .compare-table th,
+    .compare-table td {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+      vertical-align: top;
+    }
+    .compare-table th:not(:first-child),
+    .compare-table td:not(:first-child) {
+      border-left: 1px solid #e8edf2;
+    }
+    .dark .compare-table th:not(:first-child),
+    .dark .compare-table td:not(:first-child) {
+      border-left-color: #1f3140;
+    }
+    .compare-table thead th {
+      border-bottom: 1px solid #e8edf2;
+    }
+    .dark .compare-table thead th {
+      border-bottom-color: #1f3140;
+    }
+    .compare-table tbody tr:nth-child(even) {
+      background: rgba(148, 163, 184, 0.07);
+    }
+    .dark .compare-table tbody tr:nth-child(even) {
+      background: rgba(30, 41, 59, 0.34);
+    }
+    .compare-positive {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-weight: 600;
+      color: #355a72;
+      line-height: 1.45;
+    }
+    .compare-positive i {
+      font-size: 0.72rem;
+      color: #54748a;
+      flex-shrink: 0;
+    }
+    .dark .compare-positive {
+      color: #8fb8cb;
+    }
+    .dark .compare-positive i {
+      color: #7ea6b9;
+    }
+
+    /* Light theme contrast hardening */
+    html:not(.dark) body {
+      color: #0f172a;
+      background: #f3f6fa;
+    }
+    html:not(.dark) .text-gray-400 {
+      color: #536170 !important;
+    }
+    html:not(.dark) .text-gray-500 {
+      color: #425062 !important;
+    }
+    html:not(.dark) .text-gray-600 {
+      color: #2f3b4c !important;
+    }
+    html:not(.dark) .text-gray-700 {
+      color: #172233 !important;
+    }
+    html:not(.dark) .border-gray-100 {
+      border-color: #cfd9e4 !important;
+    }
+    html:not(.dark) .border-gray-200 {
+      border-color: #b7c6d6 !important;
+    }
+    html:not(.dark) .bg-gray-50 {
+      background-color: #eef3f8 !important;
+    }
+    html:not(.dark) .glass-card {
+      background: #ffffff;
+      border-color: #bfd0df;
+      box-shadow: 0 8px 20px -14px rgba(15, 23, 42, 0.5);
+    }
+    html:not(.dark) .glass-card:hover {
+      border-color: #98afc3;
+      box-shadow: 0 18px 34px -20px rgba(15, 23, 42, 0.4);
+    }
+    html:not(.dark) .section-pill {
+      border-color: #b2c3d2;
+      background: #e6eef5;
+      color: #2a4154;
+    }
+    html:not(.dark) .section-pill:hover {
+      border-color: #93a9bd;
+      background: #dde8f2;
+      color: #23394b;
+    }
+    html:not(.dark) .compare-table th:not(:first-child),
+    html:not(.dark) .compare-table td:not(:first-child) {
+      border-left-color: #c9d7e4;
+    }
+    html:not(.dark) .compare-table thead th {
+      color: #2c3f52;
+      border-bottom-color: #c5d3e1;
+    }
+    html:not(.dark) .compare-table tbody tr:nth-child(even) {
+      background: rgba(125, 147, 171, 0.16);
+    }
+
+    html:not(.dark) .ga-today-card {
+      background: #e2f3e8;
+      border-color: #97c6a8 !important;
+      box-shadow: 0 10px 22px -16px rgba(26, 95, 58, 0.45);
+    }
+    html:not(.dark) .ga-today-chip {
+      background: #f3fbf6 !important;
+      border-color: #8ebea1 !important;
+      color: #1f6b41 !important;
+    }
+    html:not(.dark) section.bg-white,
+    html:not(.dark) div.bg-white#statsSection {
+      background-color: #f6f9fc !important;
+    }
+    /* Typography polish (enterprise tone) */
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+    body { line-height: 1.6; letter-spacing: 0.002em; }
+    h1, h2, h3 { letter-spacing: -0.018em; line-height: 1.14; }
+    h4 { letter-spacing: -0.01em; line-height: 1.22; }
+    p { line-height: 1.68; }
+    li { line-height: 1.58; }
+    .nav-item, .mobile-nav-item { font-weight: 500; letter-spacing: 0.004em; }
+    .btn-solid-premium, .btn-outline-premium { letter-spacing: 0.01em; }
+    .stat-number { letter-spacing: -0.02em; }
+    /* === WILD ANIMATIONS === */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideLeft {
+      from { opacity: 0; transform: translateX(60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeSlideRight {
+      from { opacity: 0; transform: translateX(-60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes rotateIn {
+      from { opacity: 0; transform: rotate(-10deg) scale(0.8); }
+      to { opacity: 1; transform: rotate(0deg) scale(1); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-15px) rotate(1deg); }
+      66% { transform: translateY(5px) rotate(-1deg); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(28,93,122,0.3), 0 0 20px rgba(28,93,122,0.1); }
+      50% { box-shadow: 0 0 20px rgba(28,93,122,0.6), 0 0 60px rgba(28,93,122,0.2); }
+    }
+    .dark .pulse-glow-btn {
+      animation: pulse-glow-dark 2s ease-in-out infinite;
+    }
+    @keyframes pulse-glow-dark {
+      0%, 100% { box-shadow: 0 0 5px rgba(91,184,216,0.3), 0 0 20px rgba(91,184,216,0.1); }
+      50% { box-shadow: 0 0 25px rgba(91,184,216,0.5), 0 0 60px rgba(91,184,216,0.2); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes blob-morph {
+      0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+      50% { border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%; }
+      75% { border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%; }
+    }
+    @keyframes bounce-subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-5deg); }
+      75% { transform: rotate(5deg); }
+    }
+    @keyframes typewriter-cursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes border-dance {
+      0% { border-color: rgba(28,93,122,0.2); }
+      33% { border-color: rgba(91,184,216,0.4); }
+      66% { border-color: rgba(16,185,129,0.3); }
+      100% { border-color: rgba(28,93,122,0.2); }
+    }
+    @keyframes slide-in-stagger {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .animate-fade-up {
+      animation: fadeSlideUp 0.6s ease-out forwards;
+    }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+
+    /* Scroll reveal base */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.from-left { transform: translateX(-22px); }
+    .reveal.from-right { transform: translateX(22px); }
+    .reveal.from-below { transform: translateY(22px); }
+    .reveal.scale-up { transform: scale(0.98); }
+    .reveal.rotate-in { transform: rotate(-2deg) scale(0.98); }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(92px);
+      opacity: 0.08;
+      animation: blob-morph 20s ease-in-out infinite, float 24s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .dark .blob { opacity: 0.05; }
+    .blob-1 { width: 400px; height: 400px; background: #1C5D7A; top: -100px; right: -100px; animation-delay: 0s; }
+    .blob-2 { width: 300px; height: 300px; background: #10b981; bottom: -50px; left: -80px; animation-delay: -3s; }
+    .blob-3 { width: 350px; height: 350px; background: #8b5cf6; top: 50%; left: 50%; animation-delay: -5s; }
+
+    /* Shimmer text */
+    .shimmer-text {
+      background: linear-gradient(90deg, #0B2B3F 0%, #1C5D7A 25%, #5BB8D8 50%, #1C5D7A 75%, #0B2B3F 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 8s linear infinite;
+    }
+    .dark .shimmer-text {
+      background: linear-gradient(90deg, #5BB8D8 0%, #7DD3FC 25%, #ffffff 50%, #7DD3FC 75%, #5BB8D8 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    /* Pulsing glow buttons */
+    .pulse-glow-btn {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    /* Icon bounce on card hover */
+    .glass-card:hover .feature-icon i {
+      animation: none;
+    }
+    /* FinOps / Identity / Admin card hover lift */
+    .hover-lift {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -8px rgba(0,0,0,0.1);
+    }
+    .dark .hover-lift:hover {
+      box-shadow: 0 12px 24px -8px rgba(0,0,0,0.3);
+    }
+    /* Admin card icon wiggle on hover */
+    .border-l-4:hover > i {
+      animation: none;
+    }
+    /* Identity card icon bounce on hover */
+    .border:hover > i.fas {
+      animation: none;
+    }
+
+    /* 3D tilt card */
+    .tilt-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+      perspective: 800px;
+    }
+
+    /* Gradient border animation */
+    .animated-border {
+      animation: border-dance 16s ease-in-out infinite;
+    }
+
+    /* Floating particles container */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(28, 93, 122, 0.3);
+      border-radius: 50%;
+      animation: floatSlow 16s ease-in-out infinite;
+    }
+    .dark .particle {
+      background: rgba(91, 184, 216, 0.2);
+    }
+
+    /* Logo link */
+
+    /* CTA section animated gradient */
+    .animated-gradient-bg {
+      background-size: 200% 200%;
+      animation: gradient-shift 10s ease infinite;
+    }
+
+    /* Stat counter pop */
+    .stat-pop {
+      animation: counter-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* === PREMIUM STATS SECTION === */
+    .stat-card {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .stat-card.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .stat-bar-track {
+      width: 60%;
+      max-width: 120px;
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 99px;
+      margin: 0.75rem auto 0.5rem;
+      overflow: hidden;
+    }
+    .dark .stat-bar-track {
+      background: #1e293b;
+    }
+    .stat-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #1C5D7A, #5BB8D8);
+      border-radius: 99px;
+      transition: width 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .stat-bar-free {
+      background: linear-gradient(90deg, #10b981, #34d399);
+    }
+    .stat-label {
       font-size: 0.875rem;
+      color: #6b7280;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s;
     }
-    .dark .heading-anchor { color: #334155; }
-    .prose-infragate h2:hover .heading-anchor,
-    .prose-infragate h3:hover .heading-anchor { opacity: 1; }
-    .heading-anchor:hover { color: #1C5D7A; }
-    .dark .heading-anchor:hover { color: #5BB8D8; }
+    .dark .stat-label { color: #9ca3af; }
+    .stat-card.active .stat-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Lifecycle-ops stat uses count-up like other metric cards */
+    @keyframes counter-pop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.2); }
+      70% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
 
-    /* Copy button on code blocks */
-    .copy-btn {
-      position: absolute; top: 0.5rem; right: 0.5rem;
-      padding: 0.25rem 0.5rem; font-size: 0.6875rem;
-      background: #1e293b; color: #94a3b8;
-      border: 1px solid #334155; border-radius: 0.375rem;
-      cursor: pointer; opacity: 0; transition: opacity 0.15s;
+    /* === SCROLL PROGRESS BAR === */
+    .scroll-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #1C5D7A, #5BB8D8);
+      width: 0%;
+      transition: width 0.1s linear;
+      z-index: 51;
     }
-    .prose-infragate pre:hover .copy-btn { opacity: 1; }
-    .copy-btn:hover { color: #e2e8f0; background: #334155; }
+    .dark .scroll-progress {
+      background: linear-gradient(90deg, #5BB8D8, #7DD3FC);
+    }
 
-    /* Prev/next navigation */
-    .page-nav {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-      margin-top: 3rem; padding-top: 2rem;
-      border-top: 1px solid #e5e7eb;
+    /* === NAV LINK ANIMATED UNDERLINE === */
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      bottom: -19px;
+      left: 50%;
+      right: 50%;
+      height: 2px;
+      background: #1C5D7A;
+      border-radius: 1px;
+      transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1), right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
     }
-    .dark .page-nav { border-top-color: #1e293b; }
-    .page-nav-link {
-      display: flex; flex-direction: column; gap: 0.25rem;
-      padding: 1rem; border-radius: 0.75rem;
-      border: 1px solid #e5e7eb; text-decoration: none;
-      transition: all 0.15s;
+    .dark .nav-item::before { background: #5BB8D8; }
+    .nav-item:hover::before {
+      left: 0;
+      right: 0;
+      opacity: 0.5;
     }
-    .dark .page-nav-link { border-color: #1e293b; }
-    .page-nav-link:hover {
-      border-color: #1C5D7A; background: #f0f7fa;
+    .nav-item.active::before {
+      left: 0;
+      right: 0;
+      opacity: 1;
     }
-    .dark .page-nav-link:hover {
-      border-color: #5BB8D8; background: rgba(91, 184, 216, 0.05);
-    }
-    .page-nav-label {
-      font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.05em; color: #9ca3af;
-    }
-    .page-nav-title {
-      font-size: 0.875rem; font-weight: 600; color: #1C5D7A;
-    }
-    .dark .page-nav-title { color: #5BB8D8; }
-    .page-nav-link.next { text-align: right; grid-column: 2; }
 
-    /* Search */
-    .search-box {
-      position: relative; margin-bottom: 1.25rem;
+    /* === PREMIUM BUTTON HOVER EFFECTS === */
+    .btn-solid-premium {
+      position: relative;
+      overflow: hidden;
     }
-    .search-box input {
-      width: 100%; padding: 0.5rem 0.75rem 0.5rem 2rem;
-      font-size: 1rem; border: 1px solid #e5e7eb;
-      border-radius: 0.5rem; background: white; color: #374151;
-      outline: none; transition: border-color 0.15s;
+    .btn-solid-premium::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
     }
-    .dark .search-box input {
-      background: #0B1120; border-color: #1e293b; color: #e2e8f0;
+    .btn-solid-premium:hover::after {
+      width: 300px;
+      height: 300px;
     }
-    .search-box input:focus { border-color: #1C5D7A; }
-    .dark .search-box input:focus { border-color: #5BB8D8; }
-    .search-box i {
-      position: absolute; left: 0.625rem; top: 50%;
-      transform: translateY(-50%); color: #9ca3af; font-size: 0.75rem;
-    }
-    .search-results {
-      position: absolute; top: 100%; left: 0; right: 0;
-      background: white; border: 1px solid #e5e7eb;
-      border-radius: 0.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      max-height: 280px; overflow-x: hidden; overflow-y: auto; z-index: 10; display: none;
-    }
-    .dark .search-results {
-      background: #1e293b; border-color: #334155;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    }
-    .search-results.active { display: block; }
-    .search-result-item {
-      display: block; padding: 0.625rem 0.75rem;
-      font-size: 0.8125rem; color: #374151;
-      text-decoration: none; border-bottom: 1px solid #f3f4f6;
-      cursor: pointer; word-break: break-word;
-    }
-    .dark .search-result-item { color: #d1d5db; border-bottom-color: #334155; }
-    .search-result-item:hover { background: #f0f7fa; }
-    .dark .search-result-item:hover { background: rgba(91,184,216,0.08); }
-    .search-result-item .result-page {
-      font-size: 0.6875rem; color: #9ca3af; margin-top: 0.125rem;
-    }
-    .search-result-item mark {
-      background: rgba(28, 93, 122, 0.15); color: inherit;
-      padding: 0 0.125rem; border-radius: 0.125rem;
-    }
-    .dark .search-result-item mark { background: rgba(91, 184, 216, 0.2); }
 
-    /* Support modal */
+    /* === CTA BUTTON HOVER SCALE === */
+    .cta-btn {
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 12px 32px -8px rgba(0,0,0,0.25);
+    }
+
+    /* Stagger children */
+    .stagger-children > * {
+      opacity: 0;
+      transform: translateY(12px) scale(0.99);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .stagger-children.visible > *:nth-child(1) { transition-delay: 0s; }
+    .stagger-children.visible > *:nth-child(2) { transition-delay: 0.08s; }
+    .stagger-children.visible > *:nth-child(3) { transition-delay: 0.16s; }
+    .stagger-children.visible > *:nth-child(4) { transition-delay: 0.24s; }
+    .stagger-children.visible > *:nth-child(5) { transition-delay: 0.32s; }
+    .stagger-children.visible > *:nth-child(6) { transition-delay: 0.4s; }
+    .stagger-children.visible > *:nth-child(7) { transition-delay: 0.48s; }
+    .stagger-children.visible > *:nth-child(8) { transition-delay: 0.56s; }
+    .stagger-children.visible > *:nth-child(9) { transition-delay: 0.64s; }
+    .stagger-children.visible > * {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Magnetic hover for buttons */
+    .magnetic-btn {
+      transition: transform 0.2s ease;
+    }
+
+    /* Wavy section divider */
+    .wave-divider {
+      position: relative;
+      overflow: hidden;
+    }
+    .wave-divider::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q300 0 600 20 Q900 40 1200 20 V0 H0Z' fill='white'/%3E%3C/svg%3E") no-repeat center;
+      background-size: cover;
+      z-index: 1;
+    }
+    .dark .wave-divider::before {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q300 0 600 20 Q900 40 1200 20 V0 H0Z' fill='%230B1120'/%3E%3C/svg%3E");
+    }
+    html:not(.dark) .wave-divider::before {
+      display: none;
+    }
+    html:not(.dark) .wave-divider {
+      border-top: 1px solid #cfd9e4;
+    }
+
+    /* === MOBILE ANIMATION ADJUSTMENTS === */
+    @media (max-width: 767px) {
+      /* Reduce reveal travel distances on small screens to avoid overflow clipping */
+      .reveal.from-left { transform: translateX(-10px); }
+      .reveal.from-right { transform: translateX(10px); }
+      .reveal.from-below { transform: translateY(10px); }
+      .reveal { transform: translateY(10px); opacity: 0; }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+      }
+
+      /* Smaller blobs to prevent horizontal overflow */
+      .blob { max-width: 100px; max-height: 100px; filter: blur(30px); pointer-events: none; }
+      .blob-1 { width: 100px; height: 100px; right: -20px; top: -20px; }
+      .blob-2 { width: 80px; height: 80px; left: -20px; }
+      .blob-3 { display: none; } /* Remove center blob on mobile to clear text area */
+
+      /* Reduce particles on mobile for perf */
+      .particles-container { display: none; }
+
+      /* Simpler wave divider on mobile */
+      .wave-divider::before { height: 20px; }
+
+      /* Ensure no horizontal overflow at root */
+      html, body { overflow-x: hidden; position: relative; width: 100%; }
+
+      /* Disable 3D tilt on touch - flat hover only */
+      .tilt-card {
+        transform-style: flat !important;
+        perspective: none !important;
+      }
+
+      /* Adjust text sizes for small screens */
+      h1 { font-size: 2.25rem !important; line-height: 2.5rem !important; }
+      h2 { font-size: 1.75rem !important; line-height: 2.25rem !important; }
+      p { font-size: 0.9375rem !important; line-height: 1.5rem !important; }
+
+      /* Mobile menu fixes */
+      .mobile-nav-item { font-size: 1.125rem; padding: 0.75rem 1rem; }
+      #mobileNav { padding: 1rem; width: 100vw; left: 0; right: 0; box-sizing: border-box; }
+
+      /* Reduce glow intensity on mobile (saves battery / GPU) */
+      .pulse-glow-btn {
+        animation: pulse-glow-mobile 2.5s ease-in-out infinite;
+      }
+
+      /* Touch-friendly: add tap feedback instead of hover tilt */
+      .glass-card:active {
+        transform: scale(0.97) !important;
+        transition: transform 0.1s ease !important;
+      }
+
+      /* Slightly faster stagger on mobile */
+      .stagger-children.visible > *:nth-child(1) { transition-delay: 0s; }
+      .stagger-children.visible > *:nth-child(2) { transition-delay: 0.08s; }
+      .stagger-children.visible > *:nth-child(3) { transition-delay: 0.16s; }
+      .stagger-children.visible > *:nth-child(4) { transition-delay: 0.12s; }
+      .stagger-children.visible > *:nth-child(5) { transition-delay: 0.2s; }
+      .stagger-children.visible > *:nth-child(6) { transition-delay: 0.24s; }
+      .stagger-children.visible > *:nth-child(7) { transition-delay: 0.28s; }
+      .stagger-children.visible > *:nth-child(8) { transition-delay: 0.32s; }
+      .stagger-children.visible > *:nth-child(9) { transition-delay: 0.36s; }
+    }
+    @keyframes pulse-glow-mobile {
+      0%, 100% { box-shadow: 0 0 4px rgba(28,93,122,0.2), 0 0 12px rgba(28,93,122,0.08); }
+      50% { box-shadow: 0 0 12px rgba(28,93,122,0.4), 0 0 30px rgba(28,93,122,0.12); }
+    }
+
+    /* Tablet tweaks */
+    @media (max-width: 1023px) and (min-width: 768px) {
+      .blob-1 { width: 280px; height: 280px; }
+      .blob-2 { width: 220px; height: 220px; }
+      .reveal.from-left { transform: translateX(-20px); }
+      .reveal.from-right { transform: translateX(20px); }
+    }
+
+    /* Respect prefers-reduced-motion - kill all animations */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal, .stagger-children > * {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .blob, .particle, .particles-container { display: none !important; }
+    }
+
+    .terminal {
+      background: #0F172A;
+      border-radius: 1rem;
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+    }
+    /* Active nav item */
+    .nav-item { position: relative; padding-bottom: 2px; }
+    .nav-item.active { color: #1C5D7A; }
+    .dark .nav-item.active { color: #5BB8D8; }
+    /* active underline now handled by ::before with animation */
+    .mobile-nav-item.active { color: #1C5D7A; font-weight: 700; }
+    .dark .mobile-nav-item.active { color: #5BB8D8; }
+    /* Scroll offset for sticky nav */
+    [id] { scroll-margin-top: 64px; }
+    @media (min-width: 1024px) {
+      [id] { scroll-margin-top: 80px; }
+    }
+    /* Section specific offsets to ensure title visibility */
+    .anchor-target {
+        scroll-margin-top: 64px;
+    }
+    @media (min-width: 1024px) {
+        .anchor-target {
+            scroll-margin-top: 80px;
+        }
+    }
+    /* Mobile menu */
+    .mobile-nav {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
+      display: flex;
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .dark .mobile-nav {
+      background: rgba(11, 17, 32, 0.98);
+      border-bottom-color: rgba(255,255,255,0.08);
+    }
+    .mobile-nav.open {
+      max-height: 500px;
+      opacity: 1;
+      padding-top: 1rem;
+      padding-bottom: 1.5rem;
+    }
+    /* Hamburger animation */
+    #menuToggle svg { transition: transform 0.3s ease; }
+    #menuToggle.open svg { transform: rotate(90deg); }
+    #menuToggle .line {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+    #menuToggle.open .line-1 { transform: translateY(6px) rotate(45deg); }
+    #menuToggle.open .line-2 { opacity: 0; }
+    #menuToggle.open .line-3 { transform: translateY(-6px) rotate(-45deg); }
+    /* Responsive fixes */
+    @media (max-width: 767px) {
+      .stat-number { font-size: 1.6rem; }
+      .terminal { border-radius: 0.75rem; }
+      .terminal .p-4 { padding: 0.75rem; }
+      .terminal .text-sm { font-size: 0.7rem; }
+    }
+    @media (max-width: 639px) {
+      h1 { font-size: 1.75rem !important; line-height: 1.3 !important; }
+      h2 { font-size: 1.5rem !important; }
+      .py-14 { padding-top: 2rem; padding-bottom: 2rem; }
+      .px-6 { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+    /* Demo modal */
     .modal-overlay {
-      position: fixed; inset: 0; z-index: 50;
-      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
     }
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
     .modal-content {
-      background: white; border-radius: 1rem; padding: 1.75rem;
-      width: 90%; max-width: 440px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-      transform: translateY(10px) scale(0.98);
-      transition: transform 0.2s;
+      background: white;
+      border-radius: 1.25rem;
+      max-width: 520px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+      transform: translateY(12px) scale(0.99);
+      transition: transform 0.25s ease;
     }
     .dark .modal-content {
-      background: #1e293b; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      background: #1E293B;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
     }
     .modal-overlay.active .modal-content {
       transform: translateY(0) scale(1);
     }
     .modal-content input,
     .modal-content textarea {
-      width: 100%; padding: 0.625rem 0.75rem;
-      border: 1px solid #e5e7eb; border-radius: 0.5rem;
-      font-size: 0.875rem; color: #374151; background: white;
-      outline: none; transition: border-color 0.15s;
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.625rem;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      background: white;
+      color: #172233;
     }
     .dark .modal-content input,
     .dark .modal-content textarea {
-      background: #0f172a; border-color: #334155; color: #e2e8f0;
+      background: #0F172A;
+      border-color: #2c3f52;
+      color: #e2e8f0;
     }
     .modal-content input:focus,
     .modal-content textarea:focus {
       border-color: #1C5D7A;
+      box-shadow: 0 0 0 3px rgba(28,93,122,0.1);
     }
     .dark .modal-content input:focus,
     .dark .modal-content textarea:focus {
       border-color: #5BB8D8;
+      box-shadow: 0 0 0 3px rgba(91,184,216,0.15);
     }
     .modal-content label {
-      display: block; font-size: 0.8125rem; font-weight: 600;
-      color: #374151; margin-bottom: 0.25rem;
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #2f3b4c;
+      margin-bottom: 0.375rem;
     }
     .dark .modal-content label { color: #cbd5e1; }
-    .btn-solid {
-      display: inline-flex; align-items: center; justify-content: center;
-      background: #1C5D7A; color: white; border: none; cursor: pointer;
-      font-weight: 600; transition: background 0.15s;
+    /* Workflow animation */
+    .flow-step { opacity: 0.4; }
+    .flow-step.active { opacity: 1; }
+    /* Theme toggle */
+    .theme-toggle {
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: #6b7280;
     }
-    .btn-solid:hover { background: #174d66; }
-    .dark .btn-solid { background: #5BB8D8; color: #0f172a; }
-    .dark .btn-solid:hover { background: #7cc8e2; }
-
-    /* Scrollbar */
-    .sidebar::-webkit-scrollbar, .toc-sidebar::-webkit-scrollbar { width: 3px; }
-    .sidebar::-webkit-scrollbar-thumb, .toc-sidebar::-webkit-scrollbar-thumb {
-      background: #cbd5e1; border-radius: 3px;
+    .theme-toggle:hover {
+      background: #f3f4f6;
+      color: #2f3b4c;
     }
-    .dark .sidebar::-webkit-scrollbar-thumb, .dark .toc-sidebar::-webkit-scrollbar-thumb {
-      background: #334155;
+    .dark .theme-toggle:hover {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    .theme-toggle .fa-sun { display: none; }
+    .dark .theme-toggle .fa-sun { display: inline; }
+    .dark .theme-toggle .fa-moon { display: none; }
+    /* Smooth transitions for theme switch - use only for specific elements to avoid layout flickering */
+    .dark body, .glass-card, .btn-outline-premium, .btn-solid-premium, .feature-icon, .stat-number, .theme-toggle, .modal-content, input, textarea {
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .mobile-nav-item {
+      transition: none !important;
+    }
+    /* Exclude animations from theme transition */
+    .flow-step, .flow-step *, .terminal *, #terraformOutput * {
+      transition-property: opacity, transform, border-color, background, color;
     }
   </style>
 </head>
 <body class="antialiased dark:text-gray-100">
+
+<!-- Floating particles -->
+<div class="particles-container" id="particles"></div>
+
+<!-- Contact / Demo / POC / Enterprise / Partner Modal (shared) -->
+<div id="demoModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 id="demoModalTitle" class="text-xl font-bold text-gray-900 dark:text-white">Book a 20-min demo</h3>
+        <p id="demoModalSubtitle" class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
+      </div>
+      <button id="modalClose" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="demoForm" class="space-y-4" data-subject="Infragate Demo Request">
+      <div>
+        <label for="demo-name">Full Name <span class="text-red-400">*</span></label>
+        <input type="text" id="demo-name" name="name" required placeholder="John Smith">
+      </div>
+      <div>
+        <label for="demo-company">Company <span class="text-red-400">*</span></label>
+        <input type="text" id="demo-company" name="company" required placeholder="Acme Corp">
+      </div>
+      <div>
+        <label for="demo-email">Work Email <span class="text-red-400">*</span></label>
+        <input type="email" id="demo-email" name="email" required placeholder="john@acme.com">
+      </div>
+      <div>
+        <label for="demo-title">Job Title</label>
+        <input type="text" id="demo-title" name="title" placeholder="Platform Engineer">
+      </div>
+      <div>
+        <label for="demo-message" id="demoMessageLabel">Tell us about your use case</label>
+        <textarea id="demo-message" name="message" rows="3" placeholder="How many clusters do you manage? What's your current workflow?"></textarea>
+      </div>
+      <button type="submit" id="demoSubmitBtn" class="w-full btn-solid-premium px-6 py-3 text-sm font-semibold rounded-xl">
+        <i class="fas fa-paper-plane mr-1.5"></i> <span id="demoSubmitText">Submit Request</span>
+      </button>
+      <p class="text-xs text-gray-400 text-center">We respect your privacy. No spam, ever.</p>
+    </form>
+    <!-- Success state (hidden by default) -->
+    <div id="demoSuccess" class="hidden text-center py-6">
+      <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check text-2xl text-emerald-600 dark:text-emerald-400"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Thank you!</h3>
+      <p id="demoSuccessMessage" class="text-gray-500 dark:text-gray-400 mt-2 text-sm">Your request has been submitted.<br>We'll be in touch shortly.</p>
+      <button onclick="closeDemoModal()" class="mt-6 btn-solid-premium px-8 py-2.5 text-sm font-semibold rounded-xl">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- Support Modal -->
 <div id="supportModal" class="modal-overlay">
@@ -474,592 +1066,990 @@
       </div>
       <div>
         <label for="support-message">Message <span class="text-red-400">*</span></label>
-        <textarea id="support-message" name="message" rows="4" required placeholder="Describe your issue or question..."></textarea>
+        <textarea id="support-message" name="message" rows="4" required placeholder="Describe your issue or question in detail..."></textarea>
       </div>
-      <button type="submit" id="supportSubmitBtn" class="w-full btn-solid px-6 py-3 text-sm rounded-xl">
+      <div>
+        <label for="support-attachment" class="mb-1.5 block">Attachment <span class="text-gray-400 font-normal">(optional)</span></label>
+        <label class="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 cursor-pointer hover:border-[#1C5D7A] dark:hover:border-[#5BB8D8] transition text-sm text-gray-500 dark:text-gray-400">
+          <i class="fas fa-paperclip text-gray-400"></i>
+          <span id="attachmentLabel">Choose files...</span>
+          <input type="file" id="support-attachment" name="attachment" class="hidden" accept=".png,.jpg,.jpeg,.gif,.pdf,.txt,.log,.zip,.json,.yaml,.yml" multiple>
+        </label>
+        <p class="text-xs text-gray-400 mt-1">Max 5 MB total. Images, PDF, text, logs, zip. Multiple files allowed.</p>
+      </div>
+      <button type="submit" id="supportSubmitBtn" class="w-full btn-solid-premium px-6 py-3 text-sm font-semibold rounded-xl">
         <i class="fas fa-paper-plane mr-1.5"></i> Send Message
       </button>
-      <p class="text-xs text-gray-400 text-center">Or email us directly at <a href="mailto:support@infragate.cloud" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline">support@infragate.cloud</a></p>
+      <p class="text-xs text-gray-400 text-center">We respect your privacy. No spam, ever.</p>
     </form>
     <div id="supportSuccess" class="hidden text-center py-6">
       <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
         <i class="fas fa-check text-2xl text-emerald-600 dark:text-emerald-400"></i>
       </div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Message sent!</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">We'll be in touch shortly.</p>
-      <button onclick="closeSupportModal()" class="mt-6 btn-solid px-8 py-2.5 text-sm rounded-xl">
+      <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">Your support request has been submitted.<br>We'll be in touch shortly.</p>
+      <button onclick="closeSupportModal()" class="mt-6 btn-solid-premium px-8 py-2.5 text-sm font-semibold rounded-xl">
         Close
       </button>
     </div>
   </div>
 </div>
 
-<!-- Top nav -->
-<nav class="sticky top-0 z-30 h-16 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 flex items-center px-4 sm:px-6">
-  <div class="flex items-center gap-3 flex-1">
-    <button id="sidebarToggle" class="lg:hidden p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-    <a href="/docs/" class="flex items-center gap-2">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
-      <span class="font-bold text-lg text-gray-800 dark:text-white">Infragate</span>
-      <span class="text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">Docs</span>
-    </a>
-  </div>
-  <div class="flex items-center gap-3">
-    <a href="/" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-[#1C5D7A] dark:text-[#5BB8D8] hover:opacity-80 transition">
-      <i class="fas fa-arrow-left text-xs"></i> Home
-    </a>
-    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-      <i class="fas fa-moon text-sm"></i>
-      <i class="fas fa-sun text-sm"></i>
-    </button>
+<!-- Navigation -->
+<nav class="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800 shadow-sm">
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <a href="#" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})" class="flex items-center gap-2">
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 md:w-9 md:h-9"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        <span class="font-bold text-xl md:text-2xl tracking-tight text-gray-800 dark:text-white">Infragate</span>
+        <span class="hidden md:inline-block ml-3 text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700" style="opacity:0;animation:fadeSlideUp 0.5s ease-out 0.6s forwards">OCI Native</span>
+      </a>
+      <div class="hidden lg:flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-400" id="desktopNav">
+        <a href="#features" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Features</a>
+        
+        <a href="#why-infragate" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Why Infragate</a>
+        <a href="#ga-roadmap" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">GA vs Roadmap</a>
+        <a href="#pricing" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Pricing</a>
+      </div>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+          <i class="fas fa-moon text-sm"></i>
+          <i class="fas fa-sun text-sm"></i>
+        </button>
+        <a href="/docs/" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition"><i class="fas fa-book text-xs"></i> Docs</a>
+        <button onclick="openDemoModal()" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-full btn-solid-premium cursor-pointer">Book a demo</button>
+        <button id="menuToggle" class="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white relative z-50" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path class="line line-1" d="M4 6h16" stroke-linecap="round"/>
+            <path class="line line-2" d="M4 12h16" stroke-linecap="round"/>
+            <path class="line line-3" d="M4 18h16" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile/tablet menu -->
+    <div id="mobileNav" class="mobile-nav flex-col gap-3 pb-4 lg:hidden">
+      <a href="#features" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Features</a>
+      
+      <a href="#why-infragate" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Why Infragate</a>
+      <a href="#ga-roadmap" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">GA vs Roadmap</a>
+      <a href="#pricing" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Pricing</a>
+      <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
+        <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-full text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
+        <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-full text-center cursor-pointer">Book a demo</button>
+      </div>
+    </div>
   </div>
 </nav>
 
-<!-- Sidebar overlay (mobile) -->
-<div id="sidebarOverlay" class="sidebar-overlay"></div>
-
-<!-- Layout -->
-<div class="flex">
-  <!-- Left sidebar -->
-  <aside id="sidebar" class="sidebar overflow-y-auto py-5 px-3 flex-shrink-0">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" id="searchInput" placeholder="Search docs..." autocomplete="off">
-      <div id="searchResults" class="search-results"></div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-heading">Getting started</div>
-      <a class="sidebar-link active" data-page="readme">
-        <i class="fas fa-home text-xs w-4"></i> Overview
-      </a>
-      <a class="sidebar-link" data-page="features">
-        <i class="fas fa-puzzle-piece text-xs w-4"></i> Features
-      </a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-heading">Deployment</div>
-      <a class="sidebar-link" data-page="guide">
-        <i class="fas fa-rocket text-xs w-4"></i> Deployment Guide
-      </a>
-      <a class="sidebar-link" data-page="integration">
-        <i class="fas fa-plug text-xs w-4"></i> Enterprise Integration
-      </a>
-      <a class="sidebar-link" data-page="testing">
-        <i class="fas fa-vial text-xs w-4"></i> Testing & Validation
-      </a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-heading">Resources</div>
-      <a href="/" class="sidebar-link">
-        <i class="fas fa-globe text-xs w-4"></i> Website
-      </a>
-      <a href="#" onclick="openSupportModal(); return false;" class="sidebar-link">
-        <i class="fas fa-envelope text-xs w-4"></i> Support
-      </a>
-    </div>
-  </aside>
-
-  <!-- Main content -->
-  <main class="flex-1 min-w-0">
-    <div class="max-w-5xl mx-auto flex gap-8">
-      <div class="flex-1 min-w-0 px-6 sm:px-10 py-8">
-        <!-- Breadcrumb -->
-        <div id="breadcrumb" class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 mb-6">
-          <a href="/docs/" class="hover:text-gray-600 dark:hover:text-gray-300">Docs</a>
-          <i class="fas fa-chevron-right text-[8px]"></i>
-          <span id="breadcrumbPage" class="text-gray-600 dark:text-gray-300">Overview</span>
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-8 pb-14 md:pt-12 md:pb-18">
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-[#0B1120] dark:to-gray-900 -z-10"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="absolute top-40 right-0 w-96 h-96 bg-[#1C5D7A]/5 dark:bg-[#1C5D7A]/10 rounded-full blur-3xl -z-10"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <div class="max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white reveal from-left text-center lg:text-left">
+          Internal Developer Platform for <span class="shimmer-text">OKE on Oracle Cloud</span>
+        </h1>
+        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="transition-delay: 0.15s;">
+          Infragate is an OCI-native Internal Developer Platform for OKE lifecycle management - provisioning, scaling, cost governance, and access control through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
+          <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-full cursor-pointer cta-btn">Book a 20-min demo</button>
+          <a href="/docs/" class="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cta-btn"><i class="fas fa-book text-xs"></i> Read the Docs</a>
         </div>
-
-        <div class="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-4">
-          <div class="text-[11px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-3">Documentation Access</div>
-          <div class="grid sm:grid-cols-3 gap-3 text-xs">
-            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
-              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Public Docs</div>
-              <div class="text-gray-500 dark:text-gray-400">Architecture, features, requirements, and deployment overview.</div>
-            </div>
-            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
-              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Customer Docs (Gated)</div>
-              <div class="text-gray-500 dark:text-gray-400">Detailed install runbooks, upgrade playbooks, and support procedures.</div>
-            </div>
-            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
-              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Private / Internal Docs</div>
-              <div class="text-gray-500 dark:text-gray-400">Internal operations, product strategy, and non-customer materials.</div>
-            </div>
+        <div class="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500 dark:text-gray-400 reveal from-left stagger-children justify-center lg:justify-start" style="transition-delay: 0.3s;">
+          <span><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mr-1"></i> Live Terraform streaming</span>
+          <span><i class="fas fa-chart-line text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Real-time cost preview</span>
+          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> RBAC + destroy protection</span>
+          <span><i class="fas fa-database text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> 100% in-tenancy</span>
+        </div>
+      </div>
+      <div class="relative reveal from-right w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none" style="transition-delay: 0.2s;">
+        <div class="terminal shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animated-border w-full">
+          <div class="bg-gray-800 px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+            <div class="w-3 h-3 rounded-full bg-red-500" style="animation:scaleIn 0.3s ease 0.5s both"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500" style="animation:scaleIn 0.3s ease 0.65s both"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500" style="animation:scaleIn 0.3s ease 0.8s both"></div>
+            <span class="text-gray-400 text-xs ml-2">Terraform output replay (sanitized)</span>
+          </div>
+          <div id="terraformOutput" class="p-4 text-gray-300 text-sm font-mono space-y-1 bg-[#0F172A] h-[280px] md:h-[320px] overflow-hidden">
           </div>
         </div>
-        <!-- Mobile TOC -->
-        <details class="toc-mobile mb-4" id="tocMobile">
-          <summary><i class="fas fa-list-ul text-xs"></i> On this page <i class="fas fa-chevron-down text-[10px] toc-chevron"></i></summary>
-          <div class="toc-mobile-list" id="tocMobileList"></div>
-        </details>
-        <!-- Loading state -->
-        <div id="loading" class="flex items-center justify-center py-20">
-          <i class="fas fa-spinner fa-spin text-[#1C5D7A] dark:text-[#5BB8D8] text-xl mr-3"></i>
-          <span class="text-gray-500 dark:text-gray-400 text-sm">Loading...</span>
-        </div>
-        <!-- Content renders here -->
-        <article id="content" class="prose-infragate hidden"></article>
-        <!-- Prev / Next -->
-        <div id="pageNav" class="page-nav hidden"></div>
+        <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-[#1C5D7A]/10 rounded-full blur-2xl -z-10"></div>
       </div>
-      <!-- Right TOC -->
-      <aside id="tocSidebar" class="toc-sidebar py-8 pr-4 hidden xl:block">
-        <div class="sidebar-heading mb-2">On this page</div>
-        <div id="tocList"></div>
-      </aside>
     </div>
-    <!-- Footer -->
-    <footer class="border-t border-gray-200 dark:border-gray-800 py-6 px-6 sm:px-10">
-      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-400">
-        <span>&copy; 2026 Solvia Lab s.r.o.</span>
-        <a href="/" class="hover:text-gray-600 dark:hover:text-gray-200 transition">infragate.cloud</a>
+  </div>
+</section>
+
+<!-- Trust / value strip -->
+<div class="border-y border-gray-100 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-900/40 py-5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row items-center justify-center md:justify-between gap-3 md:gap-6 text-sm text-gray-600 dark:text-gray-400">
+      <div class="flex items-center gap-2.5 text-center md:text-left">
+        <i class="fas fa-cloud text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
+        <span>Built on Oracle Cloud - native to <strong class="text-gray-800 dark:text-gray-200">OKE</strong>, <strong class="text-gray-800 dark:text-gray-200">IAM</strong>, <strong class="text-gray-800 dark:text-gray-200">VCN</strong>, and <strong class="text-gray-800 dark:text-gray-200">Object Storage</strong></span>
       </div>
-    </footer>
-  </main>
+      <div class="hidden md:block h-5 w-px bg-gray-200 dark:bg-gray-700"></div>
+      <div class="flex items-center gap-2.5 text-center md:text-left">
+        <i class="fas fa-tag text-emerald-600 dark:text-emerald-400"></i>
+        <span class="font-semibold text-gray-800 dark:text-gray-200"><span class="text-emerald-600 dark:text-emerald-400">No markup</span> on OCI resources - billed directly by Oracle</span>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- Features Grid -->
+<div id="features" class="anchor-target"></div>
+<section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+  <div class="blob" style="width:250px;height:250px;background:#8b5cf6;top:20%;right:-40px;animation-delay:-6s"></div>
+  <div class="text-center max-w-2xl mx-auto mb-10 reveal">
+    <span class="section-pill">Platform capabilities</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4 text-gray-900 dark:text-white">Complete cluster lifecycle<br>at your fingertips</h2>
+    <p class="text-gray-600 dark:text-gray-400">From one-click provisioning to multi-pool scaling, TTL expiry, and cost governance - Infragate brings enterprise control to OKE.</p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 stagger-children text-center sm:text-left">
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-mouse-pointer text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">One-click deploy</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Engineers provision fully managed OKE clusters with automatic compartment, VCN, subnet, security list, and node pool creation - no manual steps.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-layer-group text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Scaling + K8s upgrades</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Add or remove node pools, adjust OCPU, RAM, and storage per pool from the UI. Dedicated Kubernetes upgrade flow supports safer version moves with guided worker refresh.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-chart-simple text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Live cost preview</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Monthly and hourly estimates update live as you configure pools. Cost visible on deploy form, dashboard cards, detail page, and admin panels.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">TTL &amp; destroy protection</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Set time-to-live in hours with color-coded countdown badges (green &gt;24h, orange &lt;24h, red &lt;4h). Protected clusters require admin force-destroy override.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-network-wired text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">CIDR pool management</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Admin-managed /24 ranges - each cluster consumes one on deploy and releases on destroy. No overlaps, automatic allocation.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-key text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Kubeconfig + SSH keys</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Download kubeconfig (OCI exec plugin) and Terraform-generated SSH private key directly from the cluster detail page.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-terminal text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Live Terraform streaming</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Watch <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">terraform init</code>, <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">plan</code>, and <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">apply</code> output stream in real time via SSE during deploy, scale, upgrade, and destroy.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Bring your own infra</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks.</p>
+    </div>
+    <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
+      <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Resource limits</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Two-tier limit system: global defaults + per-user overrides. Covers clusters, pools, nodes, OCPU, RAM, storage, and tier, with shape-aware Kubernetes compatibility checks.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Templates + RBAC section -->
+<div id="templates" class="anchor-target"></div>
+<section class="bg-gray-50 dark:bg-gray-900/50 py-14 md:py-18 wave-divider">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
+      <div>
+        <span class="section-pill reveal mx-auto md:mx-0">Cluster templates &amp; RBAC</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-5 mb-5 text-gray-900 dark:text-white reveal text-center md:text-left" style="transition-delay:0.1s">Golden paths with role-based gating</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6 reveal text-center md:text-left" style="transition-delay:0.2s">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields - users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations.</p>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm reveal scale-up mx-auto md:mx-0 max-w-lg" style="transition-delay:0.3s">
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <span class="font-bold text-gray-800 dark:text-white">Template: PROD - HA</span>
+            <span class="text-xs bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-1 rounded-full border border-amber-200 dark:border-amber-700">requires: production</span>
+          </div>
+          <div class="flex flex-wrap gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
+            <span><i class="fas fa-lock text-[#1C5D7A] dark:text-[#5BB8D8]"></i> Destroy protection</span>
+            <span><i class="fas fa-clock text-[#1C5D7A] dark:text-[#5BB8D8]"></i> TTL: <span data-count-to="720" data-count-suffix="h" data-count-duration="2000">720h</span></span>
+            <span><i class="fas fa-server text-[#1C5D7A] dark:text-[#5BB8D8]"></i> VM.Standard3.Flex</span>
+            <span><i class="fas fa-layer-group text-[#1C5D7A] dark:text-[#5BB8D8]"></i> <span data-count-to="3" data-count-suffix=" node pools" data-count-duration="800">3 node pools</span></span>
+          </div>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mt-3"><i class="fas fa-eye-slash"></i> Users without the <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">production</code> role never see this template - clean UI, no error messages.</p>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 reveal from-right" style="transition-delay:0.2s">
+        <div class="flex items-center gap-2 border-b border-gray-100 dark:border-gray-700 pb-3 mb-4">
+          <i class="fas fa-id-badge text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+          <span class="font-semibold text-gray-900 dark:text-white">OIDC role mapping (Keycloak / Azure AD / Okta)</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 stagger-children">
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">DEV - Small</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">No role required &rarr; all users</div>
+          </div>
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">TEST - Medium</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">testing</code> &rarr; QA team</div>
+          </div>
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">UAT - Large</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">uat</code> &rarr; release managers</div>
+          </div>
+          <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg">
+            <span class="font-bold text-[#1C5D7A] dark:text-[#5BB8D8]">PROD - HA</span>
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Role: <code class="bg-white dark:bg-gray-800 px-1 rounded">production</code> &rarr; SRE only</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FinOps Section -->
+<div id="finops" class="anchor-target"></div>
+<section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <div class="text-center mb-10 reveal">
+    <span class="section-pill">FinOps native</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Cost visibility &amp; governance</h2>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Real-time cost previews, cluster-level breakdowns, and global spend dashboards - no surprises. Both server-side and client-side cost engines produce identical results.</p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 stagger-children text-center sm:text-left">
+    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800/50 shadow-sm hover-lift flex flex-col items-center sm:items-start">
+      <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-dollar-sign text-lg text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
+      </div>
+      <h3 class="font-bold text-lg text-gray-900 dark:text-white">Deploy cost summary</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Hourly &amp; monthly cost updates live as you configure node pools, shape, and tier. Also shown in the deploy plan confirm modal.</p>
+      <div class="mt-3 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg text-sm font-mono text-gray-600 dark:text-gray-400">$0.025/OCPU&middot;hr + $0.0015/GB RAM</div>
+    </div>
+    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800/50 shadow-sm hover-lift flex flex-col items-center sm:items-start">
+      <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-chart-pie text-lg text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
+      </div>
+      <h3 class="font-bold text-lg text-gray-900 dark:text-white">Cluster cost cards</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Dashboard cards show estimated monthly cost per cluster. Detail page shows full breakdown: per-pool cost, control plane cost, total with hourly rate.</p>
+    </div>
+    <div class="border border-gray-200 dark:border-gray-700 rounded-2xl p-6 bg-white dark:bg-gray-800/50 shadow-sm hover-lift flex flex-col items-center sm:items-start">
+      <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+        <i class="fas fa-chart-line text-lg text-[#1C5D7A] dark:text-[#5BB8D8]"></i>
+      </div>
+      <h3 class="font-bold text-lg text-gray-900 dark:text-white">Admin spend overview</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Total monthly spend across all active clusters in the admin stats bar. Shape-specific rate overrides supported for custom OCI enterprise contracts.</p>
+    </div>
+  </div>
+  <div class="mt-10 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-4 reveal scale-up" style="transition-delay:0.3s">
+    <div>
+      <i class="fas fa-calculator text-[#1C5D7A] dark:text-[#5BB8D8] text-xl mr-2"></i>
+      <span class="font-semibold text-gray-900 dark:text-white">Identical server-side &amp; client-side cost engine</span>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">OCI Pay-As-You-Go rates + admin overrides for custom enterprise contracts.</p>
+    </div>
+    <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-center">Basic CP: <span class="text-emerald-600 dark:text-emerald-400">$0</span> &middot; Enhanced CP: <span class="text-[#1C5D7A] dark:text-[#5BB8D8]">$0.10/hr</span></div>
+  </div>
+</section>
+
+<!-- Admin Panel Section -->
+<div id="admin" class="anchor-target"></div>
+<section class="bg-gray-50 dark:bg-gray-900/50 py-14 md:py-18 wave-divider">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10 reveal">
+      <span class="section-pill">Admin &amp; governance</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white"><span data-count-to="5" data-count-duration="1000">5</span> dedicated admin panels</h2>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, and audit logs - all changes take effect immediately.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 stagger-children text-center sm:text-left mx-auto">
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-globe text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">All Clusters</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Every cluster across all users with status, owner, CIDR, K8s version, tier, resources, cost, and age. Stats bar with total spend.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-users text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Users &amp; Limits</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Per-user overrides for any combination of limits and tier. Reset to global defaults with one click. Override badges visible.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-sliders text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Configuration</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">CIDR pool, VM shapes, K8s versions, node images (with enable/disable), global resource limits. No restart needed.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-layer-group text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Cluster Templates</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Template table with live cost preview in add/edit modal. Enable/disable toggle and permanent delete.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-clock-rotate-left text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Audit Log</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Append-only record of every deploy, scale, upgrade, and destroy. Filterable by user, operation, status, and duration.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deployment Options -->
+<div id="deploy" class="anchor-target"></div>
+<section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <div class="grid md:grid-cols-2 gap-6 lg:gap-12 items-center">
+    <div>
+      <span class="section-pill reveal mx-auto md:mx-0">Deployment flexibility</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-5 text-gray-900 dark:text-white reveal text-center md:text-left" style="transition-delay:0.1s">Helm chart, OKE, or any Kubernetes</h2>
+      <ul class="space-y-3 text-gray-600 dark:text-gray-400 stagger-children max-w-xl mx-auto md:mx-0">
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Existing OKE cluster</strong> - deploy into your Oracle Kubernetes Engine cluster via Helm in minutes. Pre-configured for OCI Block Volumes, nginx ingress, and OCI load balancer.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Helm chart</strong> - single chart with configurable values, ingress-nginx with OCI load balancer annotations. Supports <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">imagePullSecrets</code> for private registries.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Customer delivery model</strong> - plug-and-play deployment with versioned, stable releases. No customer-side CI/CD pipeline setup required.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Single VM (k3s) on OCI Always Free</strong> - ARM-compatible, control-plane tolerations for single-node scheduling.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Any OIDC provider</strong> - bundled Keycloak, or connect Azure AD, Okta, Google Workspace. PKCE flow, no client secrets in frontend.</span></li>
+      </ul>
+    </div>
+    <!-- Deployment workflow animation -->
+    <div class="bg-gray-900 rounded-xl sm:rounded-2xl p-5 sm:p-7 shadow-2xl overflow-hidden border border-transparent dark:border-gray-700 reveal from-right" style="transition-delay:0.2s">
+      <div class="flex items-center gap-2 border-b border-gray-700 pb-3 mb-5">
+        <i class="fas fa-rocket text-cyan-400 text-lg"></i>
+        <span class="font-semibold text-white text-sm">Deployment Workflow</span>
+      </div>
+      <div class="space-y-4" id="workflowSteps">
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="0">
+          <div class="w-9 h-9 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-code-branch text-cyan-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Push to main</div>
+            <div class="text-gray-500 text-xs">CI/CD pipeline triggered</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="1">
+          <div class="w-9 h-9 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fab fa-docker text-purple-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Build &amp; push images</div>
+            <div class="text-gray-500 text-xs">GHCR / GitLab CR / OCIR</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="2">
+          <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-vial text-amber-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Run test suite</div>
+            <div class="text-gray-500 text-xs"><span data-count-to="107" data-count-suffix=" automated tests passed" data-count-duration="1200">107 automated tests passed</span></div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="3">
+          <div class="w-9 h-9 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-dharmachakra text-blue-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Helm upgrade</div>
+            <div class="text-gray-500 text-xs">Rolling deployment to OKE</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+        <div class="ml-4 border-l-2 border-dashed border-gray-700 h-3"></div>
+        <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="4">
+          <div class="w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-check-double text-emerald-400 text-sm"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white text-sm font-medium">Health check passed</div>
+            <div class="text-gray-500 text-xs">All pods running, ingress ready</div>
+          </div>
+          <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
+            <i class="fas fa-check text-xs text-transparent"></i>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5 bg-gray-800/50 p-3 rounded-lg text-emerald-300 text-xs">
+        <i class="fas fa-infinity mr-1"></i> Automated CI/CD with GitHub Actions &amp; GitLab CI - zero manual steps
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Identity & Security -->
+<div id="identity" class="anchor-target"></div>
+<section class="bg-gray-50 dark:bg-gray-900/50 py-14 md:py-18 wave-divider relative overflow-hidden">
+  <div class="blob" style="width:250px;height:250px;background:#10b981;bottom:-60px;right:-30px;animation-delay:-4s"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10 reveal">
+      <span class="section-pill">Identity &amp; security</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Enterprise-grade access control</h2>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Zero external dependencies. No data leaves your tenancy. No SaaS control plane.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 stagger-children text-center sm:text-left">
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-id-card text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">Any OIDC Provider</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Keycloak (bundled), Azure AD, Okta, Google Workspace - any OIDC-compliant IdP.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-fingerprint text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">PKCE Auth Flow</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Authorization Code + PKCE. No client secrets stored in the frontend. Auto token refresh.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-user-check text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">Auto-provisioning</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">No user directory needed. Users auto-provisioned on first login from JWT <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">sub</code> claim.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover-lift flex flex-col items-center sm:items-start">
+        <i class="fas fa-bolt text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
+        <h4 class="font-bold mt-3 text-gray-900 dark:text-white">Cached OIDC Discovery</h4>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Well-known config cached in sessionStorage + nginx proxy layer. Zero network round-trips on load.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Infragate (Rafay + Quali comparison) -->
+<div id="why-infragate" class="anchor-target"></div>
+<section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+  <div class="text-center mb-10">
+    <span class="section-pill">OCI-First & Sovereign</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">Why Infragate - OCI-native operating model</h2>
+    <p class="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mt-3">Designed for teams that want faster platform delivery while keeping control-plane operations, governance, and secrets management within their OCI boundary.</p>
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto mb-12">
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#355a72] dark:text-[#8fb8cb]"></i> Designed for OCI in-tenancy control planes
+    </span>
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#355a72] dark:text-[#8fb8cb]"></i> External SaaS callbacks not required
+    </span>
+    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+      <i class="fas fa-check text-xs text-[#355a72] dark:text-[#8fb8cb]"></i> Secrets retained in customer boundary
+    </span>
+  </div>
+
+  <div class="max-w-6xl mx-auto">
+    <div class="glass-card rounded-3xl p-5 sm:p-6 md:p-10 overflow-hidden">
+      <table class="compare-table hidden md:table w-full text-left">
+        <thead>
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="pb-6 text-gray-500 dark:text-gray-400 font-medium">Platform dimension</th>
+            <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">DIY (Backstage + scripts)</th>
+            <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">Rafay</th>
+            <th class="pb-6 text-center text-gray-500 dark:text-gray-400 font-medium">Quali (Torque)</th>
+            <th class="pb-6 text-center text-[#355a72] dark:text-[#8fb8cb] font-semibold">Infragate</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+          <tr>
+            <td class="py-5 font-medium">Control plane location</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Inside your tenancy (self-managed)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor SaaS (self-host optional)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Vendor SaaS</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Inside your OCI tenancy</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Outbound egress to third-party control plane</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Depends on selected integrations</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Commonly required</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Commonly required</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Not required by default</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Secrets and credential boundary</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Custom implementation required</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">May traverse vendor-managed services</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">May traverse vendor-managed services</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Stays within tenant or cluster boundary</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Governance guardrails and limits</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Custom policy and quota workflows</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available via platform policy framework</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available via platform policy framework</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Built-in global and per-user limits</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Day-2 ops effort (scale, upgrade, destroy)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">High (build and maintain workflows)</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Medium</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Medium</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Low with OCI-focused workflows</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Auditability and action traceability</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Custom build required</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available in vendor platform</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available in vendor platform</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Built-in audit logs and job traces</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Air-gapped / disconnected OCI regions</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Possible with extra engineering</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Limited</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Limited</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Supported with mirrored artifacts</span></span></td>
+          </tr>
+          <tr>
+            <td class="py-5 font-medium">Time to first production cluster</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Weeks to months</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Days to weeks</td>
+            <td class="py-5 text-center text-gray-500 dark:text-gray-400">Days to weeks</td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Minutes to hours</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="md:hidden space-y-4">
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Control plane location</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">Inside tenancy (self-managed)</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor SaaS (self-host optional)</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Vendor SaaS</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Inside your OCI tenancy</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Outbound egress to third-party control plane</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">Depends on integrations</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Commonly required</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Commonly required</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Not required by default</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Governance guardrails and limits</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">Custom policy workflows</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Platform policy framework</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Platform policy framework</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Built-in limits</span></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+          <div class="font-semibold text-gray-900 dark:text-white text-sm mb-3">Day-2 ops effort</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">High</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Medium</span></div>
+            <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Medium</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Low for OCI ops</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-10 text-sm text-gray-500 dark:text-gray-400 max-w-3xl mx-auto">
+    Comparison reflects publicly documented default architectures and common deployment patterns as of April 24, 2026. Validate against your internal security, compliance, and operating model.
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0B1120] py-12 md:py-16" id="statsSection">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 xs:grid-cols-4 gap-8 md:gap-10">
+    <div class="stat-card text-center" data-stat-index="0">
+      <div class="stat-number">10-20 min</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
+      <div class="stat-label">Typical provisioning</div>
+    </div>
+    <div class="stat-card text-center" data-stat-index="1">
+      <div class="stat-number" data-count-to="107" data-count-suffix="+" data-count-duration="2800">107+</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
+      <div class="stat-label">Automated tests</div>
+    </div>
+    <div class="stat-card text-center" data-stat-index="2">
+      <div class="stat-number" data-count-to="4" data-count-suffix="/4" data-count-duration="1600">4/4</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
+      <div class="stat-label">Lifecycle ops</div>
+    </div>
+    <div class="stat-card text-center" data-stat-index="3">
+      <div class="stat-number" data-count-to="100" data-count-suffix="%" data-count-duration="3000">100%</div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
+      <div class="stat-label">In-tenancy</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- GA vs Roadmap -->
+<div id="ga-roadmap" class="anchor-target"></div>
+<section class="py-14 md:py-18 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <div class="text-center mb-10 reveal">
+    <span class="section-pill">Product maturity</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">GA today vs roadmap next</h2>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Clear separation between production capabilities and planned capabilities. Roadmap items are phased, customer-validated, and release-gated.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 stagger-children">
+    <div class="ga-today-card rounded-2xl border border-emerald-200/70 dark:border-emerald-700/60 bg-emerald-50/40 dark:bg-emerald-900/10 p-6">
+      <div class="ga-today-chip inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-white dark:bg-gray-900/70 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-700">
+        <i class="fas fa-check-circle"></i> GA today
+      </div>
+      <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Deploy, scale, Kubernetes upgrade, and destroy with live Terraform logs</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user overrides, templates, audit log, and OCI config sync</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Shape-aware Kubernetes compatibility filtering to prevent invalid deploy combinations</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>FinOps visibility: live estimates, cluster-level cost cards, and admin total spend</span></li>
+      </ul>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
+      <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full border border-[#1C5D7A]/20 dark:border-[#5BB8D8]/30">
+        <i class="fas fa-map"></i> Roadmap next
+      </div>
+      <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Gatekeeper platform copilot: continuous, state-aware recommendations powered by OCI Generative AI</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Cost watcher: idle-cluster detection, anomaly alerts, and right-sizing guidance</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Policy guardrails: drift detection, Kubernetes lifecycle risk flags, and weekly compliance digests</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Approval-gated remediation with full audit trail (suggest -> review -> apply)</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- Pricing -->
+<section id="pricing" class="py-14 md:py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12 reveal">
+      <div class="section-pill no-dot mb-4">
+        <i class="fas fa-tag text-xs"></i> Pricing
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Simple, transparent pricing</h2>
+      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Infragate is delivered as a private commercial product. Packaging scales with <strong class="text-gray-800 dark:text-gray-200">evaluation scope, production licensing, support response, and operating guarantees</strong>.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+      <!-- Evaluation -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Evaluation</div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">By request</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Time-boxed private trial</div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For qualified teams evaluating fit in a controlled, non-production scope.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Guided environment setup for technical validation</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Access to evaluation runbook and onboarding checklist</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support during trial window (business hours)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private evaluation artifacts</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">No production use, redistribution, or managed-service use</span></li>
+        </ul>
+        <button onclick="openDemoModal('poc')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Request evaluation</button>
+      </div>
+
+      <!-- Business (highlighted) -->
+      <div class="rounded-2xl border-2 border-[#1C5D7A] dark:border-[#5BB8D8] bg-white dark:bg-gray-900/60 p-6 md:p-8 flex flex-col relative shadow-xl reveal">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#1C5D7A] dark:bg-[#5BB8D8] text-white dark:text-gray-900 text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Most popular</div>
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] uppercase tracking-wider">Business</div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">$3,000</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">/ month</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Billed annually - $36,000 / year</div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For teams running Infragate in production with self-managed day-2 operations.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Commercial &amp; production license</strong> for internal and customer-facing environments</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support with <strong class="text-gray-800 dark:text-gray-200">48h response SLA</strong> (business hours)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private registry access with versioned, pinned release channel</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Versioned release channel with stable upgrade path</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Security advisories - early private notice before public disclosure</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Onboarding workshop and deployment review</span></li>
+        </ul>
+        <button onclick="openDemoModal('poc')" class="block text-center px-5 py-3 text-sm font-semibold rounded-full btn-solid-premium cursor-pointer">Start a POC</button>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Enterprise</div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Custom</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Custom scope - SLA, compliance, and shared-operations model</div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For regulated or mission-critical organizations that require formal operating guarantees and shared responsibility.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Business</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">4h response SLA</strong> with named support engineer and shared Slack / Teams channel</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Managed install</strong> plus upgrade planning and rollout assistance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Multi-tenancy and multiple OCI-tenancy organization scoping</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Air-gapped / mirrored registry delivery - LTS pinning</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance support pack: SOC 2 / ISO questionnaires, DPA, and audit-evidence guidance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Production incident escalation support and change-advisory guidance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Quarterly architecture and FinOps governance reviews</span></li>
+        </ul>
+        <button onclick="openDemoModal('enterprise')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-full hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Contact us</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Founding Customer Program -->
+<section class="py-14 md:py-18 px-4 sm:px-6 lg:px-8 overflow-hidden" id="founding">
+  <div class="max-w-5xl mx-auto gradient-bg-premium animated-gradient-bg rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl reveal scale-up relative overflow-hidden">
+    <div class="blob" style="width:180px;height:180px;background:#5BB8D8;top:-40px;right:-20px;opacity:0.1;animation-delay:-2s"></div>
+
+    <div class="text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 text-xs font-semibold uppercase tracking-wider mb-5 reveal" style="transition-delay:0.1s">
+        <i class="fas fa-star text-amber-300 text-xs"></i> Founding Customer Program - 5 spots - limited
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-white reveal" style="transition-delay:0.15s">Help shape Infragate.<br class="hidden sm:block"> Get in before the rest.</h2>
+      <p class="text-gray-200 mt-4 text-lg max-w-2xl mx-auto reveal" style="transition-delay:0.3s">
+        A small group of production teams helping us build the first year of the roadmap. Early-access program with discounted pricing and direct product feedback.
+      </p>
+    </div>
+
+    <!-- What founding customers get -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 reveal" style="transition-delay:0.4s">
+      <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+          <i class="fas fa-percentage text-amber-300"></i>
+        </div>
+        <h3 class="text-white font-semibold text-sm mb-1">50% off Business</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Locked for the first 12 months. 6-month minimum commitment. Pricing discussed on the intro call.</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+          <i class="fas fa-headset text-amber-300"></i>
+        </div>
+        <h3 class="text-white font-semibold text-sm mb-1">Direct line to the team</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Monthly roadmap calls, private Slack / email with engineering. Your feedback shapes what ships next.</p>
+      </div>
+      <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm relative">
+        <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider text-amber-200 bg-amber-500/20 px-2 py-0.5 rounded-full">Roadmap v1.1</span>
+        <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+          <i class="fas fa-wand-magic-sparkles text-amber-300"></i>
+        </div>
+        <h3 class="text-white font-semibold text-sm mb-1">Gatekeeper - platform copilot</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Initial scope: cost watcher, anomaly alerts, policy drift detection, and approval-gated remediation suggestions. Powered by OCI Generative AI and designed to run in your tenancy. Founding customers get early access.</p>
+      </div>
+    </div>
+
+    <!-- In exchange -->
+    <p class="text-gray-300 text-sm text-center mt-8 max-w-2xl mx-auto reveal" style="transition-delay:0.5s">
+      In exchange: monthly feedback calls and the right to publish a sanitized case study. That's it.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-8 reveal" style="transition-delay:0.55s">
+      <button onclick="openDemoModal('founding')" class="bg-amber-500 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-amber-400 shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer cta-btn">
+        <i class="fas fa-paper-plane"></i> Apply for a founding spot
+      </button>
+    </div>
+    <p class="text-gray-300 text-sm text-center mt-6 reveal" style="transition-delay:0.6s">Not ready for a commitment? <a href="#pricing" class="text-white hover:underline">See standard pricing</a></p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-gray-200 dark:border-gray-800 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+          <span class="font-bold text-sm text-gray-800 dark:text-white">Infragate</span>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">OCI-native Internal Developer Platform for OKE lifecycle and governance.</p>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Resources</h4>
+        <div class="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <a href="/docs/" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Documentation</a>
+          <a href="#" onclick="event.preventDefault();openSupportModal()" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Support</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Company</h4>
+        <div class="flex flex-col gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <a href="https://solvialab.tech" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Solvia Lab</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Follow</h4>
+        <div class="flex items-center gap-2 text-gray-400">
+          <a href="https://www.linkedin.com/company/112238202/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="w-8 h-8 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 transition" title="LinkedIn"><i class="fab fa-linkedin text-sm"></i></a>
+          <a href="https://x.com/infragate_cloud" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" class="w-8 h-8 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 transition" title="X (Twitter)"><i class="fab fa-x-twitter text-sm"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span class="text-xs sm:text-sm text-gray-400">&copy; 2026 Solvia Lab s.r.o.</span>
+      <span class="text-xs text-gray-400 dark:text-gray-500">Built for enterprise OCI tenancies</span>
+    </div>
+  </div>
+</footer>
+
 <script>
-  // â”€â”€ Config
-  var PAGES = [
-    { id: 'readme', title: 'Overview', icon: 'fa-home' },
-    { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' },
-    { id: 'guide', title: 'Deployment Guide', icon: 'fa-rocket' },
-    { id: 'integration', title: 'Enterprise Integration', icon: 'fa-plug' },
-    { id: 'testing', title: 'Testing & Validation', icon: 'fa-vial' }
-  ];
-  var pageCache = {};
-  var currentPage = null;
-
-  // â”€â”€ Elements
-  var contentEl = document.getElementById('content');
-  var loadingEl = document.getElementById('loading');
-  var tocList = document.getElementById('tocList');
-  var tocMobileList = document.getElementById('tocMobileList');
-  var tocMobile = document.getElementById('tocMobile');
-  var pageNav = document.getElementById('pageNav');
-  var breadcrumbPage = document.getElementById('breadcrumbPage');
-  var sidebar = document.getElementById('sidebar');
-  var overlay = document.getElementById('sidebarOverlay');
-
-  // â”€â”€ Theme toggle
+  // Theme toggle
   document.getElementById('themeToggle').addEventListener('click', function() {
-    var isDark = document.documentElement.classList.toggle('dark');
+    var html = document.documentElement;
+    var isDark = html.classList.toggle('dark');
     localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
   });
 
-  // â”€â”€ Mobile sidebar
-  document.getElementById('sidebarToggle').addEventListener('click', function() {
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-  });
-  overlay.addEventListener('click', function() {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('active');
-  });
-
-  // â”€â”€ Marked config
-  marked.setOptions({ gfm: true, breaks: false });
-
-  // â”€â”€ Helpers
-  function getPageFromHash() {
-    var hash = window.location.hash.replace('#', '');
-    var page = hash.split('/')[0];
-    // Only treat as page if it matches a known page ID
-    for (var i = 0; i < PAGES.length; i++) {
-      if (PAGES[i].id === page) return page;
+  // Demo / POC / Enterprise / Partner modal - shared form, context-driven copy
+  var DEMO_MODAL_CONFIGS = {
+    demo: {
+      title: 'Book a 20-min demo',
+      subtitle: "We'll get back to you within one business day.",
+      messageLabel: 'Tell us about your use case',
+      messagePlaceholder: "How many clusters do you manage? What's your current workflow?",
+      submitText: 'Submit Request',
+      successMessage: 'Your demo request has been submitted.<br>We\'ll be in touch shortly.',
+      subject: 'Infragate Demo Request'
+    },
+    poc: {
+      title: 'Start a Proof of Concept',
+      subtitle: 'Scoped 2-4 week POC. We\'ll set up a kickoff call within one business day.',
+      messageLabel: 'Tell us about your environment',
+      messagePlaceholder: 'How many OCI tenancies / clusters? What does success look like for the POC?',
+      submitText: 'Request a POC',
+      successMessage: 'Your POC request has been submitted.<br>We\'ll be in touch to schedule the kickoff.',
+      subject: 'Infragate POC Request'
+    },
+    enterprise: {
+      title: 'Talk to sales - Enterprise',
+      subtitle: 'Tell us what you need. We\'ll respond within one business day.',
+      messageLabel: 'What are you looking for?',
+      messagePlaceholder: 'Multi-tenancy, compliance support (SOC 2 / ISO), managed install, air-gapped delivery, LTS pinning...',
+      submitText: 'Get in touch',
+      successMessage: 'Your enquiry has been submitted.<br>An Enterprise contact will reach out shortly.',
+      subject: 'Infragate Enterprise Enquiry'
+    },
+    founding: {
+      title: 'Apply for a founding spot',
+      subtitle: '5 founding customer spots. 50% off Business, direct access to the team, and early Gatekeeper access (cost watcher + policy guardrails + approval-gated remediation). 6-month minimum.',
+      messageLabel: 'Tell us about your team',
+      messagePlaceholder: 'Team size, current OCI usage, what would success look like in 6 months?',
+      submitText: 'Submit application',
+      successMessage: 'Your application has been received.<br>We\'ll review and reach out within a few business days.',
+      subject: 'Infragate Founding Customer Application'
     }
-    return 'readme';
+  };
+
+  function openDemoModal(context) {
+    var cfg = DEMO_MODAL_CONFIGS[context] || DEMO_MODAL_CONFIGS.demo;
+    document.getElementById('demoModalTitle').textContent = cfg.title;
+    document.getElementById('demoModalSubtitle').textContent = cfg.subtitle;
+    document.getElementById('demoMessageLabel').textContent = cfg.messageLabel;
+    document.getElementById('demo-message').setAttribute('placeholder', cfg.messagePlaceholder);
+    document.getElementById('demoSubmitText').textContent = cfg.submitText;
+    document.getElementById('demoSuccessMessage').innerHTML = cfg.successMessage;
+    document.getElementById('demoForm').setAttribute('data-subject', cfg.subject);
+    // Reset to form view when opening
+    document.getElementById('demoForm').classList.remove('hidden');
+    document.getElementById('demoSuccess').classList.add('hidden');
+    document.getElementById('demoModal').classList.add('active');
+    document.body.style.overflowY = 'hidden';
+  }
+  function closeDemoModal() {
+    document.getElementById('demoModal').classList.remove('active');
+    document.body.style.overflowY = '';
   }
 
-  function getHeadingFromHash() {
-    var hash = window.location.hash.replace('#', '');
-    var parts = hash.split('/');
-    // If first part is a known page, heading is after /
-    for (var i = 0; i < PAGES.length; i++) {
-      if (PAGES[i].id === parts[0]) return parts[1] || null;
-    }
-    // Otherwise the whole hash might be an in-page anchor
-    return hash || null;
-  }
+  // Form submission via AJAX
+  document.getElementById('demoForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    var btn = document.getElementById('demoSubmitBtn');
+    var originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Sending...';
 
-  function getPageInfo(id) {
-    for (var i = 0; i < PAGES.length; i++) {
-      if (PAGES[i].id === id) return { index: i, info: PAGES[i] };
-    }
-    return null;
-  }
+    var data = {
+      name: form.name.value,
+      company: form.company.value,
+      email: form.email.value,
+      title: form.title.value,
+      message: form.message.value,
+      _subject: form.getAttribute('data-subject') || 'Infragate Enquiry',
+      _captcha: 'false',
+      _template: 'table'
+    };
 
-  function slugify(text) {
-    // GitHub-compatible slug: lowercase, strip non-alnum/space/hyphen, spacesâ†’hyphens
-    return text.toLowerCase()
-      .replace(/[^\w\s-]/g, '')   // remove non-word except spaces and hyphens
-      .replace(/ /g, '-')         // each space â†’ one hyphen (preserves double-space â†’ --)
-      .replace(/^-+|-+$/g, '');   // trim leading/trailing hyphens
-  }
-
-  // â”€â”€ Load page
-  function loadPage(page, forceScroll) {
-    if (page === currentPage) {
-      // Same page â€” scroll to heading if present, or top
-      var heading = getHeadingFromHash();
-      if (heading) {
-        var el = document.getElementById(heading);
-        if (el) {
-          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-      } else if (forceScroll) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      return;
-    }
-    currentPage = page;
-
-    // Update sidebar
-    document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
-      link.classList.toggle('active', link.getAttribute('data-page') === page);
-    });
-
-    // Update title & breadcrumb
-    var pi = getPageInfo(page);
-    var title = pi ? pi.info.title : 'Docs';
-    document.title = title + ' â€” Infragate Docs';
-    breadcrumbPage.textContent = title;
-
-    // Show loading
-    contentEl.classList.add('hidden');
-    contentEl.classList.add('loading');
-    loadingEl.classList.remove('hidden');
-    pageNav.classList.add('hidden');
-    tocList.innerHTML = '';
-
-    function render(md) {
-      // Map known .md files to docs page hashes (with optional #anchor)
-      var knownPages = { readme: 1, features: 1, guide: 1, integration: 1, testing: 1 };
-      md = md.replace(/\(\.\/([A-Z_]+)\.md(#[^)]+)?\)/gi, function(m, name, anchor) {
-        var lower = name.toLowerCase();
-        if (knownPages[lower]) return '(#' + lower + (anchor ? '/' + anchor.substring(1) : '') + ')';
-        return m; // leave unknown .md links as-is
-      });
-
-      contentEl.innerHTML = marked.parse(md);
-      contentEl.classList.remove('hidden');
-      contentEl.classList.remove('loading');
-      loadingEl.classList.add('hidden');
-
-      // Rewrite in-page anchor clicks to use smooth scroll instead of hash nav
-      contentEl.querySelectorAll('a[href^="#"]').forEach(function(a) {
-        var href = a.getAttribute('href').substring(1);
-        // If it points to a known page, let hash router handle it
-        if (knownPages[href]) return;
-        // Otherwise it's an in-page anchor â€” smooth scroll to it
-        a.addEventListener('click', function(e) {
-          e.preventDefault();
-          var targetId = href;
-          var el = document.getElementById(targetId);
-          if (el) {
-            var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-          }
-        });
-      });
-
-      // Add heading anchors + build TOC
-      buildTOC();
-      // Add copy buttons to code blocks
-      addCopyButtons();
-      // Build prev/next nav
-      buildPageNav();
-
-      // Scroll to heading if hash contains one, otherwise top
-      var targetHeading = getHeadingFromHash();
-      if (targetHeading) {
-        var el = document.getElementById(targetHeading);
-        if (el) {
-          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({ top: y, behavior: 'auto' });
-        } else {
-          window.scrollTo(0, 0);
-        }
-      } else {
-        window.scrollTo(0, 0);
-      }
-
-      // Close mobile sidebar
-      sidebar.classList.remove('open');
-      overlay.classList.remove('active');
-    }
-
-    if (pageCache[page]) {
-      render(pageCache[page]);
-    } else {
-      fetch(page + '.md')
-        .then(function(res) {
-          if (!res.ok) throw new Error('Not found');
-          return res.text();
-        })
-        .then(function(md) {
-          pageCache[page] = md;
-          render(md);
-        })
-        .catch(function() {
-          contentEl.innerHTML = '<div class="text-center py-20"><i class="fas fa-exclamation-triangle text-amber-500 text-3xl mb-4 block"></i><p class="text-gray-500 dark:text-gray-400">Page not found.</p></div>';
-          contentEl.classList.remove('hidden');
-          contentEl.classList.remove('loading');
-          loadingEl.classList.add('hidden');
-        });
-    }
-  }
-
-  // â”€â”€ Build table of contents from headings
-  function buildTOC() {
-    var headings = contentEl.querySelectorAll('h2, h3');
-    var html = '';
-    headings.forEach(function(h) {
-      var id = slugify(h.textContent);
-      h.id = id;
-      // Add anchor link
-      var anchor = document.createElement('a');
-      anchor.href = '#' + currentPage + '/' + id;
-      anchor.className = 'heading-anchor';
-      anchor.textContent = '#';
-      h.insertBefore(anchor, h.firstChild);
-
-      var depth = h.tagName === 'H3' ? ' depth-3' : '';
-      html += '<a class="toc-item' + depth + '" href="#' + currentPage + '/' + id + '">' + h.textContent.replace(/^# ?/, '') + '</a>';
-    });
-    tocList.innerHTML = html;
-    tocMobileList.innerHTML = html;
-    // Show/hide mobile TOC based on whether there are headings
-    tocMobile.style.display = headings.length > 0 ? '' : 'none';
-    // Close mobile TOC when navigating
-    tocMobile.removeAttribute('open');
-
-    function handleTocClick(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        var targetId = this.getAttribute('href').split('/').pop();
-        var el = document.getElementById(targetId);
-        if (el) {
-          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-          history.replaceState(null, '', this.getAttribute('href'));
-        }
-        // Close mobile TOC on click
-        tocMobile.removeAttribute('open');
-      });
-    }
-
-    // TOC click: scroll to heading with offset for sticky nav
-    tocList.querySelectorAll('.toc-item').forEach(handleTocClick);
-    tocMobileList.querySelectorAll('.toc-item').forEach(handleTocClick);
-
-    // Highlight TOC on scroll â€” find the heading closest to the top of viewport
-    if (headings.length > 0) {
-      var tocItems = tocList.querySelectorAll('.toc-item');
-      var tocMobileItems = tocMobileList.querySelectorAll('.toc-item');
-      var scrollRaf = null;
-      window._tocScrollHandler = function() {
-        if (scrollRaf) return;
-        scrollRaf = requestAnimationFrame(function() {
-          scrollRaf = null;
-          var best = 0;
-          for (var i = 0; i < headings.length; i++) {
-            // 90px accounts for sticky nav (64px) + padding
-            if (headings[i].getBoundingClientRect().top <= 90) {
-              best = i;
-            } else {
-              break;
-            }
-          }
-          tocItems.forEach(function(item, i) {
-            item.classList.toggle('active', i === best);
-          });
-          tocMobileItems.forEach(function(item, i) {
-            item.classList.toggle('active', i === best);
-          });
-        });
-      };
-      window.addEventListener('scroll', window._tocScrollHandler, { passive: true });
-    }
-  }
-
-  // â”€â”€ Copy buttons on code blocks
-  function addCopyButtons() {
-    contentEl.querySelectorAll('pre').forEach(function(pre) {
-      var btn = document.createElement('button');
-      btn.className = 'copy-btn';
-      btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
-      btn.addEventListener('click', function() {
-        var code = pre.querySelector('code');
-        navigator.clipboard.writeText(code.textContent).then(function() {
-          btn.innerHTML = '<i class="fas fa-check"></i> Copied';
-          setTimeout(function() { btn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000);
-        });
-      });
-      pre.appendChild(btn);
-    });
-  }
-
-  // â”€â”€ Prev / Next page navigation
-  function buildPageNav() {
-    var pi = getPageInfo(currentPage);
-    if (!pi) { pageNav.classList.add('hidden'); return; }
-    var html = '';
-    if (pi.index > 0) {
-      var prev = PAGES[pi.index - 1];
-      html += '<a class="page-nav-link prev" href="#' + prev.id + '"><span class="page-nav-label"><i class="fas fa-arrow-left text-[10px] mr-1"></i> Previous</span><span class="page-nav-title">' + prev.title + '</span></a>';
-    }
-    if (pi.index < PAGES.length - 1) {
-      var next = PAGES[pi.index + 1];
-      html += '<a class="page-nav-link next" href="#' + next.id + '"><span class="page-nav-label">Next <i class="fas fa-arrow-right text-[10px] ml-1"></i></span><span class="page-nav-title">' + next.title + '</span></a>';
-    }
-    pageNav.innerHTML = html;
-    pageNav.classList.remove('hidden');
-
-    pageNav.querySelectorAll('.page-nav-link').forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.hash = this.getAttribute('href').substring(1);
-      });
-    });
-  }
-
-  // â”€â”€ Search
-  var searchInput = document.getElementById('searchInput');
-  var searchResults = document.getElementById('searchResults');
-  var searchTimeout = null;
-
-  // Pre-fetch all pages for search
-  function prefetchAll() {
-    PAGES.forEach(function(p) {
-      if (!pageCache[p.id]) {
-        fetch(p.id + '.md').then(function(r) { return r.text(); }).then(function(md) {
-          pageCache[p.id] = md;
-        }).catch(function() {});
-      }
-    });
-  }
-  setTimeout(prefetchAll, 1000);
-
-  searchInput.addEventListener('input', function() {
-    clearTimeout(searchTimeout);
-    var query = this.value.trim().toLowerCase();
-    if (query.length < 2) {
-      searchResults.classList.remove('active');
-      return;
-    }
-    searchTimeout = setTimeout(function() {
-      var results = [];
-      PAGES.forEach(function(p) {
-        var md = pageCache[p.id];
-        if (!md) return;
-        var lines = md.split('\n');
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i];
-          if (line.toLowerCase().indexOf(query) !== -1 && !line.match(/^---$/) && line.trim()) {
-            // Clean up markdown syntax for display
-            var clean = line.replace(/^#+\s*/, '').replace(/\*\*/g, '').replace(/`/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim();
-            if (clean.length < 3) continue;
-            var idx = clean.toLowerCase().indexOf(query);
-            var snippet = clean;
-            if (idx !== -1) {
-              var start = Math.max(0, idx - 30);
-              var end = Math.min(clean.length, idx + query.length + 30);
-              snippet = (start > 0 ? '...' : '') +
-                clean.substring(start, idx) +
-                '<mark>' + clean.substring(idx, idx + query.length) + '</mark>' +
-                clean.substring(idx + query.length, end) +
-                (end < clean.length ? '...' : '');
-            }
-            results.push({ page: p, snippet: snippet, heading: line.match(/^#+/) });
-            if (results.length >= 8) return;
-          }
-        }
-      });
-
-      if (results.length === 0) {
-        searchResults.innerHTML = '<div class="px-3 py-4 text-center text-xs text-gray-400">No results found</div>';
-      } else {
-        searchResults.innerHTML = results.map(function(r) {
-          return '<a class="search-result-item" href="#' + r.page.id + '" data-page="' + r.page.id + '">' +
-            '<div>' + r.snippet + '</div>' +
-            '<div class="result-page"><i class="fas fa-' + r.page.icon + ' text-[10px] mr-1"></i>' + r.page.title + '</div></a>';
-        }).join('');
-      }
-      searchResults.classList.add('active');
-    }, 200);
-  });
-
-  // Close search on click outside
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.search-box')) {
-      searchResults.classList.remove('active');
-    }
-  });
-
-  // Search result click â€” let native <a href="#page"> handle navigation,
-  // just clean up search UI. hashchange listener handles page loading.
-  searchResults.addEventListener('click', function(e) {
-    var item = e.target.closest('.search-result-item');
-    if (!item) return;
-    searchInput.value = '';
-    searchResults.classList.remove('active');
-    sidebar.classList.remove('open');
-    overlay.classList.remove('active');
-    // If already on this page, force reload
-    var targetPage = item.getAttribute('data-page');
-    if (targetPage === currentPage) {
-      e.preventDefault();
-      currentPage = null;
-      window.location.hash = targetPage;
-      loadPage(targetPage);
-    }
-    // Otherwise the native <a href="#page"> navigates and hashchange fires
-  });
-
-  // â”€â”€ Sidebar link clicks
-  document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.hash = this.getAttribute('data-page');
+    fetch('https://formsubmit.co/ajax/hello@infragate.cloud', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(resp) {
+      form.classList.add('hidden');
+      document.getElementById('demoSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .catch(function() {
+      form.classList.add('hidden');
+      document.getElementById('demoSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.innerHTML = originalHTML;
     });
   });
-
-  // â”€â”€ Hash change handler
-  window.addEventListener('hashchange', function() {
-    // Clean up search/sidebar on any navigation
-    searchInput.value = '';
-    searchResults.classList.remove('active');
-    sidebar.classList.remove('open');
-    overlay.classList.remove('active');
-    // Remove old TOC scroll handler
-    if (window._tocScrollHandler) {
-      window.removeEventListener('scroll', window._tocScrollHandler);
-    }
-    loadPage(getPageFromHash());
+  document.getElementById('modalClose').addEventListener('click', closeDemoModal);
+  document.getElementById('demoModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDemoModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeDemoModal(); closeSupportModal(); }
   });
 
-  // â”€â”€ Initial load
-  loadPage(getPageFromHash());
-
-  // â”€â”€ Support modal
+  // Support modal
   function openSupportModal() {
     document.getElementById('supportForm').classList.remove('hidden');
     document.getElementById('supportSuccess').classList.add('hidden');
     document.getElementById('supportModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflowY = 'hidden';
   }
-  window.openSupportModal = openSupportModal;
-
   function closeSupportModal() {
     document.getElementById('supportModal').classList.remove('active');
-    document.body.style.overflow = '';
+    document.body.style.overflowY = '';
   }
-  window.closeSupportModal = closeSupportModal;
-
+  document.getElementById('support-attachment').addEventListener('change', function() {
+    var label = document.getElementById('attachmentLabel');
+    if (this.files.length > 0) {
+      var total = 0;
+      for (var i = 0; i < this.files.length; i++) total += this.files[i].size;
+      if (total > 5 * 1024 * 1024) {
+        alert('Total file size exceeds 5 MB limit.');
+        this.value = '';
+        label.textContent = 'Choose files...';
+        return;
+      }
+      var names = [];
+      for (var i = 0; i < this.files.length; i++) names.push(this.files[i].name);
+      label.textContent = names.join(', ');
+    } else {
+      label.textContent = 'Choose files...';
+    }
+  });
   document.getElementById('supportForm').addEventListener('submit', function(e) {
     e.preventDefault();
     var form = this;
@@ -1068,48 +2058,537 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Sending...';
 
-    var data = {
-      name: form.name.value,
-      email: form.email.value,
-      subject: form.subject.value,
-      message: form.message.value,
-      _subject: 'Infragate Docs â€” ' + form.subject.value,
-      _captcha: 'false',
-      _template: 'table'
-    };
+    var formData = new FormData();
+    formData.append('name', form.name.value);
+    formData.append('email', form.email.value);
+    formData.append('subject', form.subject.value);
+    formData.append('message', form.message.value);
+    formData.append('_subject', 'Infragate Support: ' + form.subject.value);
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+    var fileInput = document.getElementById('support-attachment');
+    for (var i = 0; i < fileInput.files.length; i++) {
+      formData.append('attachment', fileInput.files[i]);
+    }
 
     fetch('https://formsubmit.co/ajax/support@infragate.cloud', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data)
+      headers: { 'Accept': 'application/json' },
+      body: formData
     })
     .then(function(res) { return res.json(); })
     .then(function() {
       form.classList.add('hidden');
       document.getElementById('supportSuccess').classList.remove('hidden');
       form.reset();
+      document.getElementById('attachmentLabel').textContent = 'Choose files...';
     })
     .catch(function() {
       form.classList.add('hidden');
       document.getElementById('supportSuccess').classList.remove('hidden');
       form.reset();
+      document.getElementById('attachmentLabel').textContent = 'Choose files...';
     })
     .finally(function() {
       btn.disabled = false;
       btn.innerHTML = originalHTML;
     });
   });
-
   document.getElementById('supportModalClose').addEventListener('click', closeSupportModal);
   document.getElementById('supportModal').addEventListener('click', function(e) {
     if (e.target === this) closeSupportModal();
   });
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeSupportModal();
+
+  // Mobile menu toggle
+  document.getElementById('menuToggle').addEventListener('click', function() {
+    this.classList.toggle('open');
+    document.getElementById('mobileNav').classList.toggle('open');
   });
+  // Close mobile menu on link click - redundant with updated scroll logic but kept for safety
+  document.querySelectorAll('#mobileNav a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.getElementById('menuToggle').classList.remove('open');
+      document.getElementById('mobileNav').classList.remove('open');
+    });
+  });
+    // Active nav highlight on scroll - simple scroll-position approach (no IntersectionObserver)
+    var navSections = ['features','ga-roadmap','templates','finops','admin','deploy','identity'];
+    var currentActive = null;
+    var isNavClick = false;
+    var scrollRaf = null;
+
+    function updateActiveNav() {
+      if (isNavClick) return;
+      var navOffset = window.innerWidth >= 1024 ? 100 : 80;
+      var best = null;
+      for (var i = 0; i < navSections.length; i++) {
+        var el = document.getElementById(navSections[i]);
+        if (!el) continue;
+        var top = el.getBoundingClientRect().top;
+        if (top <= navOffset) best = navSections[i];
+      }
+      if (best !== null && best !== currentActive) {
+        currentActive = best;
+        document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + best);
+        });
+      }
+    }
+
+    window.addEventListener('scroll', function() {
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(function() {
+        scrollRaf = null;
+        updateActiveNav();
+      });
+    }, { passive: true });
+
+    // Smooth scroll with offset for fixed header
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        var href = this.getAttribute('href');
+        if (href === '#' || href === '') return;
+        var target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          isNavClick = true;
+
+          document.getElementById('menuToggle').classList.remove('open');
+          document.getElementById('mobileNav').classList.remove('open');
+
+          var id = href.substring(1);
+          currentActive = id;
+          document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(function(link) {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+          });
+
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          setTimeout(function() { isNavClick = false; }, 1000);
+        }
+      });
+    });
+
+  // Terraform log replay (sanitized real runs)
+  (function() {
+    var container = document.getElementById('terraformOutput');
+    var titleEl = document.querySelector('.terminal .bg-gray-800 .text-gray-400.text-xs.ml-2');
+
+    var scenarios = [
+      {
+        name: 'Deploy',
+        title: 'terraform apply - deploy replay (sanitized)',
+        lines: [
+          { html: '<span class="text-gray-500">$ terraform init</span>', delay: 500 },
+          { html: '<span class="text-gray-400">Initializing the backend...</span>', delay: 550 },
+          { html: '<span class="text-gray-400">Initializing provider plugins...</span>', delay: 650 },
+          { html: '<span class="text-green-400">&#10003;</span> <span class="text-gray-400">hashicorp/oci v6.x installed</span>', delay: 550 },
+          { html: '<span class="text-gray-500">$ terraform apply -auto-approve</span>', delay: 800 },
+          { html: '<span class="text-yellow-400">&#9210;</span> Plan: 12 to add, 0 to change, 0 to destroy', delay: 900 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_cluster.oke: Creating...</span>', delay: 700 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_cluster.oke: Creation complete <span class="text-gray-500">[19m6s]</span>', delay: 1000 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Creating...</span>', delay: 850 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Creation complete <span class="text-gray-500">[4m12s]</span>', delay: 1000 },
+          { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 12 added, 0 changed, 0 destroyed.</span>', delay: 900 },
+          { html: '<span class="text-gray-500 text-xs">sample/deploy/job.log</span>', delay: 0 }
+        ]
+      },
+      {
+        name: 'Scale',
+        title: 'terraform apply - scale replay (sanitized)',
+        lines: [
+          { html: '<span class="text-gray-500">$ terraform plan</span>', delay: 500 },
+          { html: '<span class="text-yellow-400">&#9210;</span> Plan: 1 to add, 1 to change, 0 to destroy', delay: 850 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-2"]: Creating...</span>', delay: 750 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-2"]: Creation complete <span class="text-gray-500">[2m58s]</span>', delay: 950 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifying...</span>', delay: 700 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifications complete <span class="text-gray-500">[2m0s]</span>', delay: 900 },
+          { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 1 added, 1 changed, 0 destroyed.</span>', delay: 900 },
+          { html: '<span class="text-gray-500 text-xs">sample/scale/job.log</span>', delay: 0 }
+        ]
+      },
+      {
+        name: 'Upgrade K8s',
+        title: 'terraform apply - k8s upgrade replay (sanitized)',
+        lines: [
+          { html: '<span class="text-gray-500">$ terraform apply -var kubernetes_version=v1.35.0</span>', delay: 650 },
+          { html: '<span class="text-yellow-400">&#9210;</span> Plan: 0 to add, 2 to change, 0 to destroy', delay: 900 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_cluster.oke: Modifying...</span>', delay: 750 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_cluster.oke: Modifications complete <span class="text-gray-500">[3m42s]</span>', delay: 950 },
+          { html: '<span class="text-blue-400">&#x21BB;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifying...</span>', delay: 800 },
+          { html: '<span class="text-green-400">&#10003;</span> oci_containerengine_node_pool.pools["app-pool-1"]: Modifications complete <span class="text-gray-500">[2m0s]</span>', delay: 950 },
+          { html: '<span class="text-emerald-300 font-semibold">&#10004; Apply complete! Resources: 0 added, 2 changed, 0 destroyed.</span>', delay: 900 },
+          { html: '<span class="text-gray-500 text-xs">sample/upgrade/job.log</span>', delay: 0 }
+        ]
+      }
+    ];
+
+    var scenarioIndex = 0;
+
+    function runScenario() {
+      var scenario = scenarios[scenarioIndex % scenarios.length];
+      scenarioIndex += 1;
+      if (titleEl) titleEl.textContent = scenario.title;
+
+      container.innerHTML = '';
+      var i = 0;
+
+      function showLine() {
+        if (i >= scenario.lines.length) {
+          setTimeout(runScenario, 2400);
+          return;
+        }
+
+        var div = document.createElement('div');
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(3px)';
+        div.style.transition = 'opacity 0.28s ease, transform 0.28s ease';
+        div.innerHTML = scenario.lines[i].html;
+        if (i === scenario.lines.length - 1) div.classList.add('mt-2');
+        container.appendChild(div);
+
+        var maxLines = window.innerWidth >= 768 ? 12 : 8;
+        if (container.children.length > maxLines) {
+          var first = container.firstChild;
+          first.style.opacity = '0';
+          first.style.marginTop = '-1.35rem';
+          first.style.transition = 'opacity 0.22s ease, margin-top 0.22s ease';
+          setTimeout(function() { if (first.parentNode) first.parentNode.removeChild(first); }, 220);
+        }
+
+        requestAnimationFrame(function() {
+          div.style.opacity = '1';
+          div.style.transform = 'translateY(0)';
+        });
+
+        var nextDelay = scenario.lines[i].delay || 800;
+        i += 1;
+        setTimeout(showLine, nextDelay);
+      }
+
+      showLine();
+    }
+
+    runScenario();
+  })();
+
+  // Workflow animation
+  (function() {
+    var steps = document.querySelectorAll('#workflowSteps .flow-step');
+    var currentStep = 0;
+    var totalSteps = steps.length;
+
+    function animateStep() {
+      steps.forEach(function(step, i) {
+        var check = step.querySelector('.step-check');
+        if (i < currentStep) {
+          step.style.opacity = '1';
+          check.style.borderColor = '#10b981';
+          check.style.background = '#10b981';
+          check.querySelector('i').style.color = 'white';
+        } else if (i === currentStep) {
+          step.style.opacity = '1';
+          check.style.borderColor = '#06b6d4';
+          check.style.background = 'transparent';
+          check.querySelector('i').style.color = 'transparent';
+        } else {
+          step.style.opacity = '0.3';
+          check.style.borderColor = '#425062';
+          check.style.background = 'transparent';
+          check.querySelector('i').style.color = 'transparent';
+        }
+      });
+
+      currentStep++;
+      if (currentStep > totalSteps) {
+        setTimeout(function() {
+          currentStep = 0;
+          animateStep();
+        }, 3000);
+      } else {
+        // Vary timing per step for natural feel
+        var delays = [1500, 1900, 2100, 1500, 1300];
+        var d = delays[currentStep - 1] || 1500;
+        setTimeout(animateStep, d);
+      }
+    }
+
+    animateStep();
+  })();
+
+  // === SCROLL REVEAL OBSERVER ===
+  (function() {
+    var revealEls = document.querySelectorAll('.reveal, .stagger-children');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Don't unobserve stagger-children so they can re-animate
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(function(el) { observer.observe(el); });
+
+    // Trigger hero elements immediately
+    setTimeout(function() {
+      document.querySelectorAll('.reveal.from-left, .reveal.from-right').forEach(function(el) {
+        if (el.closest('section') && el.closest('section').classList.contains('overflow-hidden')) {
+          el.classList.add('visible');
+        }
+      });
+    }, 100);
+  })();
+
+  // === DEVICE DETECTION ===
+  var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  var isMobile = window.innerWidth < 768;
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // === FLOATING PARTICLES (skip on mobile & reduced motion) ===
+  (function() {
+    if (isMobile || prefersReducedMotion) return;
+    var container = document.getElementById('particles');
+    // Fewer particles on tablet, full on desktop
+    var count = window.innerWidth < 1024 ? 6 : 12;
+    for (var i = 0; i < count; i++) {
+      var p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.width = (2 + Math.random() * 4) + 'px';
+      p.style.height = p.style.width;
+      p.style.animationDelay = (-Math.random() * 8) + 's';
+      p.style.animationDuration = (10 + Math.random() * 8) + 's';
+      p.style.opacity = 0.1 + Math.random() * 0.3;
+      container.appendChild(p);
+    }
+  })();
+
+  // === 3D TILT EFFECT ON CARDS (desktop only - no touch) ===
+  (function() {
+    if (isTouchDevice || prefersReducedMotion || window.innerWidth < 1200) return;
+    document.querySelectorAll('.tilt-card').forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var centerX = rect.width / 2;
+        var centerY = rect.height / 2;
+        var rotateX = ((y - centerY) / centerY) * -3;
+        var rotateY = ((x - centerX) / centerX) * 3;
+        card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-2px)';
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+      });
+    });
+  })();
+
+  // === ANIMATED COUNTERS (fire when scrolled into view) ===
+  (function() {
+    function animateCounter(el, delay) {
+      var end = parseFloat(el.getAttribute('data-count-to')) || 0;
+      var prefix = el.getAttribute('data-count-prefix') || '';
+      var suffix = el.getAttribute('data-count-suffix') || '';
+      var duration = parseInt(el.getAttribute('data-count-duration')) || 1500;
+      var startTime = null;
+
+      function tick(now) {
+        if (!startTime) startTime = now;
+        var progress = Math.min((now - startTime) / duration, 1);
+        // Elastic ease-out for dramatic feel
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = Math.round(end * eased);
+        el.textContent = prefix + current + suffix;
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          el.textContent = prefix + end + suffix;
+          // counter finished
+        }
+      }
+
+      setTimeout(function() { requestAnimationFrame(tick); }, delay || 0);
+    }
+
+    // Set initial "0" state on all non-stat-section counters
+    var allCountEls = document.querySelectorAll('[data-count-to]');
+    allCountEls.forEach(function(el) {
+      // Skip stats section - those are handled by the stats observer below
+      if (el.closest('#statsSection')) return;
+      var prefix = el.getAttribute('data-count-prefix') || '';
+      var suffix = el.getAttribute('data-count-suffix') || '';
+      el.textContent = prefix + '0' + suffix;
+    });
+
+    // Fire non-stat counters when they scroll into view
+    var nonStatCountEls = document.querySelectorAll('[data-count-to]:not(#statsSection [data-count-to])');
+    var countObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !entry.target.dataset.counted) {
+          entry.target.dataset.counted = 'true';
+          animateCounter(entry.target, 0);
+        }
+      });
+    }, { threshold: 0.3 });
+    nonStatCountEls.forEach(function(el) { countObserver.observe(el); });
+  })();
+
+  // === PREMIUM STATS SECTION ANIMATION ===
+  (function() {
+    var statsSection = document.getElementById('statsSection');
+    if (!statsSection) return;
+    var statCards = statsSection.querySelectorAll('.stat-card');
+    var statCounters = statsSection.querySelectorAll('[data-count-to]');
+    var statBars = statsSection.querySelectorAll('.stat-bar-fill');
+    var fired = false;
+
+    // Set counters to "0" initial state
+    statCounters.forEach(function(el) {
+      var prefix = el.getAttribute('data-count-prefix') || '';
+      var suffix = el.getAttribute('data-count-suffix') || '';
+      el.textContent = prefix + '0' + suffix;
+    });
+
+    function fireStats() {
+      if (fired) return;
+      fired = true;
+
+      // Stagger each stat card entrance
+      statCards.forEach(function(card, i) {
+        setTimeout(function() {
+          card.classList.add('active');
+        }, i * 300);
+      });
+
+      // Fire counters with stagger
+      statCounters.forEach(function(el, i) {
+        var end = parseFloat(el.getAttribute('data-count-to')) || 0;
+        var prefix = el.getAttribute('data-count-prefix') || '';
+        var suffix = el.getAttribute('data-count-suffix') || '';
+        var duration = parseInt(el.getAttribute('data-count-duration')) || 1500;
+        var startTime = null;
+
+        function tick(now) {
+          if (!startTime) startTime = now;
+          var progress = Math.min((now - startTime) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = Math.round(end * eased);
+          el.textContent = prefix + current + suffix;
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            el.textContent = prefix + end + suffix;
+            // counter finished
+          }
+        }
+
+        // Delay counter start to sync with card entrance
+        var cardIndex = el.closest('.stat-card') ? parseInt(el.closest('.stat-card').dataset.statIndex) : i;
+        setTimeout(function() { requestAnimationFrame(tick); }, cardIndex * 300 + 400);
+      });
+
+      // Lifecycle-ops stat participates in normal count animation
+
+      // Fill progress bars
+      statBars.forEach(function(bar) {
+        var fill = bar.getAttribute('data-fill') || 0;
+        var card = bar.closest('.stat-card');
+        var cardIndex = card ? parseInt(card.dataset.statIndex) : 0;
+        setTimeout(function() {
+          bar.style.width = fill + '%';
+        }, cardIndex * 300 + 300);
+      });
+    }
+
+    // Observe the section
+    var statsObs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        fireStats();
+        statsObs.disconnect();
+      }
+    }, { threshold: 0.15 });
+    statsObs.observe(statsSection);
+  })();
+
+  // === SCROLL PROGRESS BAR ===
+  (function() {
+    var progressBar = document.getElementById('scrollProgress');
+    if (!progressBar) return;
+    window.addEventListener('scroll', function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    }, { passive: true });
+  })();
+
+  // === PARALLAX BLOBS ON MOUSE MOVE (desktop only) ===
+  (function() {
+    if (isTouchDevice || isMobile || prefersReducedMotion) return;
+    var blobs = document.querySelectorAll('.blob');
+    document.addEventListener('mousemove', function(e) {
+      var x = (e.clientX / window.innerWidth - 0.5) * 2;
+      var y = (e.clientY / window.innerHeight - 0.5) * 2;
+      blobs.forEach(function(blob, i) {
+        var speed = 15 + i * 10;
+        blob.style.transform = 'translate(' + (x * speed) + 'px, ' + (y * speed) + 'px)';
+      });
+    });
+  })();
+
+  // === NAV ENTRANCE ANIMATION ===
+  (function() {
+    var nav = document.querySelector('nav');
+    nav.style.opacity = '0';
+    nav.style.transform = 'translateY(-20px)';
+    nav.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    setTimeout(function() {
+      nav.style.opacity = '1';
+      nav.style.transform = 'translateY(0)';
+    }, 150);
+  })();
+
+  // === MOBILE: TAP-TO-WIGGLE ICONS ===
+  (function() {
+    if (!isTouchDevice) return;
+    document.querySelectorAll('.feature-icon').forEach(function(icon) {
+      icon.addEventListener('touchstart', function() {
+        icon.querySelector('i').style.animation = 'none';
+        setTimeout(function() {
+          icon.querySelector('i').style.animation = '';
+        }, 400);
+      }, { passive: true });
+    });
+  })();
+
+  // === MOBILE: SCROLL VELOCITY BOOST ===
+  // On mobile, trigger reveals slightly earlier so animations feel snappy during fast scrolling
+  (function() {
+    if (!isMobile) return;
+    var mobileReveals = document.querySelectorAll('.reveal, .stagger-children');
+    var mobileObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+    mobileReveals.forEach(function(el) { mobileObs.observe(el); });
+  })();
+
+  // === FOOTER REVEAL ===
+  (function() {
+    var footer = document.querySelector('footer');
+    footer.classList.add('reveal');
+    var footerObs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        footer.classList.add('visible');
+        footerObs.disconnect();
+      }
+    }, { threshold: 0.2 });
+    footerObs.observe(footer);
+  })();
 </script>
 </body>
 </html>
-
-
-
