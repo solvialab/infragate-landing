@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Infragate Docs</title>
-  <meta name="description" content="Infragate documentation — deployment guides, features, and enterprise integration for OKE lifecycle management on Oracle Cloud.">
+  <meta name="description" content="Infragate documentation â€” deployment guides, features, and enterprise integration for OKE lifecycle management on Oracle Cloud.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -546,6 +546,9 @@
       <a class="sidebar-link" data-page="integration">
         <i class="fas fa-plug text-xs w-4"></i> Enterprise Integration
       </a>
+      <a class="sidebar-link" data-page="testing">
+        <i class="fas fa-vial text-xs w-4"></i> Testing & Validation
+      </a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-heading">Resources</div>
@@ -567,6 +570,24 @@
           <a href="/docs/" class="hover:text-gray-600 dark:hover:text-gray-300">Docs</a>
           <i class="fas fa-chevron-right text-[8px]"></i>
           <span id="breadcrumbPage" class="text-gray-600 dark:text-gray-300">Overview</span>
+        </div>
+
+        <div class="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-4">
+          <div class="text-[11px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-3">Documentation Access</div>
+          <div class="grid sm:grid-cols-3 gap-3 text-xs">
+            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
+              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Public Docs</div>
+              <div class="text-gray-500 dark:text-gray-400">Architecture, features, requirements, and deployment overview.</div>
+            </div>
+            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
+              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Customer Docs (Gated)</div>
+              <div class="text-gray-500 dark:text-gray-400">Detailed install runbooks, upgrade playbooks, and support procedures.</div>
+            </div>
+            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
+              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Private / Internal Docs</div>
+              <div class="text-gray-500 dark:text-gray-400">Internal operations, product strategy, and non-customer materials.</div>
+            </div>
+          </div>
         </div>
         <!-- Mobile TOC -->
         <details class="toc-mobile mb-4" id="tocMobile">
@@ -600,17 +621,18 @@
 </div>
 
 <script>
-  // ── Config
+  // â”€â”€ Config
   var PAGES = [
     { id: 'readme', title: 'Overview', icon: 'fa-home' },
     { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' },
     { id: 'guide', title: 'Deployment Guide', icon: 'fa-rocket' },
-    { id: 'integration', title: 'Enterprise Integration', icon: 'fa-plug' }
+    { id: 'integration', title: 'Enterprise Integration', icon: 'fa-plug' },
+    { id: 'testing', title: 'Testing & Validation', icon: 'fa-vial' }
   ];
   var pageCache = {};
   var currentPage = null;
 
-  // ── Elements
+  // â”€â”€ Elements
   var contentEl = document.getElementById('content');
   var loadingEl = document.getElementById('loading');
   var tocList = document.getElementById('tocList');
@@ -621,13 +643,13 @@
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('sidebarOverlay');
 
-  // ── Theme toggle
+  // â”€â”€ Theme toggle
   document.getElementById('themeToggle').addEventListener('click', function() {
     var isDark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
   });
 
-  // ── Mobile sidebar
+  // â”€â”€ Mobile sidebar
   document.getElementById('sidebarToggle').addEventListener('click', function() {
     sidebar.classList.toggle('open');
     overlay.classList.toggle('active');
@@ -637,10 +659,10 @@
     overlay.classList.remove('active');
   });
 
-  // ── Marked config
+  // â”€â”€ Marked config
   marked.setOptions({ gfm: true, breaks: false });
 
-  // ── Helpers
+  // â”€â”€ Helpers
   function getPageFromHash() {
     var hash = window.location.hash.replace('#', '');
     var page = hash.split('/')[0];
@@ -670,17 +692,17 @@
   }
 
   function slugify(text) {
-    // GitHub-compatible slug: lowercase, strip non-alnum/space/hyphen, spaces→hyphens
+    // GitHub-compatible slug: lowercase, strip non-alnum/space/hyphen, spacesâ†’hyphens
     return text.toLowerCase()
       .replace(/[^\w\s-]/g, '')   // remove non-word except spaces and hyphens
-      .replace(/ /g, '-')         // each space → one hyphen (preserves double-space → --)
+      .replace(/ /g, '-')         // each space â†’ one hyphen (preserves double-space â†’ --)
       .replace(/^-+|-+$/g, '');   // trim leading/trailing hyphens
   }
 
-  // ── Load page
+  // â”€â”€ Load page
   function loadPage(page, forceScroll) {
     if (page === currentPage) {
-      // Same page — scroll to heading if present, or top
+      // Same page â€” scroll to heading if present, or top
       var heading = getHeadingFromHash();
       if (heading) {
         var el = document.getElementById(heading);
@@ -703,7 +725,7 @@
     // Update title & breadcrumb
     var pi = getPageInfo(page);
     var title = pi ? pi.info.title : 'Docs';
-    document.title = title + ' — Infragate Docs';
+    document.title = title + ' â€” Infragate Docs';
     breadcrumbPage.textContent = title;
 
     // Show loading
@@ -715,7 +737,7 @@
 
     function render(md) {
       // Map known .md files to docs page hashes (with optional #anchor)
-      var knownPages = { readme: 1, features: 1, guide: 1, integration: 1 };
+      var knownPages = { readme: 1, features: 1, guide: 1, integration: 1, testing: 1 };
       md = md.replace(/\(\.\/([A-Z_]+)\.md(#[^)]+)?\)/gi, function(m, name, anchor) {
         var lower = name.toLowerCase();
         if (knownPages[lower]) return '(#' + lower + (anchor ? '/' + anchor.substring(1) : '') + ')';
@@ -732,7 +754,7 @@
         var href = a.getAttribute('href').substring(1);
         // If it points to a known page, let hash router handle it
         if (knownPages[href]) return;
-        // Otherwise it's an in-page anchor — smooth scroll to it
+        // Otherwise it's an in-page anchor â€” smooth scroll to it
         a.addEventListener('click', function(e) {
           e.preventDefault();
           var targetId = href;
@@ -791,7 +813,7 @@
     }
   }
 
-  // ── Build table of contents from headings
+  // â”€â”€ Build table of contents from headings
   function buildTOC() {
     var headings = contentEl.querySelectorAll('h2, h3');
     var html = '';
@@ -834,7 +856,7 @@
     tocList.querySelectorAll('.toc-item').forEach(handleTocClick);
     tocMobileList.querySelectorAll('.toc-item').forEach(handleTocClick);
 
-    // Highlight TOC on scroll — find the heading closest to the top of viewport
+    // Highlight TOC on scroll â€” find the heading closest to the top of viewport
     if (headings.length > 0) {
       var tocItems = tocList.querySelectorAll('.toc-item');
       var tocMobileItems = tocMobileList.querySelectorAll('.toc-item');
@@ -864,7 +886,7 @@
     }
   }
 
-  // ── Copy buttons on code blocks
+  // â”€â”€ Copy buttons on code blocks
   function addCopyButtons() {
     contentEl.querySelectorAll('pre').forEach(function(pre) {
       var btn = document.createElement('button');
@@ -881,7 +903,7 @@
     });
   }
 
-  // ── Prev / Next page navigation
+  // â”€â”€ Prev / Next page navigation
   function buildPageNav() {
     var pi = getPageInfo(currentPage);
     if (!pi) { pageNav.classList.add('hidden'); return; }
@@ -905,7 +927,7 @@
     });
   }
 
-  // ── Search
+  // â”€â”€ Search
   var searchInput = document.getElementById('searchInput');
   var searchResults = document.getElementById('searchResults');
   var searchTimeout = null;
@@ -978,7 +1000,7 @@
     }
   });
 
-  // Search result click — let native <a href="#page"> handle navigation,
+  // Search result click â€” let native <a href="#page"> handle navigation,
   // just clean up search UI. hashchange listener handles page loading.
   searchResults.addEventListener('click', function(e) {
     var item = e.target.closest('.search-result-item');
@@ -998,7 +1020,7 @@
     // Otherwise the native <a href="#page"> navigates and hashchange fires
   });
 
-  // ── Sidebar link clicks
+  // â”€â”€ Sidebar link clicks
   document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
     link.addEventListener('click', function(e) {
       e.preventDefault();
@@ -1006,7 +1028,7 @@
     });
   });
 
-  // ── Hash change handler
+  // â”€â”€ Hash change handler
   window.addEventListener('hashchange', function() {
     // Clean up search/sidebar on any navigation
     searchInput.value = '';
@@ -1020,10 +1042,10 @@
     loadPage(getPageFromHash());
   });
 
-  // ── Initial load
+  // â”€â”€ Initial load
   loadPage(getPageFromHash());
 
-  // ── Support modal
+  // â”€â”€ Support modal
   function openSupportModal() {
     document.getElementById('supportForm').classList.remove('hidden');
     document.getElementById('supportSuccess').classList.add('hidden');
@@ -1051,7 +1073,7 @@
       email: form.email.value,
       subject: form.subject.value,
       message: form.message.value,
-      _subject: 'Infragate Docs — ' + form.subject.value,
+      _subject: 'Infragate Docs â€” ' + form.subject.value,
       _captcha: 'false',
       _template: 'table'
     };
@@ -1088,3 +1110,6 @@
 </script>
 </body>
 </html>
+
+
+
