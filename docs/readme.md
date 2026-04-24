@@ -32,7 +32,7 @@ Pick the deployment path that matches your environment — both use the same Hel
 | Storage class | `oci-bv` (OCI Block Volume) | `local-path` (k3s default) |
 | Image pull policy | `IfNotPresent` (OKE nodes pull from GHCR) | `Always` (single VM refresh-on-restart) |
 | Scheduling | No tolerations (OKE has dedicated workers) | Control-plane tolerations (single-node scheduling) |
-| Values file | `deploy/helm/values-oke.yaml` | `deploy/helm/values-oci.yaml` |
+| Values file | `deploy/helm/values-oke.yaml` | `deploy/helm/values-k3s.yaml` |
 | Chart values `ingress.className` | `nginx` | `traefik` |
 | Setup time | ~30 min (cluster exists) | ~15 min |
 | Guide | Available during evaluation/POC | Available during evaluation/POC |
@@ -63,7 +63,7 @@ For dev/test, demos, or OCI Always Free tier VMs. Run this on an OCI VM in the s
 
 ```bash
 helm upgrade --install infragate deploy/helm/ -n infragate \
-  -f deploy/helm/values-oci.yaml \
+  -f deploy/helm/values-k3s.yaml \
   --set global.domain=infragate.example.com \
   --set postgresql.auth.password=YOUR_DB_PASSWORD \
   --set keycloak.admin.password=YOUR_KC_PASSWORD \
@@ -423,6 +423,7 @@ For integration, deployment, stack architecture, and API reference see customer 
 For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
 
 
 
