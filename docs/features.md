@@ -10,10 +10,10 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 - **Live Terraform streaming** — `terraform init`, `plan`, and `apply` output streams in real time to the browser during deploy, scale, upgrade, and destroy operations
 - **Template-based or custom** — choose from admin-defined cluster templates or configure everything manually
 - **Automatic resource creation** — each cluster gets its own compartment, VCN, subnet, internet gateway, route table, security list, and node pools
-- **Bring your own infrastructure** — optionally supply existing VCN, compartment, or subnet OCIes via the Advanced tab to skip resource creation and wire into existing networks. BYO resources are referenced read-only and never modified by Terraform; Infragate-created VCN/subnet/security list resources are fully managed and manual OCI Console edits to them will be overwritten on the next apply. When using existing VCN/subnet overrides, route tables are not managed by Infragate, so equivalent private-subnet egress must already exist for OKE workers: route `0.0.0.0/0` to NAT Gateway (or equivalent corporate egress path) and route `all-<region>-services-in-oracle-services-network` to Service Gateway. This is routing, not an open ingress security rule.
-- **BYON scope behavior** - `Existing Compartment OCIe` alone reuses only the compartment. Infragate does not auto-discover existing VCN/subnet objects inside that compartment; leave VCN/subnet blank only when you want Infragate to create a fresh network stack there.
-- **Advanced override guardrails** - Advanced OCIe fields validate resource-type prefixes and provide OCI-backed autocomplete for compartments, VCNs, and subnets to reduce typo/copy-paste errors before deploy.
-- **Shared compartment pattern** — for multiple clusters in one compartment, use a dedicated BYO compartment OCIe in Advanced for every cluster in that shared domain; avoid reusing an auto-created per-cluster compartment as a shared target.
+- **Bring your own infrastructure** — optionally supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks. BYO resources are referenced read-only and never modified by Terraform; Infragate-created VCN/subnet/security list resources are fully managed and manual OCI Console edits to them will be overwritten on the next apply. When using existing VCN/subnet overrides, route tables are not managed by Infragate, so equivalent private-subnet egress must already exist for OKE workers: route `0.0.0.0/0` to NAT Gateway (or equivalent corporate egress path) and route `all-<region>-services-in-oracle-services-network` to Service Gateway. This is routing, not an open ingress security rule.
+- **BYON scope behavior** - `Existing Compartment OCID` alone reuses only the compartment. Infragate does not auto-discover existing VCN/subnet objects inside that compartment; leave VCN/subnet blank only when you want Infragate to create a fresh network stack there.
+- **Advanced override guardrails** - Advanced OCID fields validate resource-type prefixes and provide OCI-backed autocomplete for compartments, VCNs, and subnets to reduce typo/copy-paste errors before deploy.
+- **Shared compartment pattern** — for multiple clusters in one compartment, use a dedicated BYO compartment OCID in Advanced for every cluster in that shared domain; avoid reusing an auto-created per-cluster compartment as a shared target.
 - **CIDR pool management** — admins pre-populate a pool of /24 ranges; each cluster allocates one on deploy and releases it on destroy
 - **Multi-pool support** — configure 1–N node pools per cluster, each with independent node count, OCPU, RAM, and storage sizing
 - **Shape sync from OCI** - Admin Configuration includes **Sync from OCI** for VM shapes, pulling OKE-compatible shapes for the current region/tenancy and merging them into `allowed_shapes` while preserving existing labels/toggles
@@ -100,7 +100,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 ## Cluster lifecycle
 
 - **Status tracking** — real-time status across all views: provisioning, scaling, upgrading, destroying, running, error, destroyed
-- **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. eetail page shows full expiry timestamp and remaining time
+- **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. Detail page shows full expiry timestamp and remaining time
 - **Destroy protection** — protected clusters show a red "Protected" badge on dashboard cards and detail page. Non-admin users cannot destroy protected clusters (button disabled + 403 from API). Admins see a "Force Destroy" option that overrides protection via `?force=true`
 - **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; compartments are retained by design, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
@@ -111,12 +111,12 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 
 ## Identity and access
 
-- **Any OIeC provider** — works with Keycloak, Azure Ae, Okta, Google Workspace, or any OIeC-compliant IdP
+- **Any OIDC provider** — works with Keycloak, Azure Ae, Okta, Google Workspace, or any OIeC-compliant IdP
 - **No user directory** — Infragate auto-provisions users on first login from the JWT `sub` claim
 - **PKCE authentication** — Authorization Code + PKCE flow; no client secrets stored in the frontend
 - **Role-based access** — `admin` role (from IdP) grants access to the admin panel; custom realm roles can restrict cluster template visibility (e.g. `production`, `staging`); all other users are regular users
 - **Session management** — automatic token refresh, silent re-auth, secure logout via IdP end-session endpoint
-- **Cached OIeC discovery** — well-known config cached in sessionStorage (1-hour TTL) and at the nginx proxy layer, eliminating network round-trips on page load, sign-in, and sign-out
+- **Cached OIDC discovery** — well-known config cached in sessionStorage (1-hour TTL) and at the nginx proxy layer, eliminating network round-trips on page load, sign-in, and sign-out
 
 ---
 
@@ -216,8 +216,8 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 
 - **Guided deployment form** — OCI Resource Manager schema with dynamic dropdowns for compartment, VCN, subnet, shapes, images, and existing clusters
 - **Conditional OKE creation** — create a new OKE cluster with VCN, subnets, and security lists, or deploy into an existing cluster
-- **Bring your own identity** — deploy bundled Keycloak or connect to an existing OIeC provider (Keycloak, Azure Ae, Okta, Google Workspace)
-- **OCI credential validation** — schema validates API key fingerprint format, requires private key PEM, and auto-injects tenancy/user OCIe from Resource Manager context
+- **Bring your own identity** — deploy bundled Keycloak or connect to an existing OIDC provider (Keycloak, Azure Ae, Okta, Google Workspace)
+- **OCI credential validation** — schema validates API key fingerprint format, requires private key PEM, and auto-injects tenancy/user OCID from Resource Manager context
 - **Auto-generated passwords** — database and Keycloak passwords auto-generated when not provided, with retrieval instructions in stack outputs
 - **Ingress-NGINX with OCI LB** — automatically deploys ingress controller with OCI flexible load balancer annotations
 - **Post-deployment guide** — stack outputs include step-by-step instructions for eNS setup, Keycloak config, and first login
