@@ -425,6 +425,3 @@ For end-to-end validation procedures and testing matrix, see docs available duri
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
 
 
-
-
-
