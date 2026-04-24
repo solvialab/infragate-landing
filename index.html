@@ -1420,8 +1420,8 @@
             <i class="fas fa-code-branch text-cyan-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Push to main</div>
-            <div class="text-gray-500 text-xs">CI/CD pipeline triggered</div>
+            <div class="text-white text-sm font-medium">Select release tag</div>
+            <div class="text-gray-500 text-xs">Operator picks approved version</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1433,8 +1433,8 @@
             <i class="fab fa-docker text-purple-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Build &amp; push images</div>
-            <div class="text-gray-500 text-xs">GHCR / GitLab CR / OCIR</div>
+            <div class="text-white text-sm font-medium">Pull versioned images</div>
+            <div class="text-gray-500 text-xs">GHCR / OCIR / private mirror</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1446,8 +1446,8 @@
             <i class="fas fa-vial text-amber-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Run test suite</div>
-            <div class="text-gray-500 text-xs"><span data-count-to="107" data-count-suffix=" automated tests passed" data-count-duration="1200">107 automated tests passed</span></div>
+            <div class="text-white text-sm font-medium">Helm install / upgrade</div>
+            <div class="text-gray-500 text-xs">Use `values-oke.yaml` or `values-oci.yaml`</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1459,8 +1459,8 @@
             <i class="fas fa-dharmachakra text-blue-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Helm upgrade</div>
-            <div class="text-gray-500 text-xs">Rolling deployment to OKE</div>
+            <div class="text-white text-sm font-medium">Platform health checks</div>
+            <div class="text-gray-500 text-xs">API, frontend, DB, and OIDC ready</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1472,8 +1472,8 @@
             <i class="fas fa-check-double text-emerald-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Health check passed</div>
-            <div class="text-gray-500 text-xs">All pods running, ingress ready</div>
+            <div class="text-white text-sm font-medium">Operate cluster lifecycle</div>
+            <div class="text-gray-500 text-xs">Deploy, scale, upgrade K8s, destroy, TTL</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1481,7 +1481,7 @@
         </div>
       </div>
       <div class="mt-5 bg-gray-800/50 p-3 rounded-lg text-emerald-300 text-xs">
-        <i class="fas fa-infinity mr-1"></i> Automated CI/CD with GitHub Actions &amp; GitLab CI - zero manual steps
+        <i class="fas fa-info-circle mr-1"></i> Customer deployment is Helm-based; maintainer CI publishes versioned release images.
       </div>
     </div>
   </div>
@@ -1665,7 +1665,7 @@
 <div class="border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-[#0B1120] py-12 md:py-16" id="statsSection">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 xs:grid-cols-4 gap-8 md:gap-10">
     <div class="stat-card text-center" data-stat-index="0">
-      <div class="stat-number">10-20 min</div>
+      <div class="stat-number">12-20 min</div>
       <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
       <div class="stat-label">Typical provisioning</div>
     </div>
@@ -1684,6 +1684,9 @@
       <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
       <div class="stat-label">In-tenancy</div>
     </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+    Provisioning time depends on OCI region capacity, shape/image availability, and tenancy limits.
   </div>
 </div>
 
