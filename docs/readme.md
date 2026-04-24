@@ -35,8 +35,8 @@ Pick the deployment path that matches your environment — both use the same Hel
 | Values file | `deploy/helm/values-oke.yaml` | `deploy/helm/values-oci.yaml` |
 | Chart values `ingress.className` | `nginx` | `traefik` |
 | Setup time | ~30 min (cluster exists) | ~15 min |
-| Guide | [GUIDE.md — OKE](./GUIDE.md#existing-oke-cluster-deployment) | [GUIDE.md — k3s](./GUIDE.md#single-node-k3s-deployment) |
-| Testing playbook | [TESTING.md — Path B](./TESTING.md#3-path-b-existing-oke-cluster) | [TESTING.md — Path A](./TESTING.md#2-path-a-k3s-on-oci-vm) |
+| Guide | Available during evaluation/POC | Available during evaluation/POC |
+| Testing playbook | Available during evaluation/POC | Available during evaluation/POC |
 
 ### Existing OKE cluster (recommended)
 
@@ -74,7 +74,7 @@ helm upgrade --install infragate deploy/helm/ -n infragate \
   --set api.oci.parentCompartmentOcid=ocid1.compartment...
 ```
 
-OCI credentials are still required — Infragate calls the OCI API to provision OKE clusters regardless of where Infragate itself runs. See [GUIDE.md — OCI service account setup](./GUIDE.md#5-oci-service-account-setup) for how to generate the API key, S3 Customer Secret Key, and Terraform state bucket.
+OCI credentials are still required — Infragate calls the OCI API to provision OKE clusters regardless of where Infragate itself runs. See customer onboarding runbooks (gated) for OCI service-account setup and state-backend provisioning steps.
 
 > Contact [hello@infragate.cloud](mailto:hello@infragate.cloud) for Helm chart access and onboarding support.
 
@@ -82,7 +82,7 @@ OCI credentials are still required — Infragate calls the OCI API to provision 
 
 An OCI Marketplace listing with one-click "Launch Stack" deployment is planned for a future release. In the meantime, the Helm-based deployment paths above provide the same functionality with full flexibility.
 
-See [GUIDE.md](./GUIDE.md) for the full step-by-step deployment guide.
+Full deployment runbook is available during evaluation/POC.
 
 ---
 
@@ -142,7 +142,7 @@ Click **Details** on any cluster card to see:
 
 ## 3. Admin guide
 
-Admin access is granted via your identity provider through role assignment — see [INTEGRATION.md](./INTEGRATION.md). Admins have a separate panel accessible from the top nav.
+Admin access is granted via your identity provider through role assignment — see customer integration docs (gated). Admins have a separate panel accessible from the top nav.
 
 ### All clusters
 
@@ -407,8 +407,11 @@ Infragate is licensed under the [Business Source License 1.1](./LICENSE).
 ---
 
 For a complete feature overview see [FEATURES.md](./FEATURES.md).
-For integration, deployment, stack architecture, and API reference see [INTEGRATION.md](./INTEGRATION.md).
-For end-to-end validation and the testing matrix see [TESTING.md](./TESTING.md).
+For integration, deployment, stack architecture, and API reference see customer integration docs (gated).
+For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
+
+
 
