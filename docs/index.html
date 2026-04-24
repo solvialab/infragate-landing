@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Infragate Docs</title>
-  <meta name="description" content="Infragate documentation â€” deployment guides, features, and enterprise integration for OKE lifecycle management on Oracle Cloud.">
+  <meta name="description" content="Infragate documentation — deployment guides, features, and enterprise integration for OKE lifecycle management on Oracle Cloud.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -702,7 +702,7 @@
   // â”€â”€ Load page
   function loadPage(page, forceScroll) {
     if (page === currentPage) {
-      // Same page â€” scroll to heading if present, or top
+      // Same page — scroll to heading if present, or top
       var heading = getHeadingFromHash();
       if (heading) {
         var el = document.getElementById(heading);
@@ -725,7 +725,7 @@
     // Update title & breadcrumb
     var pi = getPageInfo(page);
     var title = pi ? pi.info.title : 'Docs';
-    document.title = title + ' â€” Infragate Docs';
+    document.title = title + ' — Infragate Docs';
     breadcrumbPage.textContent = title;
 
     // Show loading
@@ -754,7 +754,7 @@
         var href = a.getAttribute('href').substring(1);
         // If it points to a known page, let hash router handle it
         if (knownPages[href]) return;
-        // Otherwise it's an in-page anchor â€” smooth scroll to it
+        // Otherwise it's an in-page anchor — smooth scroll to it
         a.addEventListener('click', function(e) {
           e.preventDefault();
           var targetId = href;
@@ -856,7 +856,7 @@
     tocList.querySelectorAll('.toc-item').forEach(handleTocClick);
     tocMobileList.querySelectorAll('.toc-item').forEach(handleTocClick);
 
-    // Highlight TOC on scroll â€” find the heading closest to the top of viewport
+    // Highlight TOC on scroll — find the heading closest to the top of viewport
     if (headings.length > 0) {
       var tocItems = tocList.querySelectorAll('.toc-item');
       var tocMobileItems = tocMobileList.querySelectorAll('.toc-item');
@@ -1000,7 +1000,7 @@
     }
   });
 
-  // Search result click â€” let native <a href="#page"> handle navigation,
+  // Search result click — let native <a href="#page"> handle navigation,
   // just clean up search UI. hashchange listener handles page loading.
   searchResults.addEventListener('click', function(e) {
     var item = e.target.closest('.search-result-item');
@@ -1073,7 +1073,7 @@
       email: form.email.value,
       subject: form.subject.value,
       message: form.message.value,
-      _subject: 'Infragate Docs â€” ' + form.subject.value,
+      _subject: 'Infragate Docs — ' + form.subject.value,
       _captcha: 'false',
       _template: 'table'
     };
