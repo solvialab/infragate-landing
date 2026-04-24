@@ -621,7 +621,7 @@
 </div>
 
 <script>
-  // â”€â”€ Config
+  // ── Config
   var PAGES = [
     { id: 'readme', title: 'Overview', icon: 'fa-home' },
     { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' }
@@ -629,7 +629,7 @@
   var pageCache = {};
   var currentPage = null;
 
-  // â”€â”€ Elements
+  // ── Elements
   var contentEl = document.getElementById('content');
   var loadingEl = document.getElementById('loading');
   var tocList = document.getElementById('tocList');
@@ -640,13 +640,13 @@
   var sidebar = document.getElementById('sidebar');
   var overlay = document.getElementById('sidebarOverlay');
 
-  // â”€â”€ Theme toggle
+  // ── Theme toggle
   document.getElementById('themeToggle').addEventListener('click', function() {
     var isDark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
   });
 
-  // â”€â”€ Mobile sidebar
+  // ── Mobile sidebar
   document.getElementById('sidebarToggle').addEventListener('click', function() {
     sidebar.classList.toggle('open');
     overlay.classList.toggle('active');
@@ -656,10 +656,10 @@
     overlay.classList.remove('active');
   });
 
-  // â”€â”€ Marked config
+  // ── Marked config
   marked.setOptions({ gfm: true, breaks: false });
 
-  // â”€â”€ Helpers
+  // ── Helpers
   function getPageFromHash() {
     var hash = window.location.hash.replace('#', '');
     var page = hash.split('/')[0];
@@ -689,14 +689,14 @@
   }
 
   function slugify(text) {
-    // GitHub-compatible slug: lowercase, strip non-alnum/space/hyphen, spacesâ†’hyphens
+    // GitHub-compatible slug: lowercase, strip non-alnum/space/hyphen, spaces→hyphens
     return text.toLowerCase()
       .replace(/[^\w\s-]/g, '')   // remove non-word except spaces and hyphens
-      .replace(/ /g, '-')         // each space â†’ one hyphen (preserves double-space â†’ --)
+      .replace(/ /g, '-')         // each space → one hyphen (preserves double-space → --)
       .replace(/^-+|-+$/g, '');   // trim leading/trailing hyphens
   }
 
-  // â”€â”€ Load page
+  // ── Load page
   function loadPage(page, forceScroll) {
     if (page === currentPage) {
       // Same page — scroll to heading if present, or top
@@ -810,7 +810,7 @@
     }
   }
 
-  // â”€â”€ Build table of contents from headings
+  // ── Build table of contents from headings
   function buildTOC() {
     var headings = contentEl.querySelectorAll('h2, h3');
     var html = '';
@@ -883,7 +883,7 @@
     }
   }
 
-  // â”€â”€ Copy buttons on code blocks
+  // ── Copy buttons on code blocks
   function addCopyButtons() {
     contentEl.querySelectorAll('pre').forEach(function(pre) {
       var btn = document.createElement('button');
@@ -900,7 +900,7 @@
     });
   }
 
-  // â”€â”€ Prev / Next page navigation
+  // ── Prev / Next page navigation
   function buildPageNav() {
     var pi = getPageInfo(currentPage);
     if (!pi) { pageNav.classList.add('hidden'); return; }
@@ -924,7 +924,7 @@
     });
   }
 
-  // â”€â”€ Search
+  // ── Search
   var searchInput = document.getElementById('searchInput');
   var searchResults = document.getElementById('searchResults');
   var searchTimeout = null;
@@ -1017,7 +1017,7 @@
     // Otherwise the native <a href="#page"> navigates and hashchange fires
   });
 
-  // â”€â”€ Sidebar link clicks
+  // ── Sidebar link clicks
   document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
     link.addEventListener('click', function(e) {
       e.preventDefault();
@@ -1025,7 +1025,7 @@
     });
   });
 
-  // â”€â”€ Hash change handler
+  // ── Hash change handler
   window.addEventListener('hashchange', function() {
     // Clean up search/sidebar on any navigation
     searchInput.value = '';
@@ -1039,10 +1039,10 @@
     loadPage(getPageFromHash());
   });
 
-  // â”€â”€ Initial load
+  // ── Initial load
   loadPage(getPageFromHash());
 
-  // â”€â”€ Support modal
+  // ── Support modal
   function openSupportModal() {
     document.getElementById('supportForm').classList.remove('hidden');
     document.getElementById('supportSuccess').classList.add('hidden');
