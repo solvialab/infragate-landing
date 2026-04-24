@@ -194,7 +194,7 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 | | **Existing OKE cluster** | **Single-node k3s on OCI VM** |
 |---|---|---|
 | **Best for** | Production, enterprise OKE users | Dev/test, demos, Always Free tier |
-| **Values file** | `values-oke.yaml` | `values-oci.yaml` |
+| **Values file** | `values-oke.yaml` | `values-k3s.yaml` |
 | **Ingress** | ingress-nginx with OCI flexible Load Balancer (installed separately) | Traefik (bundled with k3s, `className: traefik`, no extra install) |
 | **Storage class** | `oci-bv` (OCI Block Volume) | `local-path` (k3s default) |
 | **PostgreSQL volume floor** | 50 GB (OCI BV minimum) | 20 GB (local disk) |
@@ -225,6 +225,7 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 ---
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
 
 
 
