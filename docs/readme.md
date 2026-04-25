@@ -127,7 +127,7 @@ Kubernetes version changes are handled via a separate **Upgrade** action.
 
 Destroy is permanent and cannot be undone.
 
-> **Destroy protection:** Clusters created from a template with destroy protection enabled cannot be destroyed by regular users. An admin must override the protection with the `?force=true` query parameter.
+> **Destroy protection:** Clusters created from a template with destroy protection enabled cannot be directly destroyed by the owning user. Clicking Destroy on a protected cluster opens a "Request destroy" modal that submits an approval ticket instead. Admins see pending requests in a **Requests** queue in the admin nav (with a live count badge that polls every 5s) where they can Approve (server immediately runs force-destroy) or Deny with a note that surfaces back on the user's cluster card. Admins can still force-destroy directly via `?force=true` to bypass the queue — useful for incident response.
 >
 > **Destroy behavior note:** Cluster compartments are intentionally **not auto-deleted** (to avoid breaking shared/multi-cluster setups). In Object Storage, only the destroyed cluster's `.tfstate` object is removed; the user-level prefix/folder is kept for other clusters.
 
@@ -206,7 +206,7 @@ Dedicated admin page for creating and managing cluster templates — pre-configu
 | Node pools | Pre-defined pool layout — name, node count, OCPU, RAM, storage per pool |
 | Tier default | Suggested cluster tier — Basic or Enhanced (suggestion only, not enforced) |
 | TTL | Optional time-to-live in hours — when reached, Infragate automatically starts cluster destroy/cleanup |
-| Destroy protection | When enabled, users cannot destroy clusters created from this template without admin approval |
+| Destroy protection | When enabled, the "Destroy" button on the user's cluster opens a "Request destroy" modal instead. Requests land in Admin → Requests (with a live count badge in the nav) where an admin approves (auto-runs force-destroy) or denies with a note |
 | Required role | Keycloak realm role — only users with this role can see and use the template (leave empty for all users) |
 | Sort order | Controls display position in the deploy form (lower numbers appear first) |
 
@@ -423,5 +423,8 @@ For integration, deployment, stack architecture, and API reference see customer 
 For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
+
+
 
 
