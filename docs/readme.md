@@ -218,9 +218,19 @@ Template modal behavior: when a VM shape is selected, the K8s dropdown is filter
 
 Templates can be created, edited, enabled/disabled, and permanently deleted. Disabled templates no longer appear in the deploy form but remain referenced by existing clusters. Permanently deleting a template removes it from the admin panel entirely.
 
+### Requests
+
+Approval queue for user-submitted destroy requests on protection-enabled clusters. The admin nav shows a live `Requests (N)` count badge that refreshes every 5 seconds (hidden when zero pending). Filter by Pending / Approved / Denied / All. Each pending row has a **Review** action that opens a modal where the admin can:
+
+- Add an optional admin note
+- Click **Approve & destroy** — server immediately runs force-destroy and flips the cluster to `destroying`. Audit-logged as `destroy-request:approve`.
+- Click **Deny** — the note is surfaced on the user's cluster card as a red "Destroy denied" pill (with the note in the tooltip). Audit-logged as `destroy-request:deny`.
+
+Approval is row-locked to prevent two admins double-scheduling. Bypass path: admins can still force-destroy any protected cluster directly via `?force=true` from the All Clusters table — useful for incident response.
+
 ### Audit Log
 
-Every provisioning, scaling, upgrade, and destroy operation is recorded with user identity, operation type, cluster name, outcome, and duration. The log is append-only and filterable by user, operation, and date range.
+Every provisioning, scaling, upgrade, and destroy operation is recorded with user identity, operation type, cluster name, outcome, and duration — including `destroy-request:submit`, `destroy-request:approve`, and `destroy-request:deny` events from the Requests queue. The log is append-only and filterable by user, operation, and date range.
 
 ---
 
