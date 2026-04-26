@@ -992,8 +992,8 @@
   <div class="modal-content">
     <div class="flex items-center justify-between mb-5">
       <div>
-        <h3 id="demoModalTitle" class="text-xl font-bold text-gray-900 dark:text-white">Book a 20-min demo</h3>
-        <p id="demoModalSubtitle" class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
+        <h3 id="demoModalTitle" class="text-xl font-bold text-gray-900 dark:text-white">Book a discovery call</h3>
+        <p id="demoModalSubtitle" class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">30-min call to understand fit. We'll follow up with the platform tour and a deep-dive call if there's a match.</p>
       </div>
       <button id="modalClose" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -1118,7 +1118,7 @@
           <i class="fas fa-sun text-sm"></i>
         </button>
         <a href="/docs/" class="hidden lg:inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-lg hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition"><i class="fas fa-book text-xs"></i> Docs</a>
-        <button onclick="openDemoModal()" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-lg btn-solid-premium cursor-pointer">Book a demo</button>
+        <button onclick="openDemoModal()" class="hidden lg:inline-block px-5 py-2 text-sm font-medium rounded-lg btn-solid-premium cursor-pointer">Book a discovery call</button>
         <button id="menuToggle" class="lg:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white relative z-50" aria-label="Toggle menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path class="line line-1" d="M4 6h16" stroke-linecap="round"/>
@@ -1137,7 +1137,7 @@
       <a href="#pricing" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Pricing</a>
       <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
         <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-lg text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
-        <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-lg text-center cursor-pointer">Book a demo</button>
+        <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-lg text-center cursor-pointer">Book a discovery call</button>
       </div>
     </div>
   </div>
@@ -1159,7 +1159,7 @@
           Infragate is an OCI-native Internal Developer Platform for OKE lifecycle management - provisioning, scaling, cost governance, and access control through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
         </p>
         <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
-          <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-lg cursor-pointer cta-btn">Book a 20-min demo</button>
+          <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-lg cursor-pointer cta-btn">Book a discovery call</button>
           <a href="/docs/" class="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-lg hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cta-btn"><i class="fas fa-book text-xs"></i> Read the Docs</a>
         </div>
         <div class="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500 dark:text-gray-400 reveal from-left stagger-children justify-center lg:justify-start" style="transition-delay: 0.3s;">
@@ -1785,7 +1785,7 @@
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Security advisories - early private notice before public disclosure</span></li>
           <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Onboarding workshop and deployment review</span></li>
         </ul>
-        <button onclick="openDemoModal('poc')" class="block text-center px-5 py-3 text-sm font-semibold rounded-lg btn-solid-premium cursor-pointer">Start a POC</button>
+        <button onclick="openDemoModal()" class="block text-center px-5 py-3 text-sm font-semibold rounded-lg btn-solid-premium cursor-pointer">Book a discovery call</button>
       </div>
 
       <!-- Enterprise -->
@@ -1925,22 +1925,22 @@
   // Demo / POC / Enterprise / Partner modal - shared form, context-driven copy
   var DEMO_MODAL_CONFIGS = {
     demo: {
-      title: 'Book a 20-min demo',
-      subtitle: "We'll get back to you within one business day.",
-      messageLabel: 'Tell us about your use case',
-      messagePlaceholder: "How many clusters do you manage? What's your current workflow?",
-      submitText: 'Submit Request',
-      successMessage: 'Your demo request has been submitted.<br>We\'ll be in touch shortly.',
-      subject: 'Infragate Demo Request'
+      title: 'Book a discovery call',
+      subtitle: "30-min call to understand fit. We'll follow up with the platform tour and a deep-dive call if there's a match.",
+      messageLabel: 'Tell us about your environment',
+      messagePlaceholder: "How many OCI tenancies / OKE clusters? Team size? Current workflow?",
+      submitText: 'Request a call',
+      successMessage: 'Your request has been received.<br>We\'ll be in touch within one business day to schedule.',
+      subject: 'Infragate Discovery Call Request'
     },
     poc: {
-      title: 'Start a Proof of Concept',
-      subtitle: 'Scoped 2-4 week POC. We\'ll set up a kickoff call within one business day.',
+      title: 'Start your evaluation',
+      subtitle: '$2,500, 14 days, in your tenancy. Fee is credited toward Business if you convert within 30 days. Kickoff scheduled within one business day.',
       messageLabel: 'Tell us about your environment',
-      messagePlaceholder: 'How many OCI tenancies / clusters? What does success look like for the POC?',
-      submitText: 'Request a POC',
-      successMessage: 'Your POC request has been submitted.<br>We\'ll be in touch to schedule the kickoff.',
-      subject: 'Infragate POC Request'
+      messagePlaceholder: 'How many OCI tenancies / OKE clusters? What does success look like for the evaluation?',
+      submitText: 'Start evaluation',
+      successMessage: 'Your evaluation request has been received.<br>We\'ll be in touch to schedule the kickoff.',
+      subject: 'Infragate Evaluation Request'
     },
     enterprise: {
       title: 'Talk to sales - Enterprise',
