@@ -134,7 +134,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 
 ## Admin panel
 
-Five dedicated admin pages accessible to users with the `admin` role:
+Six dedicated admin pages accessible to users with the `admin` role:
 
 ### All Clusters
 - Every cluster across all users with status, owner, CIDR, K8s version, tier, resources, cost, and age
@@ -160,8 +160,18 @@ Five dedicated admin pages accessible to users with the `admin` role:
 - Add/edit modal with live cost preview
 - Enable/disable toggle and permanent delete
 
+### Requests
+- Approval queue for user-submitted destroy requests on protection-enabled clusters
+- Live count badge in the admin nav (`Requests (N)`) refreshed every 5 seconds; hidden when zero pending
+- Filters: Pending / Approved / Denied / All
+- Columns: requested-at (relative time), cluster, user, reason, status, reviewer, actions
+- **Review** action opens a modal: optional admin note, then **Approve** (auto-triggers force-destroy) or **Deny** (note surfaces on user's cluster card as "Destroy denied")
+- Row-locked approval prevents double-scheduling when two admins click simultaneously
+- Every submit / approve / deny is audit-logged
+- Bypass path: admins can still force-destroy directly via `?force=true` for incident response
+
 ### Audit Log
-- Append-only record of every deploy, scale, upgrade, and destroy operation
+- Append-only record of every deploy, scale, upgrade, and destroy operation, plus `destroy-request:submit` / `destroy-request:approve` / `destroy-request:deny` events
 - Columns: timestamp, user, operation, cluster name, status, duration
 - Filterable by user, operation type, and status
 
@@ -225,9 +235,5 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 ---
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
-
-
-
-
 
 
