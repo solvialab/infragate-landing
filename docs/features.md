@@ -37,10 +37,10 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 
   | Template | Required role | Who sees it |
   |---|---|---|
-| DEV — Small | *(none)* | All users |
+  | DEV — Small | *(none)* | All users |
   | TEST — Medium | `testing` | QA engineers and testers |
   | UAT — Large | `uat` | Release managers and senior engineers |
-  | PROe — HA | `production` | Production team only |
+  | PROD — HA | `production` | Production team only |
 
   Create the roles in Keycloak under **Realm roles**, assign them to the relevant users, and set the `required_role` field on each template. Templates without a required role are visible to everyone. Users only see templates they have access to on the deploy form — no error messages, the restricted templates simply don't appear.
 - **Sort order** — controls card display position on the deploy form
@@ -235,5 +235,3 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 ---
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
-
-
