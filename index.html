@@ -1230,9 +1230,10 @@
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
-      <h3 class="text-xl font-bold text-gray-900 dark:text-white">TTL &amp; destroy protection</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Set time-to-live in hours with color-coded countdown badges (green &gt;24h, orange &lt;24h, red &lt;4h). Protected clusters route destroy attempts to an admin approval queue - users submit a request with optional reason, admins approve or deny from a dedicated Requests page with a live nav count badge.</p>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">TTL, protection &amp; Activity</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">TTL countdown badges and Activity warnings flag expiry risk, protected destroys require admin review plus plan confirmation, and approve/deny messages stay visible with unread tracking.</p>
     </div>
+
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-network-wired text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">CIDR pool management</h3>
@@ -1387,7 +1388,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-inbox text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Requests</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Approval queue for user-submitted destroy requests on protected clusters. Live count badge in nav, approve to auto-destroy or deny with a note.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Approval queue for user-submitted destroy requests on protected clusters. Live count badge in nav; approval opens the destroy plan before final force-destroy confirmation, or admins can deny with a note.</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-clock-rotate-left text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
@@ -1408,25 +1409,25 @@
       <ul class="space-y-3 text-gray-600 dark:text-gray-400 stagger-children max-w-xl mx-auto md:mx-0">
         <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Existing OKE cluster</strong> - deploy into your Oracle Kubernetes Engine cluster via Helm in minutes. Pre-configured for OCI Block Volumes, nginx ingress, and OCI load balancer.</span></li>
         <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Helm chart</strong> - single chart with configurable values, ingress-nginx with OCI load balancer annotations. Supports <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">imagePullSecrets</code> for private registries.</span></li>
-        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Customer delivery model</strong> - plug-and-play deployment with versioned, stable releases. No customer-side CI/CD pipeline setup required.</span></li>
+        <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Customer delivery model</strong> - read-only registry token, released images, and Helm values. Customers pull images into their own tenancy; no source access or build system required.</span></li>
         <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Single VM (k3s) on OCI Always Free</strong> - ARM-compatible, control-plane tolerations for single-node scheduling.</span></li>
         <li class="flex gap-2"><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mt-1 flex-shrink-0"></i> <span><strong class="text-gray-900 dark:text-white">Any OIDC provider</strong> - bundled Keycloak, or connect Azure AD, Okta, Google Workspace. PKCE flow, no client secrets in frontend.</span></li>
       </ul>
     </div>
-    <!-- Deployment workflow animation -->
+    <!-- Customer install path animation -->
     <div class="bg-gray-900 rounded-xl sm:rounded-2xl p-5 sm:p-7 shadow-2xl overflow-hidden border border-transparent dark:border-gray-700 reveal from-right" style="transition-delay:0.2s">
       <div class="flex items-center gap-2 border-b border-gray-700 pb-3 mb-5">
-        <i class="fas fa-rocket text-cyan-400 text-lg"></i>
-        <span class="font-semibold text-white text-sm">Deployment Workflow</span>
+        <i class="fas fa-key text-cyan-400 text-lg"></i>
+        <span class="font-semibold text-white text-sm">Customer Install Path</span>
       </div>
       <div class="space-y-4" id="workflowSteps">
         <div class="flex items-center gap-3 flow-step transition-all duration-500" data-step="0">
           <div class="w-9 h-9 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-            <i class="fas fa-code-branch text-cyan-400 text-sm"></i>
+            <i class="fas fa-key text-cyan-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Select release tag</div>
-            <div class="text-gray-500 text-xs">Operator picks approved version</div>
+            <div class="text-white text-sm font-medium">Receive registry token</div>
+            <div class="text-gray-500 text-xs">Read-only PAT scoped to Infragate images</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1438,8 +1439,8 @@
             <i class="fab fa-docker text-purple-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Pull versioned images</div>
-            <div class="text-gray-500 text-xs">GHCR / OCIR / private mirror</div>
+            <div class="text-white text-sm font-medium">Create imagePullSecret</div>
+            <div class="text-gray-500 text-xs">Kubernetes regcred uses the PAT</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1451,8 +1452,8 @@
             <i class="fas fa-vial text-amber-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Helm install / upgrade</div>
-            <div class="text-gray-500 text-xs">Use `values-oke.yaml` or `values-oci.yaml`</div>
+            <div class="text-white text-sm font-medium">Configure Helm values</div>
+            <div class="text-gray-500 text-xs">OCI, OIDC, ingress, storage, and limits</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1464,8 +1465,8 @@
             <i class="fas fa-dharmachakra text-blue-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Platform health checks</div>
-            <div class="text-gray-500 text-xs">API, frontend, DB, and OIDC ready</div>
+            <div class="text-white text-sm font-medium">Helm install / upgrade</div>
+            <div class="text-gray-500 text-xs">Pods pull released images in their cluster</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1477,8 +1478,8 @@
             <i class="fas fa-check-double text-emerald-400 text-sm"></i>
           </div>
           <div class="flex-1">
-            <div class="text-white text-sm font-medium">Operate cluster lifecycle</div>
-            <div class="text-gray-500 text-xs">Deploy, scale, upgrade K8s, destroy, TTL</div>
+            <div class="text-white text-sm font-medium">Validate and operate</div>
+            <div class="text-gray-500 text-xs">Login works; first cluster deploy proves readiness</div>
           </div>
           <div class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center step-check">
             <i class="fas fa-check text-xs text-transparent"></i>
@@ -1486,7 +1487,7 @@
         </div>
       </div>
       <div class="mt-5 bg-gray-800/50 p-3 rounded-lg text-emerald-300 text-xs">
-        <i class="fas fa-info-circle mr-1"></i> Customer deployment is Helm-based; maintainer CI publishes versioned release images.
+        <i class="fas fa-info-circle mr-1"></i> Customers only receive released images and a Helm runbook; Infragate source and release automation stay private.
       </div>
     </div>
   </div>
@@ -1712,7 +1713,7 @@
       </div>
       <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Deploy, scale, Kubernetes upgrade, and destroy with live Terraform logs</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user overrides, templates, audit log, and OCI config sync</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user overrides, templates, destroy approvals, Activity inbox, audit log, and OCI config sync</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Shape-aware Kubernetes compatibility filtering to prevent invalid deploy combinations</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>FinOps visibility: live estimates, cluster-level cost cards, and admin total spend</span></li>
       </ul>
