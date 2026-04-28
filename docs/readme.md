@@ -133,7 +133,7 @@ Destroy is permanent and cannot be undone.
 
 ### Activity
 
-The user nav includes an **Activity** inbox with an unread badge. It persists important events across refreshes and sessions; today it records destroy-request approvals and denials, and it is ready for future TTL, deploy, scale, upgrade, and error events.
+The user nav includes an **Activity** inbox with an unread badge. It persists important events across refreshes and sessions; today it records destroy-request approvals/denials and TTL expiry warnings at 24h, 4h, and 1h remaining. Deploy, scale, upgrade, and error events can reuse the same inbox later.
 
 ### Cluster detail
 
@@ -437,6 +437,11 @@ For integration, deployment, stack architecture, and API reference see customer 
 For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
+
+
+
+
 
 
 
