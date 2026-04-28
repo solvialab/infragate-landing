@@ -105,7 +105,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events emit inbox rows immediately; TTL warnings emit at 24h, 4h, and 1h remaining. Lifecycle completion events can reuse the same notification table later.
 - **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; compartments are retained by design, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
-- **Kubeconfig download** — available on the detail page once the cluster is running; uses OCI CLI exec plugin
+- **Kubeconfig download** — universal kubeconfig with embedded per-user ServiceAccount token; no OCI CLI or local OCI config required. Explicit OCI-exec fallback remains available via `/kubeconfig-oci`.
 - **SSH key download** — Terraform-generated private key available on the detail page
 
 ---
@@ -236,5 +236,6 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 ---
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
 
 
