@@ -102,7 +102,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **Status tracking** — real-time status across all views: provisioning, scaling, upgrading, destroying, running, error, destroyed
 - **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. Detail page shows full expiry timestamp and remaining time
 - **Destroy protection + approval queue** — protected clusters show a red "Protected" badge on dashboard cards, the admin All Clusters table, and the detail page. Non-admin users clicking "Destroy" open a "Request destroy" modal (optional reason) which creates a pending approval ticket. The admin nav shows a live-count "Requests (N)" badge, refreshed every 5s. On the admin Requests page, admins approve, review the destroy plan, then confirm force-destroy, or deny with a note — the user's cluster card then displays a "Destroy pending" (amber) or "Destroy denied" (red, note in tooltip) pill. At most one pending request per cluster. Every submit/approve/deny is audit-logged. Admins can still force-destroy directly via `?force=true`.
-- **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events emit inbox rows immediately; TTL warnings and lifecycle completion events can reuse the same notification table.
+- **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events emit inbox rows immediately; TTL warnings emit at 24h, 4h, and 1h remaining. Lifecycle completion events can reuse the same notification table later.
 - **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; compartments are retained by design, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
 - **Kubeconfig download** — available on the detail page once the cluster is running; uses OCI CLI exec plugin
@@ -236,4 +236,5 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 ---
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
 
