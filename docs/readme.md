@@ -294,7 +294,7 @@ The deploy form always reflects the user's current effective limits. If a user h
 
 ### Kubeconfig
 
-Available on the cluster detail page once the cluster is running. The kubeconfig uses the OCI CLI exec plugin (`oci ce cluster generate-token`) — users need the [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm) installed locally.
+Available on the cluster detail page once the cluster is running. The default download is a universal kubeconfig with an embedded per-user ServiceAccount token, so users only need `kubectl` — no OCI CLI, local OCI config, or plugins. The explicit `/kubeconfig-oci` endpoint remains available for power users who prefer OCI CLI exec auth.
 
 ```bash
 export KUBECONFIG=~/oke-myname-cluster-kubeconfig.yaml
@@ -437,6 +437,7 @@ For integration, deployment, stack architecture, and API reference see customer 
 For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
+
 
 
 
