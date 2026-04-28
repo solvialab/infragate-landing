@@ -17,6 +17,7 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 - **CIDR pool management** — admins pre-populate a pool of /24 ranges; each cluster allocates one on deploy and releases it on destroy
 - **Multi-pool support** — configure 1–N node pools per cluster, each with independent node count, OCPU, RAM, and storage sizing
 - **Shape sync from OCI** - Admin Configuration includes **Sync from OCI** for VM shapes, pulling OKE-compatible shapes for the current region/tenancy and merging them into `allowed_shapes` while preserving existing labels/toggles
+- **K8s version sync from OCI** - Admin Configuration can refresh available OKE versions for the configured region so deploy options and upgrade recommendation pills stay aligned with newly published patch versions
 - **Sync fallback behavior** - if OCI shape sync is unavailable (credentials/policy/network), existing `allowed_shapes` remain unchanged and admins can continue with manual shape curation from `oci ce node-pool-options get --node-pool-option-id all`
 - **Shape-aware K8s picker** - deploy form Kubernetes options are filtered by the selected VM shape and region, and only include admin-enabled versions with OKE node-image compatibility for that shape. If compatibility lookup fails, the picker is fail-closed (no permissive fallback list), preventing invalid shape/version combinations before apply
 - **Node image selection** - admins configure allowed OCI compute images; users select an image on the deploy form or leave it as auto-select (latest OKE-compatible image). Templates can lock a specific image. Recommended onboarding flow: sync shapes from OCI first, then curate images from `oci ce node-pool-options get --node-pool-option-id all`
@@ -102,7 +103,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **Status tracking** — real-time status across all views: provisioning, scaling, upgrading, destroying, running, error, destroyed
 - **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. Detail page shows full expiry timestamp and remaining time
 - **Destroy protection + approval queue** — protected clusters show a red "Protected" badge on dashboard cards, the admin All Clusters table, and the detail page. Non-admin users clicking "Destroy" open a "Request destroy" modal (optional reason) which creates a pending approval ticket. The admin nav shows a live-count "Requests (N)" badge, refreshed every 5s. On the admin Requests page, admins approve, review the destroy plan, then confirm force-destroy, or deny with a note — the user's cluster card then displays a "Destroy pending" (amber) or "Destroy denied" (red, note in tooltip) pill. At most one pending request per cluster. Every submit/approve/deny is audit-logged. Admins can still force-destroy directly via `?force=true`.
-- **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events emit inbox rows immediately; TTL warnings emit at 24h, 4h, and 1h remaining. Lifecycle completion events can reuse the same notification table later.
+- **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events, limit request submit/review events, TTL warnings, deploy/scale/upgrade/destroy lifecycle events, and admin-driven account limit changes emit inbox rows.
 - **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; compartments are retained by design, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
 - **Kubeconfig download** — universal kubeconfig with embedded per-user ServiceAccount token; no OCI CLI or local OCI config required. Explicit OCI-exec fallback remains available via `/kubeconfig-oci`.
@@ -145,13 +146,13 @@ Six dedicated admin pages accessible to users with the `admin` role:
 ### Users & Limits
 - All users with cluster count, limit, and per-user override badges
 - Edit Limits modal: set per-user overrides for any combination of limits and tier
-- Reset to global defaults with one click
+- Reset to global defaults with one click; direct edits and resets notify the affected user in Activity
 
 ### Configuration
 - Platform-wide settings: region, compartment, cluster tier, state bucket, namespace
 - CIDR pool: add/remove /24 ranges with allocation status
 - VM shapes: sync from OCI, then optionally add custom shapes with display labels
-- K8s versions: manage available versions (deploy form shows only versions compatible with the currently selected shape/region)
+- K8s versions: sync from OCI and manage available versions (deploy form shows only versions compatible with the currently selected shape/region; upgrade recommendations use the latest enabled version)
 - Node images: add OCI compute images with display labels, enable/disable, auto-select fallback when no images configured
 - Global resource limits: cluster limit, pool max, node max, OCPU, RAM, storage
 - All changes take effect immediately — no restart or redeployment needed
