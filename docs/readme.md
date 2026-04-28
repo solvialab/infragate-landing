@@ -133,7 +133,7 @@ Destroy is permanent and cannot be undone.
 
 ### Activity
 
-The user nav includes an **Activity** inbox with an unread badge. It persists important events across refreshes and sessions; today it records destroy-request approvals/denials and TTL expiry warnings at 24h, 4h, and 1h remaining. Deploy, scale, upgrade, and error events can reuse the same inbox later.
+The user nav includes an **Activity** inbox with an unread badge. It persists important events across refreshes and sessions; today it records destroy-request approvals/denials, limit request submissions and reviews, TTL expiry warnings at 24h, 4h, and 1h remaining, deploy/scale/upgrade/destroy start and completion events, and admin-driven account limit changes.
 
 ### Cluster detail
 
@@ -168,6 +168,7 @@ Lists every user who has signed into Infragate. For each user, admins can:
 - View current cluster count and active limit
 - View resolved effective limits (per-user override if set, otherwise global default)
 - Click **Edit Limits** to set per-user overrides for any combination of: cluster limit, pool max, node max, OCPU, RAM, storage, and cluster tier
+- Reset a user's overrides back to global defaults; direct admin limit edits and resets create user Activity notifications
 - Reset all overrides at once to revert the user to global platform defaults
 
 Limit changes take effect on the user's next page load or login — no restart required.
@@ -195,6 +196,8 @@ Platform-wide settings manageable at runtime — no redeployment needed:
 > Use the returned `shapes` and `sources` lists as the source of truth for VM shapes and node images.
 >
 > If **Sync from OCI** is unavailable, Infragate keeps existing shape config unchanged and you can continue with manual curation from the CLI output above. Sync uses the API pod OCI service account credentials/policies (not the browser/user profile).
+>
+> K8s version freshness: OCI can publish new OKE patch versions after Infragate is deployed. In **Admin -> Configuration -> K8s versions**, use **Refresh from OCI** periodically (recommended monthly, and before template reviews or upgrade waves), then enable the versions users may deploy. Upgrade recommendation pills use the latest enabled version, so stale config can hide available upgrades.
 >
 > Deploy form behavior: Kubernetes versions are filtered by the currently selected VM shape and region. Users only see versions that are both OCI-compatible for that shape (based on OKE node image availability) and enabled in Admin Configuration. If compatibility lookup is unavailable, the K8s list is not shown (fail-closed) and deploy is blocked until validation succeeds. If a version is missing, either enable it in Admin Configuration or choose a shape that supports it.
 
@@ -437,12 +440,6 @@ For integration, deployment, stack architecture, and API reference see customer 
 For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
-
-
-
-
-
-
 
 
 
