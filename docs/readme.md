@@ -127,9 +127,13 @@ Kubernetes version changes are handled via a separate **Upgrade** action.
 
 Destroy is permanent and cannot be undone.
 
-> **Destroy protection:** Clusters created from a template with destroy protection enabled cannot be directly destroyed by the owning user. Clicking Destroy on a protected cluster opens a "Request destroy" modal that submits an approval ticket instead. Admins see pending requests in a **Requests** queue in the admin nav (with a live count badge that polls every 5s) where they can Approve (server immediately runs force-destroy) or Deny with a note that surfaces back on the user's cluster card. Admins can still force-destroy directly via `?force=true` to bypass the queue — useful for incident response.
+> **Destroy protection:** Clusters created from a template with destroy protection enabled cannot be directly destroyed by the owning user. Clicking Destroy on a protected cluster opens a "Request destroy" modal that submits an approval ticket instead. Admins see pending requests in a **Requests** queue in the admin nav (with a live count badge that polls every 5s) where they can Approve, review the destroy plan, then confirm force-destroy, or Deny with a note that surfaces back on the user's cluster card. Admins can still force-destroy directly via `?force=true` to bypass the queue — useful for incident response.
 >
 > **Destroy behavior note:** Cluster compartments are intentionally **not auto-deleted** (to avoid breaking shared/multi-cluster setups). In Object Storage, only the destroyed cluster's `.tfstate` object is removed; the user-level prefix/folder is kept for other clusters.
+
+### Activity
+
+The user nav includes an **Activity** inbox with an unread badge. It persists important events across refreshes and sessions; today it records destroy-request approvals and denials, and it is ready for future TTL, deploy, scale, upgrade, and error events.
 
 ### Cluster detail
 
@@ -206,7 +210,7 @@ Dedicated admin page for creating and managing cluster templates — pre-configu
 | Node pools | Pre-defined pool layout — name, node count, OCPU, RAM, storage per pool |
 | Tier default | Suggested cluster tier — Basic or Enhanced (suggestion only, not enforced) |
 | TTL | Optional time-to-live in hours — when reached, Infragate automatically starts cluster destroy/cleanup |
-| Destroy protection | When enabled, the "Destroy" button on the user's cluster opens a "Request destroy" modal instead. Requests land in Admin → Requests (with a live count badge in the nav) where an admin approves (auto-runs force-destroy) or denies with a note |
+| Destroy protection | When enabled, the "Destroy" button on the user's cluster opens a "Request destroy" modal instead. Requests land in Admin → Requests (with a live count badge in the nav) where an admin approves, reviews the destroy plan, then confirms force-destroy, or denies with a note |
 | Required role | Keycloak realm role — only users with this role can see and use the template (leave empty for all users) |
 | Sort order | Controls display position in the deploy form (lower numbers appear first) |
 
@@ -223,10 +227,10 @@ Templates can be created, edited, enabled/disabled, and permanently deleted. Dis
 Approval queue for user-submitted destroy requests on protection-enabled clusters. The admin nav shows a live `Requests (N)` count badge that refreshes every 5 seconds (hidden when zero pending). Filter by Pending / Approved / Denied / All. Each pending row has a **Review** action that opens a modal where the admin can:
 
 - Add an optional admin note
-- Click **Approve & destroy** — server immediately runs force-destroy and flips the cluster to `destroying`. Audit-logged as `destroy-request:approve`.
+- Click **Approve & review plan** — the normal destroy plan opens. After the admin confirms the plan, the request is marked `approved` and `force=true` destroy starts. Audit-logged as `destroy-request:approve`.
 - Click **Deny** — the note is surfaced on the user's cluster card as a red "Destroy denied" pill (with the note in the tooltip). Audit-logged as `destroy-request:deny`.
 
-Approval is row-locked to prevent two admins double-scheduling. Bypass path: admins can still force-destroy any protected cluster directly via `?force=true` from the All Clusters table — useful for incident response.
+Approval is row-locked to prevent two admins double-approving. Bypass path: admins can still force-destroy any protected cluster directly via `?force=true` from the All Clusters table — useful for incident response.
 
 ### Audit Log
 
@@ -433,8 +437,6 @@ For integration, deployment, stack architecture, and API reference see customer 
 For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
-
-
 
 
 
