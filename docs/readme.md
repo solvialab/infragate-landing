@@ -385,7 +385,7 @@ pip install -r requirements.txt
 pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 ```
 
-133 automated tests covering user provisioning, limit resolution and limit requests, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), lifecycle notifications, and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
+138 automated tests covering user provisioning, limit resolution and limit requests, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), lifecycle notifications, and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
 
 ### CI pipeline (maintainer-owned)
 
@@ -395,7 +395,7 @@ Infragate includes reference CI/CD pipelines for maintainers on GitHub and GitLa
 
 | Job | What it validates |
 |---|---|
-| `test` | 133 Python unit tests with coverage |
+| `test` | 138 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `docker-build-push` | Build + push images to GHCR (`dev-latest` on DEV, `latest` on main) |
 | `terraform-validate` | Core module and runner template |
@@ -404,7 +404,7 @@ Infragate includes reference CI/CD pipelines for maintainers on GitHub and GitLa
 
 | Job | What it validates |
 |---|---|
-| `test` | 133 Python unit tests with coverage |
+| `test` | 138 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `build-api` / `build-frontend` | Build + push images to GitLab Container Registry |
 | `terraform-validate` | Core module and runner template |
