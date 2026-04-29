@@ -10,6 +10,7 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 - **Live Terraform streaming** — `terraform init`, `plan`, and `apply` output streams in real time to the browser during deploy, scale, upgrade, and destroy operations
 - **Template-based or custom** — choose from admin-defined cluster templates or configure everything manually
 - **Automatic resource creation** — each cluster gets its own compartment, VCN, subnet, internet gateway, route table, security list, and node pools
+- **VPN-first Kubernetes API access** — admins can enable public OKE API endpoints restricted to runner/VPN/corporate CIDRs. Infragate creates a dedicated public API endpoint subnet and TCP/6443 allowlist rules, avoiding DRG cost and LPG scaling limits while keeping access unavailable from the open internet.
 - **Bring your own infrastructure** — optionally supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks. BYO resources are referenced read-only and never modified by Terraform; Infragate-created VCN/subnet/security list resources are fully managed and manual OCI Console edits to them will be overwritten on the next apply. When using existing VCN/subnet overrides, route tables are not managed by Infragate, so equivalent private-subnet egress must already exist for OKE workers: route `0.0.0.0/0` to NAT Gateway (or equivalent corporate egress path) and route `all-<region>-services-in-oracle-services-network` to Service Gateway. This is routing, not an open ingress security rule.
 - **BYON scope behavior** - `Existing Compartment OCID` alone reuses only the compartment. Infragate does not auto-discover existing VCN/subnet objects inside that compartment; leave VCN/subnet blank only when you want Infragate to create a fresh network stack there.
 - **Advanced override guardrails** - Advanced OCID fields validate resource-type prefixes and provide OCI-backed autocomplete for compartments, VCNs, and subnets to reduce typo/copy-paste errors before deploy.
@@ -106,7 +107,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events, limit request submit/review events, TTL warnings, deploy/scale/upgrade/destroy lifecycle events, and admin-driven account limit changes emit inbox rows.
 - **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; compartments are retained by design, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
-- **Kubeconfig download** — universal kubeconfig with embedded per-user ServiceAccount token; no OCI CLI or local OCI config required. Explicit OCI-exec fallback remains available via `/kubeconfig-oci`.
+- **Kubeconfig download** — universal kubeconfig with embedded per-user ServiceAccount token; no OCI CLI or local OCI config required. Infragate and the user must still reach the OKE API endpoint; the supported no-DRG/no-LPG path is the restricted public API endpoint allowlist. Explicit OCI-exec fallback remains available via `/kubeconfig-oci`.
 - **SSH key download** — Terraform-generated private key available on the detail page
 
 ---
@@ -220,6 +221,7 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 - **Any Kubernetes** — the Helm chart also works on any K8s cluster that has an ingress controller and a default StorageClass; use `values.yaml` as a starting point and override for your environment
 - **Image delivery with any container registry** — release images can be consumed from GHCR or mirrored into your private registry (OCIR, GitLab CR, Harbor, Docker Hub, etc.). Helm chart supports `imagePullSecrets` for private registries.
 - **OCI Marketplace (planned)** — one-click "Launch Stack" deployment from OCI Console is planned for a future release
+- **In-cluster access agent (planned)** — outbound agent tunnel for private-by-default environments that do not allow public OKE API endpoints, even CIDR-restricted ones. This removes DRG/LPG pressure after bootstrap and gives Rancher-like kubeconfig behavior.
 
 ---
 
@@ -238,4 +240,3 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 ---
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
-
