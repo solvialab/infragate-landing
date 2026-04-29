@@ -194,7 +194,7 @@ Six dedicated admin pages accessible to users with the `admin` role:
 
 ## Testing & CI
 
-- **133 automated tests** — business logic, validation rules, API contracts, access control, lifecycle notifications, and cost estimation
+- **138 automated tests** — business logic, validation rules, API contracts, access control, lifecycle notifications, and cost estimation
 - **Zero external dependencies** — in-memory SQLite with mocked auth; no database server, IdP, or OCI access needed to run tests
 - **Coverage areas** — user provisioning, limit resolution, admin config CRUD, cluster templates, cost engine (basic/enhanced tiers, multi-pool, custom pricing)
 - **Reference CI pipeline (maintainer-owned)** — GitHub Actions and GitLab CI run validation and publish images for maintainer release flow; customer operators consume published image tags/digests
