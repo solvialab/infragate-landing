@@ -127,7 +127,7 @@ Kubernetes version changes are handled via a separate **Upgrade** action.
 
 Destroy is permanent and cannot be undone.
 
-> **Destroy protection:** Clusters created from a template with destroy protection enabled cannot be directly destroyed by the owning user. Clicking Destroy on a protected cluster opens a "Request destroy" modal that submits an approval ticket instead. Admins see pending requests in a **Requests** queue in the admin nav (with a live count badge that polls every 5s) where they can Approve, review the destroy plan, then confirm force-destroy, or Deny with a note that surfaces back on the user's cluster card. Admins can still force-destroy directly via `?force=true` to bypass the queue — useful for incident response.
+> **Requests workflow:** The admin **Requests** area handles both protected-cluster destroy approvals and per-user limit-increase requests. Users submit a reason instead of destroying directly or when they need higher limits; admins approve, adjust, or deny with a note. Destroy approval still opens the Terraform destroy plan before force-destroy. Limit approval writes granted values into the user's per-user overrides. Results appear in the user's Activity inbox.
 >
 > **Destroy behavior note:** Cluster compartments are intentionally **not auto-deleted** (to avoid breaking shared/multi-cluster setups). In Object Storage, only the destroyed cluster's `.tfstate` object is removed; the user-level prefix/folder is kept for other clusters.
 
@@ -227,17 +227,20 @@ Templates can be created, edited, enabled/disabled, and permanently deleted. Dis
 
 ### Requests
 
-Approval queue for user-submitted destroy requests on protection-enabled clusters. The admin nav shows a live `Requests (N)` count badge that refreshes every 5 seconds (hidden when zero pending). Filter by Pending / Approved / Denied / All. Each pending row has a **Review** action that opens a modal where the admin can:
+Approval queue for user-submitted destroy requests on protection-enabled clusters and limit-increase requests for per-user overrides. The admin nav shows live request count badges that refresh every 5 seconds (hidden when zero pending). Filter by Pending / Approved / Denied / All. Each pending row has a **Review** action.
 
+For destroy requests, the review modal lets the admin:
 - Add an optional admin note
 - Click **Approve & review plan** — the normal destroy plan opens. After the admin confirms the plan, the request is marked `approved` and `force=true` destroy starts. Audit-logged as `destroy-request:approve`.
 - Click **Deny** — the note is surfaced on the user's cluster card as a red "Destroy denied" pill (with the note in the tooltip). Audit-logged as `destroy-request:deny`.
+
+For limit requests, the review modal lets the admin grant the requested values or adjust them before approval. Approved values are written into the user's per-user overrides and the user receives an Activity notification. Denials can include an admin note and are audit-logged as `limit-request:deny`.
 
 Approval is row-locked to prevent two admins double-approving. Bypass path: admins can still force-destroy any protected cluster directly via `?force=true` from the All Clusters table — useful for incident response.
 
 ### Audit Log
 
-Every provisioning, scaling, upgrade, and destroy operation is recorded with user identity, operation type, cluster name, outcome, and duration — including `destroy-request:submit`, `destroy-request:approve`, and `destroy-request:deny` events from the Requests queue. The log is append-only and filterable by user, operation, and date range.
+Every provisioning, scaling, upgrade, and destroy operation is recorded with user identity, operation type, cluster name, outcome, and duration — including `destroy-request:*` and `limit-request:*` events from the Requests queue. The log is append-only and filterable by user, operation, and date range.
 
 ---
 
@@ -370,7 +373,7 @@ pip install -r requirements.txt
 pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 ```
 
-107 automated tests covering user provisioning, limit resolution, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
+133 automated tests covering user provisioning, limit resolution and limit requests, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), lifecycle notifications, and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
 
 ### CI pipeline (maintainer-owned)
 
@@ -380,7 +383,7 @@ Infragate includes reference CI/CD pipelines for maintainers on GitHub and GitLa
 
 | Job | What it validates |
 |---|---|
-| `test` | 107 Python unit tests with coverage |
+| `test` | 133 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `docker-build-push` | Build + push images to GHCR (`dev-latest` on DEV, `latest` on main) |
 | `terraform-validate` | Core module and runner template |
@@ -389,7 +392,7 @@ Infragate includes reference CI/CD pipelines for maintainers on GitHub and GitLa
 
 | Job | What it validates |
 |---|---|
-| `test` | 107 Python unit tests with coverage |
+| `test` | 133 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `build-api` / `build-frontend` | Build + push images to GitLab Container Registry |
 | `terraform-validate` | Core module and runner template |
@@ -440,6 +443,3 @@ For integration, deployment, stack architecture, and API reference see customer 
 For end-to-end validation procedures and testing matrix, see docs available during evaluation/POC.
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
-
-
-
