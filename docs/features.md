@@ -30,7 +30,7 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 - **Pre-configured profiles** — admins create templates that encode K8s version, VM shape, node image, pool layout, tier, TTL, and destroy protection
 - **Deploy form pre-fill + lock** — selecting a template pre-fills and locks resource fields (pools, nodes, CPU, RAM, storage, pool names, and add/remove pool controls). Users can still set cluster name, CIDR, compartment, and advanced overrides. Select "Custom" to unlock all fields and configure manually with limit enforcement
 - **Template values can exceed user limits** — templates represent admin-pre-approved configurations, so template-defined values are not clamped to the user's personal limits. The lock prevents users from editing these values
-- **Destroy protection with approval workflow** — template policy that blocks users from directly destroying a cluster. Instead, users submit a destroy request (optional reason); admins get a live-count badge on their nav and a dedicated Requests queue page where they approve, review the destroy plan, then confirm force-destroy, or deny with a note shown back to the user. Admins can still force-destroy directly via `?force=true`
+- **Requests workflow** — protected-cluster destroy approvals and per-user limit-increase requests share a dedicated admin Requests queue. Users submit a reason, admins approve/deny with an optional note, and outcomes are visible in Activity. Destroy approvals still require review of the Terraform destroy plan before force-destroy; limit approvals apply granted overrides to the user's account
 - **Time-to-live (TTL)** — optional expiry in hours, enforced at deploy time; when TTL is reached, Infragate automatically triggers destroy/cleanup. Also available on custom deploys without a template
 - **Live cost preview** — add/edit modal shows estimated monthly and hourly cost that updates as you change pools, shape, or tier
 - **Template shape/K8s guardrail** — template modal uses the same shape-aware compatibility filtering as deploy; save/update re-validates selected shape+K8s and blocks incompatible combinations
@@ -168,12 +168,13 @@ Six dedicated admin pages accessible to users with the `admin` role:
 - Filters: Pending / Approved / Denied / All
 - Columns: requested-at (relative time), cluster, user, reason, status, reviewer, actions
 - **Review** action opens a modal: optional admin note, then **Approve** opens the destroy plan for a second confirmation, or **Deny** (note surfaces on user's cluster card as "Destroy denied")
+- Limit-request review lets admins grant requested or adjusted values for cluster count, pools, nodes, OCPU, RAM, and storage; approve/deny results notify the user in Activity
 - Row-locked approval prevents double-approval when two admins click simultaneously
 - Every submit / approve / deny is audit-logged
 - Bypass path: admins can still force-destroy directly via `?force=true` for incident response
 
 ### Audit Log
-- Append-only record of every deploy, scale, upgrade, and destroy operation, plus `destroy-request:submit` / `destroy-request:approve` / `destroy-request:deny` events
+- Append-only record of every deploy, scale, upgrade, and destroy operation, plus `destroy-request:*` and `limit-request:*` events
 - Columns: timestamp, user, operation, cluster name, status, duration
 - Filterable by user, operation type, and status
 
@@ -192,7 +193,7 @@ Six dedicated admin pages accessible to users with the `admin` role:
 
 ## Testing & CI
 
-- **107 automated tests** — business logic, validation rules, API contracts, access control, and cost estimation
+- **133 automated tests** — business logic, validation rules, API contracts, access control, lifecycle notifications, and cost estimation
 - **Zero external dependencies** — in-memory SQLite with mocked auth; no database server, IdP, or OCI access needed to run tests
 - **Coverage areas** — user provisioning, limit resolution, admin config CRUD, cluster templates, cost engine (basic/enhanced tiers, multi-pool, custom pricing)
 - **Reference CI pipeline (maintainer-owned)** — GitHub Actions and GitLab CI run validation and publish images for maintainer release flow; customer operators consume published image tags/digests
@@ -237,6 +238,4 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 ---
 
 Built by [Solvia Lab s.r.o.](https://solvialab.tech)
-
-
 
