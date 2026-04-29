@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Infragate | IDP for OCI</title>
-  <meta name="description" content="Infragate empowers engineering teams to provision production-grade Oracle Kubernetes Engine clusters with one click. Self-service, FinOps, and full lifecycle management.">
+  <meta name="description" content="Infragate is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine lifecycle management: self-service provisioning, scaling, upgrades, access, FinOps, approvals, and governance in your tenancy.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -1156,7 +1156,7 @@
           Internal Developer Platform for <span class="shimmer-text">OKE on Oracle Cloud</span>
         </h1>
         <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="transition-delay: 0.15s;">
-          Infragate is an OCI-native Internal Developer Platform for OKE lifecycle management - provisioning, scaling, cost governance, and access control through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
+          Infragate is an OCI-native Internal Developer Platform for OKE lifecycle management - provisioning, scaling, Kubernetes upgrades, cost governance, access, approvals, and Activity tracking through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
         </p>
         <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
           <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-lg cursor-pointer cta-btn">Book a discovery call</button>
@@ -1165,7 +1165,7 @@
         <div class="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500 dark:text-gray-400 reveal from-left stagger-children justify-center lg:justify-start" style="transition-delay: 0.3s;">
           <span><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mr-1"></i> Live Terraform streaming</span>
           <span><i class="fas fa-chart-line text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Real-time cost preview</span>
-          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> RBAC + destroy protection</span>
+          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> RBAC + approvals</span>
           <span><i class="fas fa-database text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> 100% in-tenancy</span>
         </div>
       </div>
@@ -1210,7 +1210,7 @@
   <div class="text-center max-w-2xl mx-auto mb-10 reveal">
     <span class="section-pill">Platform capabilities</span>
     <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4 text-gray-900 dark:text-white">Complete cluster lifecycle<br>at your fingertips</h2>
-    <p class="text-gray-600 dark:text-gray-400">From one-click provisioning to multi-pool scaling, TTL expiry, and cost governance - Infragate brings enterprise control to OKE.</p>
+    <p class="text-gray-600 dark:text-gray-400">From one-click provisioning to multi-pool scaling, Kubernetes upgrades, TTL expiry, limit requests, Activity notifications, and cost governance - Infragate brings enterprise control to OKE.</p>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 stagger-children text-center sm:text-left">
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
@@ -1221,7 +1221,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-layer-group text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Scaling + K8s upgrades</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Add or remove node pools, adjust OCPU, RAM, and storage per pool from the UI. Dedicated Kubernetes upgrade flow supports safer version moves with guided worker refresh.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Add or remove node pools, scale to zero, adjust OCPU, RAM, and storage per pool from the UI. Dedicated Kubernetes upgrade flow filters OCI-compatible versions and renders Basic-tier worker refresh steps from live pool counts.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-chart-simple text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -1230,8 +1230,8 @@
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
-      <h3 class="text-xl font-bold text-gray-900 dark:text-white">TTL, protection &amp; Activity</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">TTL countdown badges and Activity warnings flag expiry risk, protected destroys require admin review plus plan confirmation, and approve/deny messages stay visible with unread tracking.</p>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">TTL, requests &amp; Activity</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">TTL countdown badges and Activity warnings flag expiry risk. Protected destroys and limit-increase requests flow through admin review, while approve/deny and lifecycle events stay visible in the user Activity tab with unread tracking.</p>
     </div>
 
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
@@ -1242,7 +1242,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-key text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Kubeconfig + SSH keys</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Download kubectl-ready kubeconfig without OCI CLI or local OCI config, plus Terraform-generated SSH private key directly from the cluster detail page.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Download kubectl-ready kubeconfig without OCI CLI or local OCI config. Admins can expose the OKE API only to runner and VPN/corporate CIDRs; future agent mode removes direct endpoint access.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-terminal text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -1252,12 +1252,12 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Bring your own infra</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab. Managed networks support a dedicated public API endpoint subnet restricted to VPN/runner CIDRs; BYO resources stay read-only.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Resource limits</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Two-tier limit system: global defaults + per-user overrides. Covers clusters, pools, nodes, OCPU, RAM, storage, and tier, with shape-aware Kubernetes compatibility checks.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Two-tier limit system: global defaults + per-user overrides for clusters, pools, nodes, OCPU, RAM, storage, and tier. Users can submit higher-limit requests from deploy/scale; admins approve granted values from Requests.</p>
     </div>
   </div>
 </section>
@@ -1270,7 +1270,7 @@
       <div>
         <span class="section-pill reveal mx-auto md:mx-0">Cluster templates &amp; RBAC</span>
         <h2 class="text-3xl md:text-4xl font-bold mt-5 mb-5 text-gray-900 dark:text-white reveal text-center md:text-left" style="transition-delay:0.1s">Golden paths with role-based gating</h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-6 reveal text-center md:text-left" style="transition-delay:0.2s">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields - users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations.</p>
+        <p class="text-gray-600 dark:text-gray-400 mb-6 reveal text-center md:text-left" style="transition-delay:0.2s">Admins define pre-approved templates (K8s version, shape, image, pools, TTL, destroy protection, and role access). Assign required Keycloak or Azure AD roles so users only see templates they're authorised for. Selecting a template pre-fills and locks resource fields - users can still set cluster name, CIDR, and advanced overrides. Template values can exceed user limits since they represent admin-approved configurations, and template shape/K8s choices are compatibility-checked before save.</p>
         <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm reveal scale-up mx-auto md:mx-0 max-w-lg" style="transition-delay:0.3s">
           <div class="flex flex-wrap justify-between items-center gap-2">
             <span class="font-bold text-gray-800 dark:text-white">Template: PROD - HA</span>
@@ -1362,7 +1362,7 @@
     <div class="text-center mb-10 reveal">
       <span class="section-pill">Admin &amp; governance</span>
       <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white"><span data-count-to="6" data-count-duration="1000">6</span> dedicated admin panels</h2>
-      <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, destroy-request approvals, and audit logs - all changes take effect immediately.</p>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, Requests, Activity-backed approvals, and audit logs - all changes take effect immediately.</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 stagger-children text-center sm:text-left mx-auto">
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
@@ -1373,12 +1373,12 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-users text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Users &amp; Limits</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Per-user overrides for any combination of limits and tier. Reset to global defaults with one click. Override badges visible.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Per-user overrides for any combination of limits and tier. Users can request higher limits; admins approve, adjust, deny, or reset to global defaults with Activity notifications.</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-sliders text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Configuration</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">CIDR pool, VM shapes, K8s versions, node images (with enable/disable), global resource limits. No restart needed.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">CIDR pool, OCI-synced VM shapes, refreshed K8s versions, node images, global resource limits, and fallback manual curation. No restart needed.</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-layer-group text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
@@ -1388,7 +1388,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-inbox text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Requests</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Approval queue for user-submitted destroy requests on protected clusters. Live count badge in nav; approval opens the destroy plan before final force-destroy confirmation, or admins can deny with a note.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Shared approval queue for protected-cluster destroy requests and higher-limit requests. Live nav badges; destroy approval opens the Terraform plan before force-destroy, while limit approval writes granted overrides. Denials include user-visible notes.</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-clock-rotate-left text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
@@ -1588,7 +1588,7 @@
             <td class="py-5 text-center text-gray-500 dark:text-gray-400">Custom policy and quota workflows</td>
             <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available via platform policy framework</td>
             <td class="py-5 text-center text-gray-500 dark:text-gray-400">Available via platform policy framework</td>
-            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Built-in global and per-user limits</span></span></td>
+            <td class="py-5 text-center"><span class="compare-positive"><i class="fas fa-check-circle"></i><span>Built-in limits + request workflow</span></span></td>
           </tr>
           <tr>
             <td class="py-5 font-medium">Day-2 ops effort (scale, upgrade, destroy)</td>
@@ -1646,7 +1646,7 @@
             <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">DIY</span><span class="text-right text-gray-600 dark:text-gray-300">Custom policy workflows</span></div>
             <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Rafay</span><span class="text-right text-gray-600 dark:text-gray-300">Platform policy framework</span></div>
             <div class="flex justify-between items-start gap-3"><span class="text-gray-500 dark:text-gray-400 shrink-0">Quali</span><span class="text-right text-gray-600 dark:text-gray-300">Platform policy framework</span></div>
-            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Built-in limits</span></div>
+            <div class="flex justify-between items-start gap-3 pt-2 border-t border-gray-200 dark:border-gray-700"><span class="text-[#355a72] dark:text-[#8fb8cb] font-semibold shrink-0">Infragate</span><span class="text-right font-semibold text-[#355a72] dark:text-[#8fb8cb]">Limits + requests</span></div>
           </div>
         </div>
         <div class="rounded-xl border border-gray-200 dark:border-gray-700 p-4">
@@ -1676,7 +1676,7 @@
       <div class="stat-label">Typical provisioning</div>
     </div>
     <div class="stat-card text-center" data-stat-index="1">
-      <div class="stat-number" data-count-to="107" data-count-suffix="+" data-count-duration="2800">107+</div>
+      <div class="stat-number" data-count-to="133" data-count-suffix="+" data-count-duration="2800">133+</div>
       <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
       <div class="stat-label">Automated tests</div>
     </div>
@@ -1713,8 +1713,9 @@
       </div>
       <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Deploy, scale, Kubernetes upgrade, and destroy with live Terraform logs</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user overrides, templates, destroy approvals, Activity inbox, audit log, and OCI config sync</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Shape-aware Kubernetes compatibility filtering to prevent invalid deploy combinations</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user override requests, templates, destroy approvals, Activity inbox, audit log, and OCI config sync</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Shape-aware Kubernetes compatibility filtering, OCI shape/version sync, and node-image auto-selection to prevent invalid deploy combinations</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>VPN-first access: kubectl-ready kubeconfig plus OKE API endpoint allowlists for runner and corporate/VPN CIDRs</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>FinOps visibility: live estimates, cluster-level cost cards, and admin total spend</span></li>
       </ul>
     </div>
@@ -1726,6 +1727,7 @@
       <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
         <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Gatekeeper platform copilot: continuous, state-aware recommendations powered by OCI Generative AI</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Cost watcher: idle-cluster detection, anomaly alerts, and right-sizing guidance</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>In-cluster access agent for private-by-default environments with no public OKE API endpoint after bootstrap</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Policy guardrails: drift detection, Kubernetes lifecycle risk flags, and weekly compliance digests</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Approval-gated remediation with full audit trail (suggest -> review -> apply)</span></li>
       </ul>
@@ -2603,9 +2605,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
