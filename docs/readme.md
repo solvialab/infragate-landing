@@ -302,6 +302,8 @@ The deploy form always reflects the user's current effective limits. If a user h
 
 Available on the cluster detail page once the cluster is running. The default download is a universal kubeconfig with an embedded per-user ServiceAccount token, so users only need `kubectl` — no OCI CLI, local OCI config, or plugins. The explicit `/kubeconfig-oci` endpoint remains available for power users who prefer OCI CLI exec auth.
 
+> **Network reachability still applies.** The universal kubeconfig solves authentication, not routing. The user's machine and the Infragate runner must be able to reach the OKE Kubernetes API on TCP/6443. The recommended no-DRG/no-LPG model is a public OKE API endpoint restricted to Infragate runner and company VPN/corporate CIDRs. A future in-cluster agent removes the direct endpoint requirement.
+
 ```bash
 export KUBECONFIG=~/oke-myname-cluster-kubeconfig.yaml
 kubectl get nodes
@@ -331,9 +333,19 @@ By default, Infragate creates a full network stack per cluster:
 
 - A **VCN** with a /16 range derived from the cluster's /24 CIDR
 - A **private worker subnet** (/24)
-- An **internet gateway** for egress
-- A **route table** routing `0.0.0.0/0` to the IGW
-- A **security list** with OKE-required ingress/egress rules — worker node ports, API server access, node-to-node communication
+- A **public Kubernetes API endpoint subnet** when public restricted API access is enabled
+- A **public load balancer subnet** for Kubernetes `LoadBalancer` services
+- Internet Gateway, NAT Gateway, Service Gateway, and route tables for public/private paths
+- Security lists with OKE-required ingress/egress rules plus API endpoint TCP/6443 allowlist rules
+
+### Kubernetes API endpoint access
+
+Admin Configuration includes **Kubernetes API Access**:
+
+- **Private endpoint** keeps the OKE API on a private subnet. Infragate and kubectl clients need an existing private route, VPN, or bastion path.
+- **Public endpoint restricted by CIDR allowlist** creates a dedicated public API endpoint subnet and allows TCP/6443 only from configured CIDRs. Add both the Infragate runner egress IP/range and company VPN/corporate egress ranges. `0.0.0.0/0` is rejected.
+
+This is the supported path when DRG is too costly and LPG does not scale past the per-VCN peering limit. Users still need to be on the corporate/VPN network for `kubectl`.
 
 ### Bringing your own network
 
