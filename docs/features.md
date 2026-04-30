@@ -1,6 +1,6 @@
 # Infragate — Features
 
-A complete overview of what Infragate can do as an OCI-native Internal Developer Platform (IDP) for OKE. Detailed deployment and integration runbooks are available during evaluation/POC.
+A complete overview of Infragate as an OCI-native Internal Developer Platform (IDP) for governed OKE lifecycle management: self-service provisioning, BYON networking, access delivery, approvals, Activity history, and FinOps visibility. Detailed deployment and integration runbooks are available during evaluation/POC.
 
 ---
 
@@ -11,7 +11,7 @@ A complete overview of what Infragate can do as an OCI-native Internal Developer
 - **Template-based or custom** — choose from admin-defined cluster templates or configure everything manually
 - **Automatic resource creation** — each cluster gets its own compartment, VCN, subnet, internet gateway, route table, security list, and node pools
 - **VPN-first Kubernetes API access** — admins can enable public OKE API endpoints restricted to runner/VPN/corporate CIDRs. Infragate creates a dedicated public API endpoint subnet and TCP/6443 allowlist rules, avoiding DRG cost and LPG scaling limits while keeping access unavailable from the open internet.
-- **Bring your own infrastructure** — optionally supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks. BYO resources are referenced read-only and never modified by Terraform; Infragate-created VCN/subnet/security list resources are fully managed and manual OCI Console edits to them will be overwritten on the next apply. When using existing VCN/subnet overrides, route tables are not managed by Infragate, so equivalent private-subnet egress must already exist for OKE workers: route `0.0.0.0/0` to NAT Gateway (or equivalent corporate egress path) and route `all-<region>-services-in-oracle-services-network` to Service Gateway. This is routing, not an open ingress security rule.
+- **Bring your own infrastructure** — optionally supply existing VCN, compartment, or subnet OCIDs via the Advanced tab to skip resource creation and wire into existing networks. Supplied BYO resources are referenced read-only and never edited by Terraform; if only an existing VCN is supplied, Infragate may still create cluster subnets/security lists inside it. Infragate-created VCN/subnet/security list resources are fully managed and manual OCI Console edits to them will be overwritten on the next apply. When using existing VCN/subnet overrides, route tables are not managed by Infragate, so equivalent private-subnet egress must already exist for OKE workers: route `0.0.0.0/0` to NAT Gateway (or equivalent corporate egress path) and route `all-<region>-services-in-oracle-services-network` to Service Gateway. This is routing, not an open ingress security rule.
 - **BYON scope behavior** - `Existing Compartment OCID` alone reuses only the compartment. Infragate does not auto-discover existing VCN/subnet objects inside that compartment; leave VCN/subnet blank only when you want Infragate to create a fresh network stack there.
 - **Advanced override guardrails** - Advanced OCID fields validate resource-type prefixes and provide OCI-backed autocomplete for compartments, VCNs, and subnets to reduce typo/copy-paste errors before deploy.
 - **Shared compartment pattern** — for multiple clusters in one compartment, use a dedicated BYO compartment OCID in Advanced for every cluster in that shared domain; avoid reusing an auto-created per-cluster compartment as a shared target.
@@ -105,7 +105,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. Detail page shows full expiry timestamp and remaining time
 - **Destroy protection + approval queue** — protected clusters show a red "Protected" badge on dashboard cards, the admin All Clusters table, and the detail page. Non-admin users clicking "Destroy" open a "Request destroy" modal (optional reason) which creates a pending approval ticket. The admin nav shows a live-count "Requests (N)" badge, refreshed every 5s. On the admin Requests page, admins approve, review the destroy plan, then confirm force-destroy, or deny with a note — the user's cluster card then displays a "Destroy pending" (amber) or "Destroy denied" (red, note in tooltip) pill. At most one pending request per cluster. Every submit/approve/deny is audit-logged. Admins can still force-destroy directly via `?force=true`.
 - **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events, limit request submit/review events, TTL warnings, deploy/scale/upgrade/destroy lifecycle events, and admin-driven account limit changes emit inbox rows.
-- **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; compartments are retained by design, and only the cluster `.tfstate` object is deleted while the user prefix remains
+- **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; Infragate-managed child compartments may be deleted, external compartment overrides are retained, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
 - **Kubeconfig download** — universal kubeconfig with embedded per-user ServiceAccount token; no OCI CLI or local OCI config required. Infragate and the user must still reach the OKE API endpoint; the supported no-DRG/no-LPG path is the restricted public API endpoint allowlist. Explicit OCI-exec fallback remains available via `/kubeconfig-oci`.
 - **SSH key download** — Terraform-generated private key available on the detail page
@@ -114,7 +114,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 
 ## Identity and access
 
-- **Any OIDC provider** — works with Keycloak, Azure Ae, Okta, Google Workspace, or any OIeC-compliant IdP
+- **Any OIDC provider** — works with Keycloak, Azure AD, Okta, Google Workspace, or any OIDC-compliant IdP
 - **No user directory** — Infragate auto-provisions users on first login from the JWT `sub` claim
 - **PKCE authentication** — Authorization Code + PKCE flow; no client secrets stored in the frontend
 - **Role-based access** — `admin` role (from IdP) grants access to the admin panel; custom realm roles can restrict cluster template visibility (e.g. `production`, `staging`); all other users are regular users
@@ -231,7 +231,7 @@ Two first-class deployment paths, each tuned to its target environment. Both use
 
 - **Guided deployment form** — OCI Resource Manager schema with dynamic dropdowns for compartment, VCN, subnet, shapes, images, and existing clusters
 - **Conditional OKE creation** — create a new OKE cluster with VCN, subnets, and security lists, or deploy into an existing cluster
-- **Bring your own identity** — deploy bundled Keycloak or connect to an existing OIDC provider (Keycloak, Azure Ae, Okta, Google Workspace)
+- **Bring your own identity** — deploy bundled Keycloak or connect to an existing OIDC provider (Keycloak, Azure AD, Okta, Google Workspace)
 - **OCI credential validation** — schema validates API key fingerprint format, requires private key PEM, and auto-injects tenancy/user OCID from Resource Manager context
 - **Auto-generated passwords** — database and Keycloak passwords auto-generated when not provided, with retrieval instructions in stack outputs
 - **Ingress-NGINX with OCI LB** — automatically deploys ingress controller with OCI flexible load balancer annotations
