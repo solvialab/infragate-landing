@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Infragate | IDP for OCI</title>
-  <meta name="description" content="Infragate is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine lifecycle management: self-service provisioning, scaling, upgrades, access, FinOps, approvals, and governance in your tenancy.">
+  <meta name="description" content="Infragate is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine: governed self-service provisioning, lifecycle automation, BYON networking, kubeconfig access, FinOps visibility, approvals, Activity history, and admin control inside your tenancy.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -1156,7 +1156,7 @@
           Internal Developer Platform for <span class="shimmer-text">OKE on Oracle Cloud</span>
         </h1>
         <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="transition-delay: 0.15s;">
-          Infragate is an OCI-native Internal Developer Platform for OKE lifecycle management - provisioning, scaling, Kubernetes upgrades, cost governance, access, approvals, and Activity tracking through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
+          Infragate turns OKE into a governed internal platform: self-service provisioning, scaling, Kubernetes upgrades, kubeconfig access, BYON networking, cost visibility, approval workflows, and durable Activity history through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
         </p>
         <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
           <button onclick="openDemoModal()" class="btn-solid-premium px-7 py-3 text-sm font-semibold rounded-lg cursor-pointer cta-btn">Book a discovery call</button>
@@ -1165,7 +1165,7 @@
         <div class="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8 text-xs sm:text-sm text-gray-500 dark:text-gray-400 reveal from-left stagger-children justify-center lg:justify-start" style="transition-delay: 0.3s;">
           <span><i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400 mr-1"></i> Live Terraform streaming</span>
           <span><i class="fas fa-chart-line text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Real-time cost preview</span>
-          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> RBAC + approvals</span>
+          <span><i class="fas fa-shield-alt text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> Governed self-service</span>
           <span><i class="fas fa-database text-[#1C5D7A] dark:text-[#5BB8D8] mr-1"></i> 100% in-tenancy</span>
         </div>
       </div>
@@ -1210,13 +1210,13 @@
   <div class="text-center max-w-2xl mx-auto mb-10 reveal">
     <span class="section-pill">Platform capabilities</span>
     <h2 class="text-3xl md:text-4xl font-bold mt-4 mb-4 text-gray-900 dark:text-white">Complete cluster lifecycle<br>at your fingertips</h2>
-    <p class="text-gray-600 dark:text-gray-400">From one-click provisioning to multi-pool scaling, Kubernetes upgrades, TTL expiry, limit requests, Activity notifications, and cost governance - Infragate brings enterprise control to OKE.</p>
+    <p class="text-gray-600 dark:text-gray-400">Infragate is more than a provisioning UI: it combines OKE lifecycle automation, network ownership boundaries, access delivery, FinOps visibility, approval workflows, and audit-ready Activity history in one in-tenancy platform.</p>
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 stagger-children text-center sm:text-left">
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-mouse-pointer text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">One-click deploy</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Engineers provision fully managed OKE clusters with automatic compartment, VCN, subnet, security list, and node pool creation - no manual steps.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Engineers provision fully managed OKE clusters from admin-approved templates or custom configs with automatic compartment, VCN, subnet, security list, and node pool creation - no manual steps.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-layer-group text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -1230,8 +1230,8 @@
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
-      <h3 class="text-xl font-bold text-gray-900 dark:text-white">TTL, requests &amp; Activity</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">TTL countdown badges and Activity warnings flag expiry risk. Protected destroys and limit-increase requests flow through admin review, while approve/deny and lifecycle events stay visible in the user Activity tab with unread tracking.</p>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Approvals + Activity</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Protected destroys, limit-increase requests, TTL warnings, lifecycle events, and admin limit changes all flow into durable Activity history with unread tracking, so users see what changed and admins keep control.</p>
     </div>
 
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
@@ -1725,7 +1725,7 @@
         <i class="fas fa-map"></i> Roadmap next
       </div>
       <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
-        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Gatekeeper platform copilot: continuous, state-aware recommendations powered by OCI Generative AI</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>AI-assisted troubleshooting advisor: explain Terraform, OCI, OKE, IAM, quota, and networking failures before full Gatekeeper automation</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Cost watcher: idle-cluster detection, anomaly alerts, and right-sizing guidance</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>In-cluster access agent for private-by-default environments with no public OKE API endpoint after bootstrap</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Policy guardrails: drift detection, Kubernetes lifecycle risk flags, and weekly compliance digests</span></li>
@@ -1861,8 +1861,8 @@
         <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
           <i class="fas fa-wand-magic-sparkles text-amber-300"></i>
         </div>
-        <h3 class="text-white font-semibold text-sm mb-1">Gatekeeper - platform copilot</h3>
-        <p class="text-gray-300 text-xs leading-relaxed">Initial scope: cost watcher, anomaly alerts, policy drift detection, and approval-gated remediation suggestions. Powered by OCI Generative AI and designed to run in your tenancy. Founding customers get early access.</p>
+        <h3 class="text-white font-semibold text-sm mb-1">AI advisor + Gatekeeper roadmap</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Near-term scope: read-only troubleshooting explanations for Terraform, OCI, OKE, IAM, quota, and networking failures. Gatekeeper policy, drift, cost watcher, and approval-gated remediation stay on the roadmap for customer-shaped v1.1.</p>
       </div>
     </div>
 
@@ -1889,7 +1889,7 @@
           <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
           <span class="font-bold text-sm text-gray-800 dark:text-white">Infragate</span>
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">OCI-native Internal Developer Platform for OKE lifecycle and governance.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">OCI-native platform for governed OKE lifecycle, access, networking, and cost control.</p>
       </div>
 
       <div>
@@ -1916,9 +1916,14 @@
       </div>
     </div>
 
-    <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <span class="text-xs sm:text-sm text-gray-400">&copy; 2026 Solvia Lab s.r.o.</span>
-      <span class="text-xs text-gray-400 dark:text-gray-500">Built for enterprise OCI tenancies</span>
+    <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span class="text-xs sm:text-sm text-gray-400">&copy; 2026 Solvia Lab s.r.o. All rights reserved.</span>
+      <div class="flex flex-wrap items-center justify-center gap-3 text-xs text-gray-400 dark:text-gray-500">
+        <span>Built for enterprise OCI tenancies</span>
+        <a href="/legal/privacy.html" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Privacy</a>
+        <a href="/legal/terms.html" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Terms</a>
+        <a href="/legal/cookies.html" class="hover:text-gray-700 dark:hover:text-gray-200 transition">Cookies</a>
+      </div>
     </div>
   </div>
 </footer>
@@ -1962,7 +1967,7 @@
     },
     founding: {
       title: 'Apply for a founding spot',
-      subtitle: '5 founding customer spots. $18,000 for the first 12 months, paid upfront before access. Includes direct product feedback loops and early Gatekeeper access.',
+      subtitle: '5 founding customer spots. $18,000 for the first 12 months, paid upfront before access. Includes direct product feedback loops and early input on AI advisor / Gatekeeper roadmap.',
       messageLabel: 'Tell us about your team',
       messagePlaceholder: 'Team size, current OCI usage, what would success look like in 6 months?',
       submitText: 'Submit application',
