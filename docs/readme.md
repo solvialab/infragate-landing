@@ -1,8 +1,8 @@
 # Infragate
 
-**OCI-native Internal Developer Platform (IDP) for OKE on Oracle Cloud — automated lifecycle management and governance for platform teams.**
+**OCI-native Internal Developer Platform (IDP) for governed OKE lifecycle management on Oracle Cloud.**
 
-Infragate is a self-hosted internal developer platform (IDP) that lets engineers spin up, scale, and tear down managed Kubernetes clusters on OCI without needing cloud console access, IAM knowledge, or Terraform expertise. A cluster is ready in minutes — no tickets, no waiting.
+Infragate turns Oracle Kubernetes Engine into a self-service platform with admin guardrails: engineers can deploy, scale, upgrade, access, and destroy clusters without OCI Console access, IAM knowledge, or Terraform expertise, while platform teams keep control through templates, limits, approvals, BYON boundaries, Activity history, and FinOps visibility.
 
 ---
 
@@ -106,7 +106,7 @@ Infragate uses your organisation's existing identity provider (Keycloak, Azure A
 
 Infragate runs `terraform apply` and streams the live output in the portal. The cluster appears in **My Clusters** once provisioning completes.
 
-> The deploy form enforces your account's effective limits — maximum pools, nodes, OCPU, RAM, and storage. If a limit prevents you from deploying, contact your admin to request a higher limit.
+> The deploy form enforces your account's effective limits — maximum pools, nodes, OCPU, RAM, and storage. If a limit prevents you from deploying, submit a limit-increase request from the deploy or scale flow; admins can approve granted values into your per-user overrides.
 
 ### Scaling a cluster
 
@@ -129,7 +129,7 @@ Destroy is permanent and cannot be undone.
 
 > **Requests workflow:** The admin **Requests** area handles both protected-cluster destroy approvals and per-user limit-increase requests. Users submit a reason instead of destroying directly or when they need higher limits; admins approve, adjust, or deny with a note. Destroy approval still opens the Terraform destroy plan before force-destroy. Limit approval writes granted values into the user's per-user overrides. Results appear in the user's Activity inbox.
 >
-> **Destroy behavior note:** Cluster compartments are intentionally **not auto-deleted** (to avoid breaking shared/multi-cluster setups). In Object Storage, only the destroyed cluster's `.tfstate` object is removed; the user-level prefix/folder is kept for other clusters.
+> **Destroy behavior note:** Infragate-managed child compartments may be deleted with the cluster. External compartment overrides are retained for shared/multi-cluster setups. In Object Storage, only the destroyed cluster's `.tfstate` object is removed; the user-level prefix/folder is kept for other clusters.
 
 ### Activity
 
@@ -357,7 +357,7 @@ Users can supply existing OCIDs via the **Advanced tab** in the deploy form. Inf
 | Existing Compartment OCID | Places resources in your compartment — skips compartment creation |
 | Existing Subnet OCID | Places nodes in your subnet — skips subnet and security list creation |
 
-Any combination is supported.
+Any combination is supported for private-endpoint mode. Restricted public API endpoint mode requires Infragate-managed networking when `Existing VCN OCID` or `Existing Subnet OCID` would otherwise make the network read-only.
 
 Important behavior: `Existing Compartment OCID` does **not** auto-discover an existing VCN or subnet from that compartment. If VCN/subnet fields are left empty, Infragate creates a new VCN/subnets/network stack inside the provided compartment.
 
@@ -367,7 +367,7 @@ Advanced override UX guardrails: OCID fields validate type prefixes (`ocid1.vcn.
 
 > Note: If you deploy with existing VCN/subnet overrides, Infragate does not manage route tables for those existing resources. Your existing network must already provide equivalent private-subnet egress required for OKE worker node registration: route `0.0.0.0/0` to a NAT Gateway (or equivalent corporate egress path) and route `all-<region>-services-in-oracle-services-network` to a Service Gateway. This is a routing requirement, not an "open ingress" security rule.
 
-> ⚠️ **Drift behaviour.** Infragate-created VCN, subnet, IGW, route table, and security list resources are fully managed by the cluster's Terraform state — manual edits in the OCI Console will be overwritten on the next apply. BYO resources (existing VCN / subnet / compartment) are referenced read-only and never modified.
+> ⚠️ **Drift behaviour.** Infragate-created VCN, subnet, IGW, route table, and security list resources are fully managed by the cluster's Terraform state — manual edits in the OCI Console will be overwritten on the next apply. Supplied BYO resources (existing VCN / subnet / compartment) are referenced read-only and never modified.
 
 ### Custom security rules
 
