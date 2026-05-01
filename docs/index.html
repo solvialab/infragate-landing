@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Infragate Docs</title>
+  <meta name="description" content="Infragate documentation — deployment guides, features, and enterprise integration for OKE lifecycle management on Oracle Cloud.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='28' height='28' rx='7' fill='%231B2B4B'/%3E%3Crect x='6' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Crect x='18' y='8' width='4' height='13' rx='1.5' fill='white' opacity='0.95'/%3E%3Cpath d='M6 12 Q14 5 22 12' stroke='%234F6AF5' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+    (function() {
+      var stored = localStorage.getItem('infragate-theme');
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { font-family: 'Lato', sans-serif; }
+    body { background: #ffffff; }
+    .dark body { background: #0B1120; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 272px;
+      min-height: calc(100vh - 64px);
+      border-right: 1px solid #e5e7eb;
+      background: #f9fafb;
+      transition: transform 0.3s ease;
+      position: sticky;
+      top: 64px;
+      max-height: calc(100vh - 64px);
+    }
+    .dark .sidebar {
+      background: #0F172A;
+      border-right-color: #1e293b;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #4b5563;
+      border-radius: 0.5rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .dark .sidebar-link { color: #9ca3af; }
+    .sidebar-link:hover { background: #e5e7eb; color: #111827; }
+    .dark .sidebar-link:hover { background: #1e293b; color: #f3f4f6; }
+    .sidebar-link.active {
+      background: #EFF6FA;
+      color: #1C5D7A;
+      font-weight: 600;
+    }
+    .dark .sidebar-link.active {
+      background: rgba(91, 184, 216, 0.1);
+      color: #5BB8D8;
+    }
+    .sidebar-section { margin-bottom: 1.5rem; }
+    .sidebar-heading {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+      padding: 0 0.75rem;
+      margin-bottom: 0.375rem;
+    }
+    .dark .sidebar-heading { color: #4b5563; }
+
+    /* Mobile sidebar */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 40;
+    }
+    .sidebar-overlay.active { display: block; }
+    @media (max-width: 1023px) {
+      .sidebar {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+      }
+      .sidebar.open { transform: translateX(0); }
+    }
+
+    /* Right TOC sidebar */
+    .toc-sidebar {
+      width: 220px;
+      position: sticky;
+      top: 80px;
+      max-height: calc(100vh - 96px);
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .toc-item {
+      display: block;
+      padding: 0.2rem 0;
+      font-size: 0.75rem;
+      color: #6b7280;
+      text-decoration: none;
+      transition: color 0.15s;
+      line-height: 1.5;
+    }
+    .toc-item:hover { color: #1C5D7A; }
+    .dark .toc-item:hover { color: #5BB8D8; }
+    .toc-item.active { color: #1C5D7A; font-weight: 600; }
+    .dark .toc-item.active { color: #5BB8D8; }
+    .toc-item.depth-3 { padding-left: 0.75rem; }
+    @media (max-width: 1279px) {
+      .toc-sidebar { display: none; }
+    }
+    /* Mobile TOC dropdown */
+    .toc-mobile { display: none; }
+    @media (max-width: 1279px) {
+      .toc-mobile { display: block; }
+    }
+    .toc-mobile summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #6b7280;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      user-select: none;
+    }
+    .dark .toc-mobile summary { color: #9ca3af; border-color: #374151; }
+    .toc-mobile summary::-webkit-details-marker { display: none; }
+    .toc-mobile summary .toc-chevron { transition: transform 0.2s; }
+    .toc-mobile[open] summary .toc-chevron { transform: rotate(180deg); }
+    .toc-mobile .toc-mobile-list {
+      padding: 0.5rem 0.75rem;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    .toc-mobile .toc-mobile-list a {
+      display: block;
+      padding: 0.25rem 0;
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-decoration: none;
+    }
+    .dark .toc-mobile .toc-mobile-list a { color: #9ca3af; }
+    .toc-mobile .toc-mobile-list a:hover { color: #1C5D7A; }
+    .dark .toc-mobile .toc-mobile-list a:hover { color: #5BB8D8; }
+    .toc-mobile .toc-mobile-list a.active { color: #1C5D7A; font-weight: 600; }
+    .dark .toc-mobile .toc-mobile-list a.active { color: #5BB8D8; }
+    .toc-mobile .toc-mobile-list a.depth-3 { padding-left: 0.75rem; }
+
+    /* Theme toggle */
+    .theme-toggle {
+      width: 2.25rem; height: 2.25rem;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 9999px; cursor: pointer;
+      background: transparent; color: #6b7280; border: none;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover { background: #f3f4f6; color: #374151; }
+    .dark .theme-toggle:hover { background: #1e293b; color: #e2e8f0; }
+    .theme-toggle .fa-sun { display: none; }
+    .dark .theme-toggle .fa-sun { display: inline; }
+    .dark .theme-toggle .fa-moon { display: none; }
+
+    /* Markdown prose */
+    .prose-infragate { transition: opacity 0.2s ease; }
+    .prose-infragate.loading { opacity: 0; }
+    .prose-infragate h1 {
+      font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;
+      color: #111827; line-height: 1.2;
+    }
+    .dark .prose-infragate h1 { color: #f9fafb; }
+    .prose-infragate h2 {
+      font-size: 1.5rem; font-weight: 700;
+      margin-top: 2.5rem; margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      color: #111827;
+    }
+    .dark .prose-infragate h2 { color: #f9fafb; border-bottom-color: #1e293b; }
+    .prose-infragate h3 {
+      font-size: 1.25rem; font-weight: 600;
+      margin-top: 2rem; margin-bottom: 0.5rem; color: #1f2937;
+    }
+    .dark .prose-infragate h3 { color: #e5e7eb; }
+    .prose-infragate h4 {
+      font-size: 1.1rem; font-weight: 600;
+      margin-top: 1.5rem; margin-bottom: 0.5rem; color: #374151;
+    }
+    .dark .prose-infragate h4 { color: #d1d5db; }
+    .prose-infragate p {
+      margin-bottom: 1rem; line-height: 1.75; color: #374151;
+    }
+    .dark .prose-infragate p { color: #d1d5db; }
+    .prose-infragate a {
+      color: #1C5D7A; text-decoration: underline; text-underline-offset: 2px;
+    }
+    .dark .prose-infragate a { color: #5BB8D8; }
+    .prose-infragate a:hover { opacity: 0.8; }
+    .prose-infragate strong { color: #111827; }
+    .dark .prose-infragate strong { color: #f9fafb; }
+    .prose-infragate ul, .prose-infragate ol {
+      margin-bottom: 1rem; padding-left: 1.5rem; color: #374151;
+    }
+    .dark .prose-infragate ul, .dark .prose-infragate ol { color: #d1d5db; }
+    .prose-infragate ul { list-style-type: disc; }
+    .prose-infragate ol { list-style-type: decimal; }
+    .prose-infragate li { margin-bottom: 0.375rem; line-height: 1.7; }
+    .prose-infragate li > ul, .prose-infragate li > ol {
+      margin-top: 0.375rem; margin-bottom: 0;
+    }
+    .prose-infragate code {
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.85em; background: #f3f4f6; color: #1C5D7A;
+      padding: 0.15em 0.4em; border-radius: 0.25rem;
+    }
+    .dark .prose-infragate code { background: #1e293b; color: #5BB8D8; }
+    .prose-infragate pre {
+      margin-bottom: 1.25rem; border-radius: 0.75rem;
+      overflow-x: auto; background: #0F172A;
+      border: 1px solid #1e293b; position: relative;
+    }
+    .prose-infragate pre code {
+      display: block; padding: 1rem 1.25rem;
+      background: transparent; color: #e2e8f0;
+      font-size: 0.8125rem; line-height: 1.7;
+    }
+    .prose-infragate blockquote {
+      border-left: 4px solid #1C5D7A;
+      padding: 0.75rem 1rem; margin-bottom: 1rem;
+      background: #f0f7fa; border-radius: 0 0.5rem 0.5rem 0;
+      color: #374151;
+    }
+    .dark .prose-infragate blockquote {
+      border-left-color: #5BB8D8;
+      background: rgba(91, 184, 216, 0.08); color: #d1d5db;
+    }
+    .prose-infragate blockquote p { margin-bottom: 0; }
+    .prose-infragate hr {
+      border: none; border-top: 1px solid #e5e7eb; margin: 2rem 0;
+    }
+    .dark .prose-infragate hr { border-top-color: #1e293b; }
+    .prose-infragate table {
+      width: 100%; margin-bottom: 1.25rem;
+      border-collapse: collapse; font-size: 0.875rem;
+      display: block; overflow-x: auto;
+    }
+    .prose-infragate th {
+      text-align: left; padding: 0.625rem 0.75rem; font-weight: 600;
+      color: #111827; background: #f3f4f6;
+      border-bottom: 2px solid #e5e7eb; white-space: nowrap;
+    }
+    .dark .prose-infragate th {
+      color: #f9fafb; background: #1e293b; border-bottom-color: #334155;
+    }
+    .prose-infragate td {
+      padding: 0.5rem 0.75rem; border-bottom: 1px solid #e5e7eb; color: #374151;
+    }
+    .dark .prose-infragate td { border-bottom-color: #1e293b; color: #d1d5db; }
+    .prose-infragate img {
+      max-width: 100%; border-radius: 0.5rem; margin: 1rem 0;
+    }
+
+    /* Heading anchors */
+    .prose-infragate h2, .prose-infragate h3 { position: relative; }
+    .heading-anchor {
+      position: absolute; left: -1.5rem; top: 50%; transform: translateY(-50%);
+      color: #cbd5e1; text-decoration: none; font-weight: 400;
+      opacity: 0; transition: opacity 0.15s;
+      font-size: 0.875rem;
+    }
+    .dark .heading-anchor { color: #334155; }
+    .prose-infragate h2:hover .heading-anchor,
+    .prose-infragate h3:hover .heading-anchor { opacity: 1; }
+    .heading-anchor:hover { color: #1C5D7A; }
+    .dark .heading-anchor:hover { color: #5BB8D8; }
+
+    /* Copy button on code blocks */
+    .copy-btn {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      padding: 0.25rem 0.5rem; font-size: 0.6875rem;
+      background: #1e293b; color: #94a3b8;
+      border: 1px solid #334155; border-radius: 0.375rem;
+      cursor: pointer; opacity: 0; transition: opacity 0.15s;
+    }
+    .prose-infragate pre:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { color: #e2e8f0; background: #334155; }
+
+    /* Prev/next navigation */
+    .page-nav {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      margin-top: 3rem; padding-top: 2rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .dark .page-nav { border-top-color: #1e293b; }
+    .page-nav-link {
+      display: flex; flex-direction: column; gap: 0.25rem;
+      padding: 1rem; border-radius: 0.75rem;
+      border: 1px solid #e5e7eb; text-decoration: none;
+      transition: all 0.15s;
+    }
+    .dark .page-nav-link { border-color: #1e293b; }
+    .page-nav-link:hover {
+      border-color: #1C5D7A; background: #f0f7fa;
+    }
+    .dark .page-nav-link:hover {
+      border-color: #5BB8D8; background: rgba(91, 184, 216, 0.05);
+    }
+    .page-nav-label {
+      font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: #9ca3af;
+    }
+    .page-nav-title {
+      font-size: 0.875rem; font-weight: 600; color: #1C5D7A;
+    }
+    .dark .page-nav-title { color: #5BB8D8; }
+    .page-nav-link.next { text-align: right; grid-column: 2; }
+
+    /* Search */
+    .search-box {
+      position: relative; margin-bottom: 1.25rem;
+    }
+    .search-box input {
+      width: 100%; padding: 0.5rem 0.75rem 0.5rem 2rem;
+      font-size: 1rem; border: 1px solid #e5e7eb;
+      border-radius: 0.5rem; background: white; color: #374151;
+      outline: none; transition: border-color 0.15s;
+    }
+    .dark .search-box input {
+      background: #0B1120; border-color: #1e293b; color: #e2e8f0;
+    }
+    .search-box input:focus { border-color: #1C5D7A; }
+    .dark .search-box input:focus { border-color: #5BB8D8; }
+    .search-box i {
+      position: absolute; left: 0.625rem; top: 50%;
+      transform: translateY(-50%); color: #9ca3af; font-size: 0.75rem;
+    }
+    .search-results {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: white; border: 1px solid #e5e7eb;
+      border-radius: 0.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-height: 280px; overflow-x: hidden; overflow-y: auto; z-index: 10; display: none;
+    }
+    .dark .search-results {
+      background: #1e293b; border-color: #334155;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .search-results.active { display: block; }
+    .search-result-item {
+      display: block; padding: 0.625rem 0.75rem;
+      font-size: 0.8125rem; color: #374151;
+      text-decoration: none; border-bottom: 1px solid #f3f4f6;
+      cursor: pointer; word-break: break-word;
+    }
+    .dark .search-result-item { color: #d1d5db; border-bottom-color: #334155; }
+    .search-result-item:hover { background: #f0f7fa; }
+    .dark .search-result-item:hover { background: rgba(91,184,216,0.08); }
+    .search-result-item .result-page {
+      font-size: 0.6875rem; color: #9ca3af; margin-top: 0.125rem;
+    }
+    .search-result-item mark {
+      background: rgba(28, 93, 122, 0.15); color: inherit;
+      padding: 0 0.125rem; border-radius: 0.125rem;
+    }
+    .dark .search-result-item mark { background: rgba(91, 184, 216, 0.2); }
+
+    /* Support modal */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: white; border-radius: 1rem; padding: 1.75rem;
+      width: 90%; max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      transform: translateY(10px) scale(0.98);
+      transition: transform 0.2s;
+    }
+    .dark .modal-content {
+      background: #1e293b; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%; padding: 0.625rem 0.75rem;
+      border: 1px solid #e5e7eb; border-radius: 0.5rem;
+      font-size: 0.875rem; color: #374151; background: white;
+      outline: none; transition: border-color 0.15s;
+    }
+    .dark .modal-content input,
+    .dark .modal-content textarea {
+      background: #0f172a; border-color: #334155; color: #e2e8f0;
+    }
+    .modal-content input:focus,
+    .modal-content textarea:focus {
+      border-color: #1C5D7A;
+    }
+    .dark .modal-content input:focus,
+    .dark .modal-content textarea:focus {
+      border-color: #5BB8D8;
+    }
+    .modal-content label {
+      display: block; font-size: 0.8125rem; font-weight: 600;
+      color: #374151; margin-bottom: 0.25rem;
+    }
+    .dark .modal-content label { color: #cbd5e1; }
+    .btn-solid {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #1C5D7A; color: white; border: none; cursor: pointer;
+      font-weight: 600; transition: background 0.15s;
+    }
+    .btn-solid:hover { background: #174d66; }
+    .dark .btn-solid { background: #5BB8D8; color: #0f172a; }
+    .dark .btn-solid:hover { background: #7cc8e2; }
+
+    /* Scrollbar */
+    .sidebar::-webkit-scrollbar, .toc-sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-thumb, .toc-sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1; border-radius: 3px;
+    }
+    .dark .sidebar::-webkit-scrollbar-thumb, .dark .toc-sidebar::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="antialiased dark:text-gray-100">
+
+<!-- Support Modal -->
+<div id="supportModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Contact Support</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">We'll get back to you within one business day.</p>
+      </div>
+      <button id="supportModalClose" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="supportForm" class="space-y-4">
+      <div>
+        <label for="support-name">Full Name <span class="text-red-400">*</span></label>
+        <input type="text" id="support-name" name="name" required placeholder="John Smith">
+      </div>
+      <div>
+        <label for="support-email">Email <span class="text-red-400">*</span></label>
+        <input type="email" id="support-email" name="email" required placeholder="john@acme.com">
+      </div>
+      <div>
+        <label for="support-subject">Subject <span class="text-red-400">*</span></label>
+        <input type="text" id="support-subject" name="subject" required placeholder="Deployment issue, feature request, etc.">
+      </div>
+      <div>
+        <label for="support-message">Message <span class="text-red-400">*</span></label>
+        <textarea id="support-message" name="message" rows="4" required placeholder="Describe your issue or question..."></textarea>
+      </div>
+      <button type="submit" id="supportSubmitBtn" class="w-full btn-solid px-6 py-3 text-sm rounded-xl">
+        <i class="fas fa-paper-plane mr-1.5"></i> Send Message
+      </button>
+      <p class="text-xs text-gray-400 text-center">Or email us directly at <a href="mailto:support@infragate.cloud" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline">support@infragate.cloud</a></p>
+    </form>
+    <div id="supportSuccess" class="hidden text-center py-6">
+      <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-check text-2xl text-emerald-600 dark:text-emerald-400"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Message sent!</h3>
+      <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">We'll be in touch shortly.</p>
+      <button onclick="closeSupportModal()" class="mt-6 btn-solid px-8 py-2.5 text-sm rounded-xl">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Top nav -->
+<nav class="sticky top-0 z-30 h-16 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 flex items-center px-4 sm:px-6">
+  <div class="flex items-center gap-3 flex-1">
+    <button id="sidebarToggle" class="lg:hidden p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a href="/docs/" class="flex items-center gap-2">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="28" rx="7" fill="#1B2B4B"/><rect x="6" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><rect x="18" y="8" width="4" height="13" rx="1.5" fill="white" opacity="0.95"/><path d="M6 12 Q14 5 22 12" stroke="#4F6AF5" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      <span class="font-bold text-lg text-gray-800 dark:text-white">Infragate</span>
+      <span class="text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">Docs</span>
+    </a>
+  </div>
+  <div class="flex items-center gap-3">
+    <a href="/" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-[#1C5D7A] dark:text-[#5BB8D8] hover:opacity-80 transition">
+      <i class="fas fa-arrow-left text-xs"></i> Home
+    </a>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      <i class="fas fa-moon text-sm"></i>
+      <i class="fas fa-sun text-sm"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- Sidebar overlay (mobile) -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+<!-- Layout -->
+<div class="flex">
+  <!-- Left sidebar -->
+  <aside id="sidebar" class="sidebar overflow-y-auto py-5 px-3 flex-shrink-0">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search docs..." autocomplete="off">
+      <div id="searchResults" class="search-results"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Getting started</div>
+      <a class="sidebar-link active" data-page="readme">
+        <i class="fas fa-home text-xs w-4"></i> Overview
+      </a>
+      <a class="sidebar-link" data-page="features">
+        <i class="fas fa-puzzle-piece text-xs w-4"></i> Features
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Available during evaluation/POC</div>
+      <div class="sidebar-link" style="opacity:.75; cursor:default;">
+        <i class="fas fa-lock text-xs w-4"></i> Deployment Runbooks
+      </div>
+      <div class="sidebar-link" style="opacity:.75; cursor:default;">
+        <i class="fas fa-lock text-xs w-4"></i> Enterprise Integration
+      </div>
+      <div class="sidebar-link" style="opacity:.75; cursor:default;">
+        <i class="fas fa-lock text-xs w-4"></i> Testing & Validation
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Resources</div>
+      <a href="/" class="sidebar-link">
+        <i class="fas fa-globe text-xs w-4"></i> Website
+      </a>
+      <a href="#" onclick="openSupportModal(); return false;" class="sidebar-link">
+        <i class="fas fa-envelope text-xs w-4"></i> Support
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 min-w-0">
+    <div class="max-w-5xl mx-auto flex gap-8">
+      <div class="flex-1 min-w-0 px-6 sm:px-10 py-8">
+        <!-- Breadcrumb -->
+        <div id="breadcrumb" class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 mb-6">
+          <a href="/docs/" class="hover:text-gray-600 dark:hover:text-gray-300">Docs</a>
+          <i class="fas fa-chevron-right text-[8px]"></i>
+          <span id="breadcrumbPage" class="text-gray-600 dark:text-gray-300">Overview</span>
+        </div>
+
+        <div class="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-4">
+          <div class="text-[11px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-3">Documentation Access</div>
+          <div class="grid sm:grid-cols-3 gap-3 text-xs">
+            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
+              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Public Docs</div>
+              <div class="text-gray-500 dark:text-gray-400">Architecture, features, requirements, and deployment overview.</div>
+            </div>
+            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
+              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Customer Docs</div>
+              <div class="text-gray-500 dark:text-gray-400">Available during evaluation/POC: detailed install runbooks, upgrade playbooks, and support procedures.</div>
+            </div>
+            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 p-3">
+              <div class="font-semibold text-gray-800 dark:text-gray-200 mb-1">Private / Internal Docs</div>
+              <div class="text-gray-500 dark:text-gray-400">Internal operations, product strategy, and non-customer materials.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile TOC -->
+        <details class="toc-mobile mb-4" id="tocMobile">
+          <summary><i class="fas fa-list-ul text-xs"></i> On this page <i class="fas fa-chevron-down text-[10px] toc-chevron"></i></summary>
+          <div class="toc-mobile-list" id="tocMobileList"></div>
+        </details>
+        <!-- Loading state -->
+        <div id="loading" class="flex items-center justify-center py-20">
+          <i class="fas fa-spinner fa-spin text-[#1C5D7A] dark:text-[#5BB8D8] text-xl mr-3"></i>
+          <span class="text-gray-500 dark:text-gray-400 text-sm">Loading...</span>
+        </div>
+        <!-- Content renders here -->
+        <article id="content" class="prose-infragate hidden"></article>
+        <!-- Prev / Next -->
+        <div id="pageNav" class="page-nav hidden"></div>
+      </div>
+      <!-- Right TOC -->
+      <aside id="tocSidebar" class="toc-sidebar py-8 pr-4 hidden xl:block">
+        <div class="sidebar-heading mb-2">On this page</div>
+        <div id="tocList"></div>
+      </aside>
+    </div>
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-6 px-6 sm:px-10">
+      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-400">
+        <span>&copy; 2026 Solvia Lab s.r.o.</span>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a href="/" class="hover:text-gray-600 dark:hover:text-gray-200 transition">infragate.cloud</a>
+          <a href="/legal/privacy.html" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Privacy</a>
+          <a href="/legal/terms.html" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Terms</a>
+          <a href="/legal/cookies.html" class="hover:text-gray-600 dark:hover:text-gray-200 transition">Cookies</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script>
+  // ── Config
+  var PAGES = [
+    { id: 'readme', title: 'Overview', icon: 'fa-home' },
+    { id: 'features', title: 'Features', icon: 'fa-puzzle-piece' }
+  ];
+  var pageCache = {};
+  var currentPage = null;
+
+  // ── Elements
+  var contentEl = document.getElementById('content');
+  var loadingEl = document.getElementById('loading');
+  var tocList = document.getElementById('tocList');
+  var tocMobileList = document.getElementById('tocMobileList');
+  var tocMobile = document.getElementById('tocMobile');
+  var pageNav = document.getElementById('pageNav');
+  var breadcrumbPage = document.getElementById('breadcrumbPage');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+
+  // ── Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('infragate-theme', isDark ? 'dark' : 'light');
+  });
+
+  // ── Mobile sidebar
+  document.getElementById('sidebarToggle').addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+  });
+  overlay.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+  });
+
+  // ── Marked config
+  marked.setOptions({ gfm: true, breaks: false });
+
+  // ── Helpers
+  function getPageFromHash() {
+    var hash = window.location.hash.replace('#', '');
+    var page = hash.split('/')[0];
+    // Only treat as page if it matches a known page ID
+    for (var i = 0; i < PAGES.length; i++) {
+      if (PAGES[i].id === page) return page;
+    }
+    return 'readme';
+  }
+
+  function getHeadingFromHash() {
+    var hash = window.location.hash.replace('#', '');
+    var parts = hash.split('/');
+    // If first part is a known page, heading is after /
+    for (var i = 0; i < PAGES.length; i++) {
+      if (PAGES[i].id === parts[0]) return parts[1] || null;
+    }
+    // Otherwise the whole hash might be an in-page anchor
+    return hash || null;
+  }
+
+  function getPageInfo(id) {
+    for (var i = 0; i < PAGES.length; i++) {
+      if (PAGES[i].id === id) return { index: i, info: PAGES[i] };
+    }
+    return null;
+  }
+
+  function slugify(text) {
+    // GitHub-compatible slug: lowercase, strip non-alnum/space/hyphen, spaces→hyphens
+    return text.toLowerCase()
+      .replace(/[^\w\s-]/g, '')   // remove non-word except spaces and hyphens
+      .replace(/ /g, '-')         // each space → one hyphen (preserves double-space → --)
+      .replace(/^-+|-+$/g, '');   // trim leading/trailing hyphens
+  }
+
+  // ── Load page
+  function loadPage(page, forceScroll) {
+    if (page === currentPage) {
+      // Same page — scroll to heading if present, or top
+      var heading = getHeadingFromHash();
+      if (heading) {
+        var el = document.getElementById(heading);
+        if (el) {
+          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      } else if (forceScroll) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+    currentPage = page;
+
+    // Update sidebar
+    document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
+      link.classList.toggle('active', link.getAttribute('data-page') === page);
+    });
+
+    // Update title & breadcrumb
+    var pi = getPageInfo(page);
+    var title = pi ? pi.info.title : 'Docs';
+    document.title = title + ' — Infragate Docs';
+    breadcrumbPage.textContent = title;
+
+    // Show loading
+    contentEl.classList.add('hidden');
+    contentEl.classList.add('loading');
+    loadingEl.classList.remove('hidden');
+    pageNav.classList.add('hidden');
+    tocList.innerHTML = '';
+
+    function render(md) {
+      // Map known .md files to docs page hashes (with optional #anchor)
+      var knownPages = { readme: 1, features: 1 };
+      md = md.replace(/\(\.\/([A-Z_]+)\.md(#[^)]+)?\)/gi, function(m, name, anchor) {
+        var lower = name.toLowerCase();
+        if (knownPages[lower]) return '(#' + lower + (anchor ? '/' + anchor.substring(1) : '') + ')';
+        return m; // leave unknown .md links as-is
+      });
+
+      contentEl.innerHTML = marked.parse(md);
+      contentEl.classList.remove('hidden');
+      contentEl.classList.remove('loading');
+      loadingEl.classList.add('hidden');
+
+      // Rewrite in-page anchor clicks to use smooth scroll instead of hash nav
+      contentEl.querySelectorAll('a[href^="#"]').forEach(function(a) {
+        var href = a.getAttribute('href').substring(1);
+        // If it points to a known page, let hash router handle it
+        if (knownPages[href]) return;
+        // Otherwise it's an in-page anchor — smooth scroll to it
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          var targetId = href;
+          var el = document.getElementById(targetId);
+          if (el) {
+            var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        });
+      });
+
+      // Add heading anchors + build TOC
+      buildTOC();
+      // Add copy buttons to code blocks
+      addCopyButtons();
+      // Build prev/next nav
+      buildPageNav();
+
+      // Scroll to heading if hash contains one, otherwise top
+      var targetHeading = getHeadingFromHash();
+      if (targetHeading) {
+        var el = document.getElementById(targetHeading);
+        if (el) {
+          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'auto' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      } else {
+        window.scrollTo(0, 0);
+      }
+
+      // Close mobile sidebar
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+
+    if (pageCache[page]) {
+      render(pageCache[page]);
+    } else {
+      fetch(page + '.md')
+        .then(function(res) {
+          if (!res.ok) throw new Error('Not found');
+          return res.text();
+        })
+        .then(function(md) {
+          pageCache[page] = md;
+          render(md);
+        })
+        .catch(function() {
+          contentEl.innerHTML = '<div class="text-center py-20"><i class="fas fa-exclamation-triangle text-amber-500 text-3xl mb-4 block"></i><p class="text-gray-500 dark:text-gray-400">Page not found.</p></div>';
+          contentEl.classList.remove('hidden');
+          contentEl.classList.remove('loading');
+          loadingEl.classList.add('hidden');
+        });
+    }
+  }
+
+  // ── Build table of contents from headings
+  function buildTOC() {
+    var headings = contentEl.querySelectorAll('h2, h3');
+    var html = '';
+    headings.forEach(function(h) {
+      var id = slugify(h.textContent);
+      h.id = id;
+      // Add anchor link
+      var anchor = document.createElement('a');
+      anchor.href = '#' + currentPage + '/' + id;
+      anchor.className = 'heading-anchor';
+      anchor.textContent = '#';
+      h.insertBefore(anchor, h.firstChild);
+
+      var depth = h.tagName === 'H3' ? ' depth-3' : '';
+      html += '<a class="toc-item' + depth + '" href="#' + currentPage + '/' + id + '">' + h.textContent.replace(/^# ?/, '') + '</a>';
+    });
+    tocList.innerHTML = html;
+    tocMobileList.innerHTML = html;
+    // Show/hide mobile TOC based on whether there are headings
+    tocMobile.style.display = headings.length > 0 ? '' : 'none';
+    // Close mobile TOC when navigating
+    tocMobile.removeAttribute('open');
+
+    function handleTocClick(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = this.getAttribute('href').split('/').pop();
+        var el = document.getElementById(targetId);
+        if (el) {
+          var y = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+          history.replaceState(null, '', this.getAttribute('href'));
+        }
+        // Close mobile TOC on click
+        tocMobile.removeAttribute('open');
+      });
+    }
+
+    // TOC click: scroll to heading with offset for sticky nav
+    tocList.querySelectorAll('.toc-item').forEach(handleTocClick);
+    tocMobileList.querySelectorAll('.toc-item').forEach(handleTocClick);
+
+    // Highlight TOC on scroll — find the heading closest to the top of viewport
+    if (headings.length > 0) {
+      var tocItems = tocList.querySelectorAll('.toc-item');
+      var tocMobileItems = tocMobileList.querySelectorAll('.toc-item');
+      var scrollRaf = null;
+      window._tocScrollHandler = function() {
+        if (scrollRaf) return;
+        scrollRaf = requestAnimationFrame(function() {
+          scrollRaf = null;
+          var best = 0;
+          for (var i = 0; i < headings.length; i++) {
+            // 90px accounts for sticky nav (64px) + padding
+            if (headings[i].getBoundingClientRect().top <= 90) {
+              best = i;
+            } else {
+              break;
+            }
+          }
+          tocItems.forEach(function(item, i) {
+            item.classList.toggle('active', i === best);
+          });
+          tocMobileItems.forEach(function(item, i) {
+            item.classList.toggle('active', i === best);
+          });
+        });
+      };
+      window.addEventListener('scroll', window._tocScrollHandler, { passive: true });
+    }
+  }
+
+  // ── Copy buttons on code blocks
+  function addCopyButtons() {
+    contentEl.querySelectorAll('pre').forEach(function(pre) {
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+      btn.addEventListener('click', function() {
+        var code = pre.querySelector('code');
+        navigator.clipboard.writeText(code.textContent).then(function() {
+          btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+          setTimeout(function() { btn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000);
+        });
+      });
+      pre.appendChild(btn);
+    });
+  }
+
+  // ── Prev / Next page navigation
+  function buildPageNav() {
+    var pi = getPageInfo(currentPage);
+    if (!pi) { pageNav.classList.add('hidden'); return; }
+    var html = '';
+    if (pi.index > 0) {
+      var prev = PAGES[pi.index - 1];
+      html += '<a class="page-nav-link prev" href="#' + prev.id + '"><span class="page-nav-label"><i class="fas fa-arrow-left text-[10px] mr-1"></i> Previous</span><span class="page-nav-title">' + prev.title + '</span></a>';
+    }
+    if (pi.index < PAGES.length - 1) {
+      var next = PAGES[pi.index + 1];
+      html += '<a class="page-nav-link next" href="#' + next.id + '"><span class="page-nav-label">Next <i class="fas fa-arrow-right text-[10px] ml-1"></i></span><span class="page-nav-title">' + next.title + '</span></a>';
+    }
+    pageNav.innerHTML = html;
+    pageNav.classList.remove('hidden');
+
+    pageNav.querySelectorAll('.page-nav-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.hash = this.getAttribute('href').substring(1);
+      });
+    });
+  }
+
+  // ── Search
+  var searchInput = document.getElementById('searchInput');
+  var searchResults = document.getElementById('searchResults');
+  var searchTimeout = null;
+
+  // Pre-fetch all pages for search
+  function prefetchAll() {
+    PAGES.forEach(function(p) {
+      if (!pageCache[p.id]) {
+        fetch(p.id + '.md').then(function(r) { return r.text(); }).then(function(md) {
+          pageCache[p.id] = md;
+        }).catch(function() {});
+      }
+    });
+  }
+  setTimeout(prefetchAll, 1000);
+
+  searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    var query = this.value.trim().toLowerCase();
+    if (query.length < 2) {
+      searchResults.classList.remove('active');
+      return;
+    }
+    searchTimeout = setTimeout(function() {
+      var results = [];
+      PAGES.forEach(function(p) {
+        var md = pageCache[p.id];
+        if (!md) return;
+        var lines = md.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          if (line.toLowerCase().indexOf(query) !== -1 && !line.match(/^---$/) && line.trim()) {
+            // Clean up markdown syntax for display
+            var clean = line.replace(/^#+\s*/, '').replace(/\*\*/g, '').replace(/`/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim();
+            if (clean.length < 3) continue;
+            var idx = clean.toLowerCase().indexOf(query);
+            var snippet = clean;
+            if (idx !== -1) {
+              var start = Math.max(0, idx - 30);
+              var end = Math.min(clean.length, idx + query.length + 30);
+              snippet = (start > 0 ? '...' : '') +
+                clean.substring(start, idx) +
+                '<mark>' + clean.substring(idx, idx + query.length) + '</mark>' +
+                clean.substring(idx + query.length, end) +
+                (end < clean.length ? '...' : '');
+            }
+            results.push({ page: p, snippet: snippet, heading: line.match(/^#+/) });
+            if (results.length >= 8) return;
+          }
+        }
+      });
+
+      if (results.length === 0) {
+        searchResults.innerHTML = '<div class="px-3 py-4 text-center text-xs text-gray-400">No results found</div>';
+      } else {
+        searchResults.innerHTML = results.map(function(r) {
+          return '<a class="search-result-item" href="#' + r.page.id + '" data-page="' + r.page.id + '">' +
+            '<div>' + r.snippet + '</div>' +
+            '<div class="result-page"><i class="fas fa-' + r.page.icon + ' text-[10px] mr-1"></i>' + r.page.title + '</div></a>';
+        }).join('');
+      }
+      searchResults.classList.add('active');
+    }, 200);
+  });
+
+  // Close search on click outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.search-box')) {
+      searchResults.classList.remove('active');
+    }
+  });
+
+  // Search result click — let native <a href="#page"> handle navigation,
+  // just clean up search UI. hashchange listener handles page loading.
+  searchResults.addEventListener('click', function(e) {
+    var item = e.target.closest('.search-result-item');
+    if (!item) return;
+    searchInput.value = '';
+    searchResults.classList.remove('active');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    // If already on this page, force reload
+    var targetPage = item.getAttribute('data-page');
+    if (targetPage === currentPage) {
+      e.preventDefault();
+      currentPage = null;
+      window.location.hash = targetPage;
+      loadPage(targetPage);
+    }
+    // Otherwise the native <a href="#page"> navigates and hashchange fires
+  });
+
+  // ── Sidebar link clicks
+  document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.hash = this.getAttribute('data-page');
+    });
+  });
+
+  // ── Hash change handler
+  window.addEventListener('hashchange', function() {
+    // Clean up search/sidebar on any navigation
+    searchInput.value = '';
+    searchResults.classList.remove('active');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    // Remove old TOC scroll handler
+    if (window._tocScrollHandler) {
+      window.removeEventListener('scroll', window._tocScrollHandler);
+    }
+    loadPage(getPageFromHash());
+  });
+
+  // ── Initial load
+  loadPage(getPageFromHash());
+
+  // ── Support modal
+  function openSupportModal() {
+    document.getElementById('supportForm').classList.remove('hidden');
+    document.getElementById('supportSuccess').classList.add('hidden');
+    document.getElementById('supportModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  window.openSupportModal = openSupportModal;
+
+  function closeSupportModal() {
+    document.getElementById('supportModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  window.closeSupportModal = closeSupportModal;
+
+  document.getElementById('supportForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    var btn = document.getElementById('supportSubmitBtn');
+    var originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Sending...';
+
+    var data = {
+      name: form.name.value,
+      email: form.email.value,
+      subject: form.subject.value,
+      message: form.message.value,
+      _subject: 'Infragate Docs — ' + form.subject.value,
+      _captcha: 'false',
+      _template: 'table'
+    };
+
+    fetch('https://formsubmit.co/ajax/support@infragate.cloud', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function() {
+      form.classList.add('hidden');
+      document.getElementById('supportSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .catch(function() {
+      form.classList.add('hidden');
+      document.getElementById('supportSuccess').classList.remove('hidden');
+      form.reset();
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.innerHTML = originalHTML;
+    });
+  });
+
+  document.getElementById('supportModalClose').addEventListener('click', closeSupportModal);
+  document.getElementById('supportModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSupportModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeSupportModal();
+  });
+</script>
+</body>
+</html>
