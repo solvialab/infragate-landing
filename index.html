@@ -58,6 +58,52 @@
           "priceCurrency": "USD",
           "availability": "https://schema.org/InStock"
         }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://infragate.cloud/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Where does Infragate run?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Infragate runs inside your OCI tenancy or customer-managed Kubernetes environment. There is no external SaaS control plane; application services, credentials, logs, and operational data stay inside the customer boundary." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Infragate require public internet access?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Production deployments are designed for private and VPN-first environments. The OKE API endpoint should be reachable from the Infragate runner and approved corporate or VPN CIDRs, while public access can remain restricted." }
+          },
+          {
+            "@type": "Question",
+            "name": "Do engineers need Terraform or OCI Console access?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Engineers request and operate clusters through the web portal, while platform administrators control templates, limits, approvals, OCI configuration, and access policies." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can users download kubeconfig?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Authorized users can download kubeconfig for clusters they are allowed to access. Network reachability to the private or public OKE API endpoint still needs to match the customer network design." }
+          },
+          {
+            "@type": "Question",
+            "name": "What does BYON mean in Infragate?",
+            "acceptedAnswer": { "@type": "Answer", "text": "BYON means bring your own network. Infragate can deploy OKE clusters into existing customer VCN, subnet, route table, security list, and gateway patterns instead of always creating a new network from scratch." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Infragate production-ready today?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Core OKE lifecycle workflows are available today: provisioning, scaling, Kubernetes upgrades, destroy workflows, kubeconfig access, BYON networking, costs, approvals, Activity history, and admin controls. AI advisor and Gatekeeper-style automation are roadmap items." }
+          },
+          {
+            "@type": "Question",
+            "name": "How is Infragate delivered to customers?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Customers receive released container images, registry access, Helm values, and deployment runbooks. The product is deployed into the customer environment rather than consumed as a hosted SaaS service." }
+          },
+          {
+            "@type": "Question",
+            "name": "Do customers receive the source code?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Standard delivery provides released images, documentation, Helm deployment assets, and support. Source code and release automation remain private unless a separate commercial agreement says otherwise." }
+          }
+        ]
       }
     ]
   }
@@ -789,9 +835,20 @@
       }
 
       /* Adjust text sizes for small screens */
-      h1 { font-size: 2.25rem !important; line-height: 2.5rem !important; }
+      h1 { font-size: 2.1rem !important; line-height: 2.35rem !important; overflow-wrap: break-word; }
       h2 { font-size: 1.75rem !important; line-height: 2.25rem !important; }
-      p { font-size: 0.9375rem !important; line-height: 1.5rem !important; }
+      p { font-size: 0.9375rem !important; line-height: 1.5rem !important; overflow-wrap: break-word; }
+
+      .hero-section { overflow-x: hidden; }
+      .hero-section .hero-copy,
+      .hero-section .max-w-7xl,
+      .hero-section .grid,
+      .hero-section h1,
+      .hero-section p,
+      .hero-section .terminal { min-width: 0; max-width: 100%; box-sizing: border-box; }
+      .hero-section .max-w-7xl { width: 100%; padding-left: 1rem; padding-right: 1rem; }
+      .hero-section h1,
+      .hero-section p { width: calc(100vw - 2rem); max-width: calc(100vw - 2rem); margin-left: auto; margin-right: auto; overflow-wrap: break-word; }
 
       /* Mobile menu fixes */
       .mobile-nav-item { font-size: 1.125rem; padding: 0.75rem 1rem; }
@@ -920,7 +977,9 @@
       .terminal .text-sm { font-size: 0.7rem; }
     }
     @media (max-width: 639px) {
-      h1 { font-size: 1.75rem !important; line-height: 1.3 !important; }
+      h1 { font-size: 1.65rem !important; line-height: 1.3 !important; }
+      .hero-section h1 { width: min(350px, calc(100vw - 2rem)) !important; max-width: min(350px, calc(100vw - 2rem)) !important; }
+      .hero-section p { width: min(340px, calc(100vw - 2rem)) !important; max-width: min(340px, calc(100vw - 2rem)) !important; }
       h2 { font-size: 1.5rem !important; }
       .py-14 { padding-top: 2rem; padding-bottom: 2rem; }
       .px-6 { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -1168,6 +1227,7 @@
         <a href="#why-infragate" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Why Infragate</a>
         <a href="#ga-roadmap" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">GA vs Roadmap</a>
         <a href="#pricing" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Pricing</a>
+        <a href="#faq" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">FAQ</a>
       </div>
       <div class="flex items-center gap-2 sm:gap-3">
         <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
@@ -1192,6 +1252,7 @@
       <a href="#why-infragate" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Why Infragate</a>
       <a href="#ga-roadmap" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">GA vs Roadmap</a>
       <a href="#pricing" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Pricing</a>
+      <a href="#faq" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">FAQ</a>
       <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
         <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-lg text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
         <button onclick="openDemoModal()" class="flex-1 btn-solid-premium px-4 py-2.5 text-sm font-semibold rounded-lg text-center cursor-pointer">Book a discovery call</button>
@@ -1201,18 +1262,18 @@
 </nav>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden pt-8 pb-14 md:pt-12 md:pb-18">
+<section class="hero-section relative overflow-hidden pt-8 pb-14 md:pt-12 md:pb-18">
   <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-[#0B1120] dark:to-gray-900 -z-10"></div>
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
   <div class="absolute top-40 right-0 w-96 h-96 bg-[#1C5D7A]/5 dark:bg-[#1C5D7A]/10 rounded-full blur-3xl -z-10"></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-      <div class="max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white reveal from-left text-center lg:text-left">
-          Internal Developer Platform for <span class="shimmer-text">OKE on Oracle Cloud</span>
+      <div class="hero-copy max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white reveal from-left text-center lg:text-left" style="width:100%;max-width:min(42rem,calc(100vw - 2rem));margin-left:auto;margin-right:auto;">
+          Internal Developer Platform <span class="block lg:inline">for <span class="shimmer-text">OKE on Oracle Cloud</span></span>
         </h1>
-        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="transition-delay: 0.15s;">
+        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="width:100%;max-width:min(36rem,calc(100vw - 2rem));margin-left:auto;margin-right:auto;transition-delay: 0.15s;">
           Infragate turns OKE into a governed internal platform: self-service provisioning, scaling, Kubernetes upgrades, kubeconfig access, BYON networking, cost visibility, approval workflows, and durable Activity history through a single web portal. No Terraform to write, no CLI to learn, no OCI Console to navigate. Runs entirely in your tenancy.
         </p>
         <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
@@ -1893,7 +1954,7 @@
       </p>
       <div class="mt-7 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center reveal" style="transition-delay:0.35s">
         <span class="text-3xl font-bold text-white">$18,000</span>
-        <span class="text-sm text-amber-100">first 12 months · paid upfront before access · 5 spots</span>
+        <span class="text-sm text-amber-100">first 12 months Â· paid upfront before access Â· 5 spots</span>
       </div>
     </div>
 
@@ -1937,6 +1998,58 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section id="faq" class="py-14 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900/50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10 reveal">
+      <div class="section-pill no-dot mb-4">
+        <i class="fas fa-circle-question text-xs"></i> Questions &amp; answers
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">The buying questions answered upfront</h2>
+      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Short answers for platform teams, security reviewers, and buyers. The deeper implementation details live in the documentation.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>Where does Infragate run?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Inside your OCI tenancy or customer-managed Kubernetes environment. There is no external SaaS control plane; application services, credentials, logs, and operational data stay inside your boundary.</p>
+      </details>
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>Does it require public internet access?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Production deployments are designed for VPN-first access. The Infragate runner and approved corporate/VPN CIDRs need network reachability to the OKE API endpoint; public access can stay restricted.</p>
+      </details>
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>Do engineers need Terraform or OCI Console access?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">No. Engineers use the portal for provisioning and day-2 actions. Platform administrators control templates, limits, OCI configuration, approvals, RBAC, protected destroy rules, and audit history.</p>
+      </details>
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>Can users download kubeconfig?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Yes. Authorized users can download kubeconfig for clusters they are allowed to access. Network reachability still follows your cluster API endpoint design and VPN/private access model.</p>
+      </details>
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>What does BYON mean?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">BYON means bring your own network. Infragate can deploy OKE into existing customer VCN, subnet, route table, security list, and gateway patterns instead of always creating a new network.</p>
+      </details>
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>Is Infragate production-ready today?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">The core OKE lifecycle platform is available today: deploy, scale, upgrade, destroy, kubeconfig access, BYON networking, cost visibility, approvals, Activity history, and admin controls. AI advisor and Gatekeeper-style automation are roadmap items.</p>
+      </details>
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>How is it delivered?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Customers receive released container images, registry access, Helm values, and deployment runbooks. Infragate is installed into the customer environment rather than consumed as a hosted SaaS service.</p>
+      </details>
+      <details class="group rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 p-5 reveal">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 font-semibold text-gray-900 dark:text-white"><span>Do customers receive source code?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
+        <p class="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Standard delivery includes released images, Helm deployment assets, documentation, and support. Source code and release automation stay private unless a separate commercial agreement says otherwise.</p>
+      </details>
+    </div>
+
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 reveal">
+      <a href="/docs/" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-lg hover:bg-white dark:hover:bg-[#5BB8D8]/10 transition w-full sm:w-auto"><i class="fas fa-book text-xs"></i> Read technical docs</a>
+      <button onclick="openDemoModal()" class="btn-solid-premium px-6 py-3 text-sm font-semibold rounded-lg cursor-pointer w-full sm:w-auto">Ask about your environment</button>
+    </div>
+  </div>
+</section>
 <!-- Footer -->
 <footer class="border-t border-gray-200 dark:border-gray-800 py-10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2674,3 +2787,4 @@
 </script>
 </body>
 </html>
+
