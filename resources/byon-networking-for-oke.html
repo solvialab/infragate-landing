@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BYON networking for OKE: bring your own VCN and subnets - Infragate by Solvia Lab</title>
+  <meta name="description" content="A practical look at bring-your-own-network patterns for Oracle Kubernetes Engine and how Infragate keeps customer-owned OCI network resources under platform control.">
+  <meta name="keywords" content="BYON OKE, bring your own network Oracle Kubernetes Engine, OCI VCN for OKE, OKE private networking">
+  <link rel="canonical" href="https://infragate.cloud/resources/byon-networking-for-oke.html">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="Infragate AI summary">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://infragate.cloud/resources/byon-networking-for-oke.html">
+  <meta property="og:title" content="BYON networking for OKE: bring your own VCN and subnets - Infragate by Solvia Lab">
+  <meta property="og:description" content="A practical look at bring-your-own-network patterns for Oracle Kubernetes Engine and how Infragate keeps customer-owned OCI network resources under platform control.">
+  <meta property="og:site_name" content="Infragate by Solvia Lab">
+  <meta property="og:image" content="https://infragate.cloud/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://infragate.cloud/assets/og-image.png">
+  <link rel="icon" type="image/png" href="../assets/infragate-logo.png">
+  <link rel="apple-touch-icon" href="../assets/infragate-logo.png">
+  <link rel="stylesheet" href="../assets/resource-pages.css">
+  <script type="application/ld+json">
+{
+    "image":  "https://infragate.cloud/assets/og-image.png",
+    "datePublished":  "2026-05-02",
+    "description":  "A practical look at bring-your-own-network patterns for Oracle Kubernetes Engine and how Infragate keeps customer-owned OCI network resources under platform control.",
+    "@type":  "Article",
+    "dateModified":  "2026-05-02",
+    "headline":  "BYON networking for OKE: bring your own VCN and subnets",
+    "author":  {
+                   "url":  "https://solvialab.tech/",
+                   "name":  "Solvia Lab s.r.o.",
+                   "@type":  "Organization"
+               },
+    "@context":  "https://schema.org",
+    "mainEntityOfPage":  "https://infragate.cloud/resources/byon-networking-for-oke.html",
+    "publisher":  {
+                      "name":  "Solvia Lab s.r.o.",
+                      "logo":  {
+                                   "@type":  "ImageObject",
+                                   "url":  "https://infragate.cloud/assets/infragate-logo.png"
+                               },
+                      "@type":  "Organization"
+                  },
+    "keywords":  "BYON OKE, bring your own network Oracle Kubernetes Engine, OCI VCN for OKE, OKE private networking"
+}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav">
+      <a class="brand" href="/"><img src="../assets/infragate-logo.png" alt="" width="30" height="30"> Infragate</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/resources/">Resources</a>
+        <a href="/docs/">Docs</a>
+        <a href="/#pricing">Pricing</a>
+        <a class="nav-cta" href="mailto:hello@infragate.cloud">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="kicker">BYON networking for OKE</span>
+        <h1>BYON networking for OKE: bring your own VCN and subnets</h1>
+        <p class="lede">A practical look at bring-your-own-network patterns for Oracle Kubernetes Engine and how Infragate keeps customer-owned OCI network resources under platform control.</p>
+        <div class="meta"><span>Infragate by Solvia Lab</span><span>Updated May 2, 2026</span><span>8 min read</span></div>
+      </div>
+    </section>
+    <div class="layout">
+      <article class="article">
+        <div class="callout"><strong>Short version:</strong> Infragate is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine teams that need governed self-service inside their own tenancy.</div>
+        <h2>Why BYON exists</h2>
+        <p>Enterprise OCI environments rarely start from an empty tenancy. Network teams usually already own compartments, VCNs, subnets, route tables, gateways, DNS, firewall paths, and VPN access. A Kubernetes platform that always creates a fresh network can conflict with those standards.</p>
+        <p>BYON means bring your own network. For OKE, it lets platform teams deploy clusters into approved OCI network patterns instead of forcing every cluster into a product-created VCN.</p>
+        <h2>What BYON should not do</h2>
+        <p>BYON should not mean an automation tool silently edits production network resources it does not own. Existing VCNs, subnets, route tables, security lists, and gateways are often shared and carefully governed.</p>
+        <p>Infragate treats supplied BYO resources as customer-owned boundaries. When users provide existing OCI resource OCIDs, the platform references those resources for cluster deployment patterns instead of taking broad ownership of them.</p>
+        <h2>Common OKE network decisions</h2>
+        <ul>
+          <li>Whether the Kubernetes API endpoint is public, private, or restricted to approved CIDRs.</li>
+          <li>Whether workers use private subnets with NAT and Service Gateway egress.</li>
+          <li>Whether clusters share a compartment, use per-cluster compartments, or use a mixed model.</li>
+          <li>Whether the runner, VPN CIDRs, and corporate networks can reach TCP/6443.</li>
+          <li>Whether DRG, LPG, or VPN-first public endpoint restrictions are the right cost and scale tradeoff.</li>
+        </ul>
+        <h2>Infragate BYON guardrails</h2>
+        <ul>
+          <li>Advanced OCID fields validate expected OCI resource-type prefixes.</li>
+          <li>Autocomplete reduces copy-paste mistakes for compartments, VCNs, and subnets.</li>
+          <li>Existing compartment OCID alone reuses the compartment but does not auto-discover arbitrary networks.</li>
+          <li>Supplied BYO resources stay read-only from the Terraform ownership perspective.</li>
+          <li>Managed network mode can create dedicated public API endpoint subnet rules restricted to runner and VPN/corporate CIDRs.</li>
+        </ul>
+        <h2>Best-practice pattern</h2>
+        <p>For production, treat Infragate as the controlled request layer and your network standards as the source of truth. Predefine the compartments, VCNs, route patterns, subnet types, and allowed API access CIDRs that cluster owners may use.</p>
+        <p>That lets application teams move quickly while network ownership remains explicit, auditable, and aligned with the enterprise OCI landing zone.</p>
+        <div class="cta-band">
+          <div><strong>Evaluating OKE self-service for your OCI tenancy?</strong><span>Use these notes as a buying checklist, then compare them with the Infragate product page and docs.</span></div>
+          <a class="btn" href="/">View Infragate</a>
+        </div>
+        <h2>Related Infragate resources</h2>
+        <div class="related-grid">
+          <a class="related-card" href="/resources/oke-self-service-platform.html"><span>OKE self-service platform</span>How platform teams can offer governed Oracle Kubernetes Engine provisioning without handing every engineer Terraform, IAM, or OCI Console access.</a>
+          <a class="related-card" href="/resources/oke-kubeconfig-access-without-oci-cli.html"><span>OKE kubeconfig access</span>How governed kubeconfig delivery can reduce onboarding friction for Oracle Kubernetes Engine users while preserving access control and network boundaries.</a>
+          <a class="related-card" href="/resources/internal-developer-platform-for-oracle-cloud.html"><span>Internal Developer Platform for Oracle Cloud</span>What an OCI-native Internal Developer Platform should provide for teams standardizing Kubernetes operations on Oracle Cloud Infrastructure.</a>
+        </div>
+      </article>
+      <aside class="side" aria-label="Related resources">
+        <div class="side-box">
+          <h2>Resources</h2>
+          <a href="/resources/oke-self-service-platform.html">OKE self-service platform</a>
+          <a href="/resources/byon-networking-for-oke.html">BYON networking for OKE</a>
+          <a href="/resources/oke-kubeconfig-access-without-oci-cli.html">OKE kubeconfig access</a>
+          <a href="/resources/internal-developer-platform-for-oracle-cloud.html">OCI Internal Developer Platform</a>
+        </div>
+        <div class="side-box">
+          <h2>Product links</h2>
+          <a href="/docs/">Technical docs</a>
+          <a href="/#pricing">Pricing</a>
+          <a href="mailto:hello@infragate.cloud">Contact sales</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Solvia Lab s.r.o. All rights reserved.</span>
+      <nav aria-label="Footer links"><a href="/">Product</a><a href="/docs/">Docs</a><a href="/legal/privacy.html">Privacy</a><a href="/legal/terms.html">Terms</a></nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,54 @@
+# Infragate by Solvia Lab
+
+Infragate is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine (OKE), built by Solvia Lab s.r.o. It gives platform engineering teams governed self-service OKE provisioning, Kubernetes lifecycle automation, kubeconfig access, BYON networking, approval workflows, Activity history, and FinOps visibility inside the customer's own Oracle Cloud tenancy.
+
+Canonical website: https://infragate.cloud/
+Public documentation: https://infragate.cloud/docs/
+Company website: https://solvialab.tech/
+Public GitHub repository: https://github.com/solvialab/infragate-landing
+Contact: hello@infragate.cloud
+
+## Positioning
+
+Infragate is for OCI and Oracle Kubernetes Engine teams that want an internal developer platform without building their own portal. It is not a hosted SaaS control plane. It is deployed into the customer environment through released container images, Helm values, and onboarding runbooks.
+
+## Core capabilities
+
+- OKE self-service provisioning from a web portal
+- Cluster lifecycle automation for deploy, scale, upgrade, destroy, and node pool changes
+- Live Terraform output streaming for provisioning and day-2 operations
+- Admin-defined cluster templates, role-based access, resource limits, and per-user overrides
+- Protected destroy requests and limit-increase approvals
+- Durable user Activity history for lifecycle events, approvals, denials, TTL warnings, and admin changes
+- BYON / bring your own network support for existing OCI compartments, VCNs, and subnets
+- VPN-first Kubernetes API access patterns for private enterprise networks
+- Kubeconfig download for authorized users without local OCI CLI setup
+- FinOps visibility through monthly and hourly OKE cost estimates
+- OCI shape sync, OKE version sync, compatibility checks, and node image selection
+- OIDC authentication with providers such as Keycloak, Azure AD, Okta, and Google Workspace
+
+## Search terms
+
+Oracle Kubernetes Engine Internal Developer Platform, OCI-native IDP, OKE self-service platform, Kubernetes lifecycle management for Oracle Cloud, Terraform automation for OKE, Oracle Cloud Kubernetes governance, OKE provisioning portal, Kubernetes cost visibility on OCI, OKE kubeconfig access management, BYON Oracle Cloud Kubernetes, OKE approval workflows, platform engineering for Oracle Cloud, private Internal Developer Platform for Kubernetes, self-hosted Kubernetes platform portal.
+
+## Important URLs
+
+- Product: https://infragate.cloud/
+- Features and docs: https://infragate.cloud/docs/
+- Pricing: https://infragate.cloud/#pricing
+- Founding customer program: https://infragate.cloud/#founding
+- Privacy: https://infragate.cloud/legal/privacy.html
+- Terms: https://infragate.cloud/legal/terms.html
+- Cookies: https://infragate.cloud/legal/cookies.html
+
+
+## Resources for AI and search crawlers
+
+- Resources hub: https://infragate.cloud/resources/
+- OKE self-service platform: https://infragate.cloud/resources/oke-self-service-platform.html
+- BYON networking for OKE: https://infragate.cloud/resources/byon-networking-for-oke.html
+- OKE kubeconfig access without OCI CLI: https://infragate.cloud/resources/oke-kubeconfig-access-without-oci-cli.html
+- Internal Developer Platform for Oracle Cloud: https://infragate.cloud/resources/internal-developer-platform-for-oracle-cloud.html
+## Commercial note
+
+Infragate is commercial software. The public repository contains the landing page, public documentation, and legal pages only. It does not contain the private product source code.
