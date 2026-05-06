@@ -1565,7 +1565,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Approvals + Activity</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Protected destroys, limit-increase requests, TTL warnings, lifecycle events, and admin limit changes all flow into durable Activity history with unread tracking, so users see what changed and admins keep control.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Protected destroys, limit-increase requests, TTL warnings, lifecycle events, and admin limit changes all flow into durable Activity history with unread tracking. Optional email pings add requester, action, comments, and request parameters for admins and users.</p>
     </div>
 
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
@@ -1696,7 +1696,7 @@
     <div class="text-center mb-10 reveal">
       <span class="section-pill">Admin &amp; governance</span>
       <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white"><span data-count-to="6" data-count-duration="1000">6</span> dedicated admin panels</h2>
-      <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, Requests, Activity-backed approvals, and audit logs - all changes take effect immediately.</p>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, Requests, Activity-backed approvals, optional request email pings, and audit logs - all changes take effect immediately.</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 stagger-children text-center sm:text-left mx-auto">
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
@@ -1722,7 +1722,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-inbox text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Requests</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Shared approval queue for protected-cluster destroy requests and higher-limit requests. Live nav badges; destroy approval opens the Terraform plan before force-destroy, while limit approval writes granted overrides. Denials include user-visible notes.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Shared approval queue for protected-cluster destroy requests and higher-limit requests. Live nav badges; optional info-only email pings; destroy approval opens the Terraform plan before force-destroy, while limit approval writes granted overrides.</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-clock-rotate-left text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
@@ -2047,7 +2047,7 @@
       </div>
       <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Deploy, scale, Kubernetes upgrade, and destroy with live Terraform logs</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user override requests, templates, destroy approvals, Activity inbox, audit log, and OCI config sync</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user override requests, templates, destroy approvals, Activity inbox, request email pings, audit log, and OCI config sync</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Shape-aware Kubernetes compatibility filtering, OCI shape/version sync, and node-image auto-selection to prevent invalid deploy combinations</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>VPN-first access: kubectl-ready kubeconfig plus OKE API endpoint allowlists for runner and corporate/VPN CIDRs</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>FinOps visibility: live estimates, cluster-level cost cards, and admin total spend</span></li>

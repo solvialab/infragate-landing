@@ -31,7 +31,7 @@ A complete overview of Infragate by Solvia Lab as an OCI-native Internal Develop
 - **Pre-configured profiles** — admins create templates that encode K8s version, VM shape, node image, pool layout, tier, TTL, and destroy protection
 - **Deploy form pre-fill + lock** — selecting a template pre-fills and locks resource fields (pools, nodes, CPU, RAM, storage, pool names, and add/remove pool controls). Users can still set cluster name, CIDR, compartment, and advanced overrides. Select "Custom" to unlock all fields and configure manually with limit enforcement
 - **Template values can exceed user limits** — templates represent admin-pre-approved configurations, so template-defined values are not clamped to the user's personal limits. The lock prevents users from editing these values
-- **Requests workflow** — protected-cluster destroy approvals and per-user limit-increase requests share a dedicated admin Requests queue. Users submit a reason, admins approve/deny with an optional note, and outcomes are visible in Activity. Destroy approvals still require review of the Terraform destroy plan before force-destroy; limit approvals apply granted overrides to the user's account
+- **Requests workflow** — protected-cluster destroy approvals and per-user limit-increase requests share a dedicated admin Requests queue. Users submit a reason, admins approve/deny with an optional note, and outcomes are visible in Activity. When SMTP is configured, submit/approve/deny events also send info-only email pings to admins and users with requester, action, comments, and request parameters. Destroy approvals still require review of the Terraform destroy plan before force-destroy; limit approvals apply granted overrides to the user's account
 - **Time-to-live (TTL)** — optional expiry in hours, enforced at deploy time; when TTL is reached, Infragate automatically triggers destroy/cleanup. Also available on custom deploys without a template
 - **Live cost preview** — add/edit modal shows estimated monthly and hourly cost that updates as you change pools, shape, or tier
 - **Template shape/K8s guardrail** — template modal uses the same shape-aware compatibility filtering as deploy; save/update re-validates selected shape+K8s and blocks incompatible combinations
@@ -103,7 +103,7 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 
 - **Status tracking** — real-time status across all views: provisioning, scaling, upgrading, destroying, running, error, destroyed
 - **TTL visibility** — dashboard cards show color-coded countdown badges (green >24h, orange <24h, red <4h) for clusters with TTL. Detail page shows full expiry timestamp and remaining time
-- **Destroy protection + approval queue** — protected clusters show a red "Protected" badge on dashboard cards, the admin All Clusters table, and the detail page. Non-admin users clicking "Destroy" open a "Request destroy" modal (optional reason) which creates a pending approval ticket. The admin nav shows a live-count "Requests (N)" badge, refreshed every 5s. On the admin Requests page, admins approve, review the destroy plan, then confirm force-destroy, or deny with a note — the user's cluster card then displays a "Destroy pending" (amber) or "Destroy denied" (red, note in tooltip) pill. At most one pending request per cluster. Every submit/approve/deny is audit-logged. Admins can still force-destroy directly via `?force=true`.
+- **Destroy protection + approval queue** — protected clusters show a red "Protected" badge on dashboard cards, the admin All Clusters table, and the detail page. Non-admin users clicking "Destroy" open a "Request destroy" modal (optional reason) which creates a pending approval ticket. The admin nav shows a live-count "Requests (N)" badge, refreshed every 5s. On the admin Requests page, admins approve, review the destroy plan, then confirm force-destroy, or deny with a note — the user's cluster card then displays a "Destroy pending" (amber) or "Destroy denied" (red, note in tooltip) pill. At most one pending request per cluster. Every submit/approve/deny is audit-logged and can emit info-only request emails when SMTP is enabled. Admins can still force-destroy directly via `?force=true`.
 - **Activity inbox** — user nav includes a persistent Activity dropdown with unread counts, last events, and mark-read controls. Destroy-request approve/deny events, limit request submit/review events, TTL warnings, deploy/scale/upgrade/destroy lifecycle events, and admin-driven account limit changes emit inbox rows.
 - **Destroy with cleanup** — `terraform destroy` removes cluster-scoped OCI resources and returns CIDR to pool; Infragate-managed child compartments may be deleted, external compartment overrides are retained, and only the cluster `.tfstate` object is deleted while the user prefix remains
 - **Error recovery** — failed deployments show troubleshooting tips and a "Clean up" button to remove partial resources
@@ -170,6 +170,7 @@ Six dedicated admin pages accessible to users with the `admin` role:
 - Columns: requested-at (relative time), cluster, user, reason, status, reviewer, actions
 - **Review** action opens a modal: optional admin note, then **Approve** opens the destroy plan for a second confirmation, or **Deny** (note surfaces on user's cluster card as "Destroy denied")
 - Limit-request review lets admins grant requested or adjusted values for cluster count, pools, nodes, OCPU, RAM, and storage; approve/deny results notify the user in Activity
+- Optional request emails notify admins on submit and users on submit/approve/deny; email content includes requester, action, request id, comments, cluster details for destroy requests, and requested/granted values for limit requests
 - Row-locked approval prevents double-approval when two admins click simultaneously
 - Every submit / approve / deny is audit-logged
 - Bypass path: admins can still force-destroy directly via `?force=true` for incident response
@@ -194,7 +195,7 @@ Six dedicated admin pages accessible to users with the `admin` role:
 
 ## Testing & CI
 
-- **138 automated tests** — business logic, validation rules, API contracts, access control, lifecycle notifications, and cost estimation
+- **143 automated tests** — business logic, validation rules, API contracts, access control, lifecycle notifications, request emails, and cost estimation
 - **Zero external dependencies** — in-memory SQLite with mocked auth; no database server, IdP, or OCI access needed to run tests
 - **Coverage areas** — user provisioning, limit resolution, admin config CRUD, cluster templates, cost engine (basic/enhanced tiers, multi-pool, custom pricing)
 - **Reference CI pipeline (maintainer-owned)** — GitHub Actions and GitLab CI run validation and publish images for maintainer release flow; customer operators consume published image tags/digests

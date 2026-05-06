@@ -127,7 +127,7 @@ Kubernetes version changes are handled via a separate **Upgrade** action.
 
 Destroy is permanent and cannot be undone.
 
-> **Requests workflow:** The admin **Requests** area handles both protected-cluster destroy approvals and per-user limit-increase requests. Users submit a reason instead of destroying directly or when they need higher limits; admins approve, adjust, or deny with a note. Destroy approval still opens the Terraform destroy plan before force-destroy. Limit approval writes granted values into the user's per-user overrides. Results appear in the user's Activity inbox.
+> **Requests workflow:** The admin **Requests** area handles both protected-cluster destroy approvals and per-user limit-increase requests. Users submit a reason instead of destroying directly or when they need higher limits; admins approve, adjust, or deny with a note. Destroy approval still opens the Terraform destroy plan before force-destroy. Limit approval writes granted values into the user's per-user overrides. Results appear in the user's Activity inbox, and SMTP-enabled installs can also send info-only email pings with requester, action, comments, and request parameters.
 >
 > **Destroy behavior note:** Infragate-managed child compartments may be deleted with the cluster. External compartment overrides are retained for shared/multi-cluster setups. In Object Storage, only the destroyed cluster's `.tfstate` object is removed; the user-level prefix/folder is kept for other clusters.
 
@@ -227,14 +227,14 @@ Templates can be created, edited, enabled/disabled, and permanently deleted. Dis
 
 ### Requests
 
-Approval queue for user-submitted destroy requests on protection-enabled clusters and limit-increase requests for per-user overrides. The admin nav shows live request count badges that refresh every 5 seconds (hidden when zero pending). Filter by Pending / Approved / Denied / All. Each pending row has a **Review** action.
+Approval queue for user-submitted destroy requests on protection-enabled clusters and limit-increase requests for per-user overrides. The admin nav shows live request count badges that refresh every 5 seconds (hidden when zero pending). Filter by Pending / Approved / Denied / All. Each pending row has a **Review** action. When SMTP is configured, request submit/review events also send info-only email pings: admins get submit notifications, and users get submit/approve/deny notifications.
 
 For destroy requests, the review modal lets the admin:
 - Add an optional admin note
 - Click **Approve & review plan** — the normal destroy plan opens. After the admin confirms the plan, the request is marked `approved` and `force=true` destroy starts. Audit-logged as `destroy-request:approve`.
 - Click **Deny** — the note is surfaced on the user's cluster card as a red "Destroy denied" pill (with the note in the tooltip). Audit-logged as `destroy-request:deny`.
 
-For limit requests, the review modal lets the admin grant the requested values or adjust them before approval. Approved values are written into the user's per-user overrides and the user receives an Activity notification. Denials can include an admin note and are audit-logged as `limit-request:deny`.
+For limit requests, the review modal lets the admin grant the requested values or adjust them before approval. Approved values are written into the user's per-user overrides and the user receives an Activity notification. Denials can include an admin note and are audit-logged as `limit-request:deny`. Request emails include the requester, request id, comment, requested values, and granted values where applicable.
 
 Approval is row-locked to prevent two admins double-approving. Bypass path: admins can still force-destroy any protected cluster directly via `?force=true` from the All Clusters table — useful for incident response.
 
@@ -395,7 +395,7 @@ pip install -r requirements.txt
 pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 ```
 
-138 automated tests covering user provisioning, limit resolution and limit requests, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), lifecycle notifications, and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
+143 automated tests covering user provisioning, limit resolution and limit requests, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), lifecycle notifications, request emails, and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
 
 ### CI pipeline (maintainer-owned)
 

@@ -4,7 +4,7 @@ This page gives AI assistants, search engines, and retrieval systems a concise f
 
 ## What Infragate Is
 
-Infragate by Solvia Lab is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine (OKE). It helps platform engineering teams provide governed self-service OKE provisioning, cluster lifecycle automation, kubeconfig access, BYON networking, approval workflows, Activity history, and FinOps visibility inside the customer's Oracle Cloud tenancy.
+Infragate by Solvia Lab is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine (OKE). It helps platform engineering teams provide governed self-service OKE provisioning, cluster lifecycle automation, kubeconfig access, BYON networking, approval workflows, Activity history, optional request email pings, and FinOps visibility inside the customer's Oracle Cloud tenancy.
 
 Canonical website: https://infragate.cloud/
 Company: Solvia Lab s.r.o.
@@ -28,7 +28,7 @@ Infragate is a self-hosted, OCI-native Internal Developer Platform for Oracle Ku
 - BYON networking for existing OCI compartments, VCNs, and subnets
 - Read-only ownership boundaries for customer-provided network resources
 - Kubeconfig access for authorized users without local OCI CLI setup
-- Approval workflows for protected operations
+- Approval workflows for protected operations, including optional info-only email pings for request submit/review events
 - Activity history and audit-friendly operational records
 - Cost visibility for OKE clusters
 - OIDC authentication with enterprise identity providers
