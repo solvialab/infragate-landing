@@ -53,6 +53,46 @@
     "keywords":  "Internal Developer Platform for Oracle Kubernetes Engine, Oracle Kubernetes Engine IDP, OKE Internal Developer Platform, OKE self-service, OCI platform engineering"
 }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is an Internal Developer Platform for Oracle Kubernetes Engine?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An Internal Developer Platform for Oracle Kubernetes Engine is a governed self-service layer for OKE provisioning, lifecycle automation, access delivery, approvals, network choices, and cost visibility. It gives developers approved Kubernetes workflows while platform teams keep control of OCI tenancy, compartment, VCN, subnet, IAM, and operational standards."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does an OKE Internal Developer Platform replace Oracle Kubernetes Engine?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. OKE remains the managed Kubernetes service. The IDP sits above OKE to standardize requests, templates, Terraform automation, kubeconfig access, upgrades, scaling, destroy protection, Activity history, and governance workflows."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should an Oracle Kubernetes Engine IDP support BYON networking?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, production OCI environments often have existing compartments, VCNs, subnets, route tables, security lists, gateways, and VPN patterns. An OKE IDP should support BYON networking while treating customer-owned network resources as read-only prerequisites unless the platform owner explicitly chooses generated infrastructure."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do developers need OCI Console or Terraform access with an OKE IDP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "They should not need broad OCI Console or Terraform access for standard workflows. Developers can request and operate approved OKE clusters through the portal, while platform administrators control templates, limits, approvals, OCI settings, and access policies."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -97,6 +137,15 @@
         <p>Infragate by Solvia Lab is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine. It is deployed into the customer environment rather than consumed as a hosted SaaS control plane, and it is designed for organizations that want governed OKE self-service without broad OCI Console or Terraform access for every engineer.</p>
         <h2>A practical adoption path</h2>
         <p>Start with a controlled evaluation in a non-production tenancy or compartment, validate OKE deploy, scale, upgrade, kubeconfig, and destroy workflows, then test BYON and VPN-first access patterns against the organization network model. After that, standardize templates, limits, and approval rules before onboarding broader engineering teams.</p>
+        <h2>Questions OKE teams usually ask</h2>
+        <h3>What is an Internal Developer Platform for Oracle Kubernetes Engine?</h3>
+        <p>It is a governed self-service layer for OKE provisioning, lifecycle automation, access delivery, approvals, network choices, and cost visibility. The goal is to make Oracle Kubernetes Engine repeatable for developers while keeping OCI tenancy, compartment, VCN, subnet, IAM, and operational standards under platform-team control.</p>
+        <h3>Does an OKE Internal Developer Platform replace Oracle Kubernetes Engine?</h3>
+        <p>No. Oracle Kubernetes Engine remains the managed Kubernetes service. The IDP sits above OKE to standardize requests, templates, Terraform automation, kubeconfig access, upgrades, scaling, destroy protection, Activity history, and governance workflows.</p>
+        <h3>Should an Oracle Kubernetes Engine IDP support BYON networking?</h3>
+        <p>Yes. Production OCI environments often already have approved compartments, VCNs, subnets, route tables, security lists, gateways, and VPN patterns. An OKE IDP should support BYON networking while treating customer-owned network resources as read-only prerequisites unless the platform owner explicitly chooses generated infrastructure.</p>
+        <h3>Do developers need OCI Console or Terraform access?</h3>
+        <p>For standard cluster workflows, they should not need broad OCI Console or Terraform access. Developers can request and operate approved OKE clusters through the portal, while platform administrators control templates, limits, approvals, OCI settings, and access policies.</p>
         <div class="cta-band">
           <div><strong>Evaluating an Internal Developer Platform for Oracle Kubernetes Engine?</strong><span>Use these notes as a buying checklist, then compare them with the Infragate product page and docs.</span></div>
           <a class="btn" href="/">View Infragate</a>
