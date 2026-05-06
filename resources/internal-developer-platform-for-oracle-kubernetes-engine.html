@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Internal Developer Platform for Oracle Cloud and OKE - Infragate by Solvia Lab</title>
-  <meta name="description" content="What an OCI-native Internal Developer Platform should provide for teams standardizing Kubernetes operations on Oracle Cloud Infrastructure.">
-  <meta name="keywords" content="Internal Developer Platform Oracle Cloud, OCI IDP, Oracle Cloud platform engineering, OKE developer platform">
-  <link rel="canonical" href="https://infragate.cloud/resources/internal-developer-platform-for-oracle-cloud.html">
+  <title>Internal Developer Platform for Oracle Kubernetes Engine - Infragate</title>
+  <meta name="description" content="What an Internal Developer Platform for Oracle Kubernetes Engine should provide: governed OKE self-service, lifecycle automation, kubeconfig access, BYON networking, approvals, and cost visibility.">
+  <meta name="keywords" content="Internal Developer Platform for Oracle Kubernetes Engine, Oracle Kubernetes Engine IDP, OKE Internal Developer Platform, OKE self-service, OCI platform engineering">
+  <link rel="canonical" href="https://infragate.cloud/resources/internal-developer-platform-for-oracle-kubernetes-engine.html">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="alternate" type="text/plain" href="/llms.txt" title="Infragate AI summary">
   <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Infragate full AI context">
   <link rel="alternate" type="text/markdown" href="/ai.md" title="Infragate AI facts and disambiguation">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://infragate.cloud/resources/internal-developer-platform-for-oracle-cloud.html">
-  <meta property="og:title" content="Internal Developer Platform for Oracle Cloud and OKE - Infragate by Solvia Lab">
-  <meta property="og:description" content="What an OCI-native Internal Developer Platform should provide for teams standardizing Kubernetes operations on Oracle Cloud Infrastructure.">
+  <meta property="og:url" content="https://infragate.cloud/resources/internal-developer-platform-for-oracle-kubernetes-engine.html">
+  <meta property="og:title" content="Internal Developer Platform for Oracle Kubernetes Engine - Infragate">
+  <meta property="og:description" content="A practical checklist for OKE teams evaluating governed self-service, lifecycle automation, kubeconfig access, BYON networking, approvals, and cost visibility.">
   <meta property="og:site_name" content="Infragate">
   <meta property="og:image" content="https://infragate.cloud/assets/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -31,17 +31,17 @@
 {
     "image":  "https://infragate.cloud/assets/og-image.png",
     "datePublished":  "2026-05-02",
-    "description":  "What an OCI-native Internal Developer Platform should provide for teams standardizing Kubernetes operations on Oracle Cloud Infrastructure.",
+    "description":  "What an Internal Developer Platform for Oracle Kubernetes Engine should provide: governed OKE self-service, lifecycle automation, kubeconfig access, BYON networking, approvals, and cost visibility.",
     "@type":  "Article",
     "dateModified":  "2026-05-06",
-    "headline":  "Internal Developer Platform for Oracle Cloud and OKE",
+    "headline":  "Internal Developer Platform for Oracle Kubernetes Engine",
     "author":  {
                    "url":  "https://solvialab.tech/",
                    "name":  "Solvia Lab s.r.o.",
                    "@type":  "Organization"
                },
     "@context":  "https://schema.org",
-    "mainEntityOfPage":  "https://infragate.cloud/resources/internal-developer-platform-for-oracle-cloud.html",
+    "mainEntityOfPage":  "https://infragate.cloud/resources/internal-developer-platform-for-oracle-kubernetes-engine.html",
     "publisher":  {
                       "name":  "Solvia Lab s.r.o.",
                       "logo":  {
@@ -50,7 +50,7 @@
                                },
                       "@type":  "Organization"
                   },
-    "keywords":  "Internal Developer Platform Oracle Cloud, OCI IDP, Oracle Cloud platform engineering, OKE developer platform"
+    "keywords":  "Internal Developer Platform for Oracle Kubernetes Engine, Oracle Kubernetes Engine IDP, OKE Internal Developer Platform, OKE self-service, OCI platform engineering"
 }
   </script>
 </head>
@@ -69,44 +69,44 @@
   <main>
     <section class="hero">
       <div class="hero-inner">
-        <span class="kicker">Internal Developer Platform for Oracle Cloud</span>
-        <h1>Internal Developer Platform for Oracle Cloud and OKE</h1>
-        <p class="lede">What an OCI-native Internal Developer Platform should provide for teams standardizing Kubernetes operations on Oracle Cloud Infrastructure.</p>
+        <span class="kicker">Oracle Kubernetes Engine IDP</span>
+        <h1>Internal Developer Platform for Oracle Kubernetes Engine</h1>
+        <p class="lede">What OKE teams should expect from a governed Internal Developer Platform: self-service provisioning, lifecycle automation, access delivery, BYON networking, approvals, and cost visibility.</p>
         <div class="meta"><span>Infragate by Solvia Lab</span><span>Updated May 6, 2026</span><span>7 min read</span></div>
       </div>
     </section>
     <div class="layout">
       <article class="article">
         <div class="callout"><strong>Short version:</strong> Infragate is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine teams that need governed self-service inside their own tenancy.</div>
-        <h2>Why Oracle Cloud needs its own IDP approach</h2>
-        <p>Generic platform engineering guidance often assumes AWS, Azure, or Google Cloud patterns. OCI has its own primitives: compartments, OKE, VCNs, Object Storage, shapes, OCPU and memory flex sizing, IAM policies, and tenancy boundaries.</p>
-        <p>An Internal Developer Platform for Oracle Cloud should embrace those primitives instead of flattening them into a vague multi-cloud abstraction.</p>
-        <h2>The core job of an OCI IDP</h2>
-        <p>The platform should give application teams a fast path to the infrastructure they need while giving platform owners control over security, network ownership, cost, templates, approvals, and operational consistency.</p>
-        <p>For OKE, that means the IDP must cover both provisioning and day-2 lifecycle actions such as scaling, upgrades, access delivery, destroy protection, and cost reviews.</p>
-        <h2>Capabilities to look for</h2>
+        <h2>Why OKE needs a focused IDP</h2>
+        <p>Oracle Kubernetes Engine is a strong managed Kubernetes foundation, but most enterprise teams still need a controlled layer above it. Without an Internal Developer Platform, OKE delivery often depends on tickets, Terraform pull requests, shared scripts, or direct OCI Console access.</p>
+        <p>An Internal Developer Platform for Oracle Kubernetes Engine should preserve OCI-native control while giving developers a faster path to approved Kubernetes environments.</p>
+        <h2>The core job of an OKE IDP</h2>
+        <p>The platform should give application teams governed self-service while giving platform owners control over templates, versions, shapes, network ownership, cost, approvals, access, and operational consistency.</p>
+        <p>For OKE, that means the IDP must cover both cluster creation and day-2 lifecycle actions: scaling, Kubernetes upgrades, kubeconfig delivery, protected destroy workflows, network choices, and cost reviews.</p>
+        <h2>Capabilities to look for in an OKE platform</h2>
         <ul>
-          <li>Self-service OKE provisioning from approved templates and custom forms.</li>
+          <li>Self-service Oracle Kubernetes Engine provisioning from approved templates and custom forms.</li>
           <li>Admin control over Kubernetes versions, VM shapes, node images, limits, and role access.</li>
-          <li>OCI-native network patterns including BYON and VPN-first API endpoint access.</li>
+          <li>OCI-native network patterns including BYON, existing VCN/subnet support, and VPN-first API endpoint access.</li>
           <li>Live Terraform execution visibility and state stored inside customer-controlled OCI boundaries.</li>
           <li>FinOps estimates before users create or scale resources.</li>
           <li>Activity history, approvals, and audit-friendly lifecycle records.</li>
         </ul>
         <h2>Where Infragate fits</h2>
-        <p>Infragate by Solvia Lab is focused on this OCI and OKE-specific platform layer. It is deployed into the customer environment rather than consumed as a hosted SaaS control plane, and it is designed for organizations that want governed self-service without direct OCI Console access for every engineer.</p>
+        <p>Infragate by Solvia Lab is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine. It is deployed into the customer environment rather than consumed as a hosted SaaS control plane, and it is designed for organizations that want governed OKE self-service without broad OCI Console or Terraform access for every engineer.</p>
         <h2>A practical adoption path</h2>
-        <p>Start with a controlled evaluation in a non-production tenancy or compartment, validate OKE lifecycle workflows, then test BYON and VPN-first access patterns against the organization network model. After that, standardize templates, limits, and approval rules before onboarding broader engineering teams.</p>
+        <p>Start with a controlled evaluation in a non-production tenancy or compartment, validate OKE deploy, scale, upgrade, kubeconfig, and destroy workflows, then test BYON and VPN-first access patterns against the organization network model. After that, standardize templates, limits, and approval rules before onboarding broader engineering teams.</p>
         <div class="cta-band">
-          <div><strong>Evaluating OKE self-service for your OCI tenancy?</strong><span>Use these notes as a buying checklist, then compare them with the Infragate product page and docs.</span></div>
+          <div><strong>Evaluating an Internal Developer Platform for Oracle Kubernetes Engine?</strong><span>Use these notes as a buying checklist, then compare them with the Infragate product page and docs.</span></div>
           <a class="btn" href="/">View Infragate</a>
         </div>
         <h2>Related Infragate resources</h2>
         <div class="related-grid">
           <a class="related-card" href="/resources/oke-self-service-platform.html"><span>OKE self-service platform</span>How platform teams can offer governed Oracle Kubernetes Engine provisioning without handing every engineer Terraform, IAM, or OCI Console access.</a>
-          <a class="related-card" href="/resources/internal-developer-platform-for-oracle-kubernetes-engine.html"><span>Oracle Kubernetes Engine IDP</span>What an Internal Developer Platform for Oracle Kubernetes Engine should provide for governed self-service, access, networking, approvals, and cost visibility.</a>
           <a class="related-card" href="/resources/byon-networking-for-oke.html"><span>BYON networking for OKE</span>A practical look at bring-your-own-network patterns for Oracle Kubernetes Engine and how Infragate keeps customer-owned OCI network resources under platform control.</a>
           <a class="related-card" href="/resources/oke-kubeconfig-access-without-oci-cli.html"><span>OKE kubeconfig access</span>How governed kubeconfig delivery can reduce onboarding friction for Oracle Kubernetes Engine users while preserving access control and network boundaries.</a>
+          <a class="related-card" href="/resources/internal-developer-platform-for-oracle-cloud.html"><span>OCI Internal Developer Platform</span>What an OCI-native Internal Developer Platform should provide for teams standardizing Kubernetes operations on Oracle Cloud Infrastructure.</a>
         </div>
       </article>
       <aside class="side" aria-label="Related resources">

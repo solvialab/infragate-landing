@@ -81,6 +81,7 @@ Infragate targets enterprise OCI and OKE teams that need a production-oriented i
 - Markdown feature list: https://infragate.cloud/docs/features.md
 - Resources hub: https://infragate.cloud/resources/
 - OKE self-service platform guide: https://infragate.cloud/resources/oke-self-service-platform.html
+- Internal Developer Platform for Oracle Kubernetes Engine guide: https://infragate.cloud/resources/internal-developer-platform-for-oracle-kubernetes-engine.html
 - BYON networking guide: https://infragate.cloud/resources/byon-networking-for-oke.html
 - OKE kubeconfig access guide: https://infragate.cloud/resources/oke-kubeconfig-access-without-oci-cli.html
 - Internal Developer Platform for Oracle Cloud guide: https://infragate.cloud/resources/internal-developer-platform-for-oracle-cloud.html

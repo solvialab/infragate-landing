@@ -54,6 +54,7 @@ Oracle Kubernetes Engine Internal Developer Platform, OCI-native IDP, OKE self-s
 - Full AI context: https://infragate.cloud/llms-full.txt
 - AI facts and disambiguation: https://infragate.cloud/ai.md
 - OKE self-service platform: https://infragate.cloud/resources/oke-self-service-platform.html
+- Internal Developer Platform for Oracle Kubernetes Engine: https://infragate.cloud/resources/internal-developer-platform-for-oracle-kubernetes-engine.html
 - BYON networking for OKE: https://infragate.cloud/resources/byon-networking-for-oke.html
 - OKE kubeconfig access without OCI CLI: https://infragate.cloud/resources/oke-kubeconfig-access-without-oci-cli.html
 - Internal Developer Platform for Oracle Cloud: https://infragate.cloud/resources/internal-developer-platform-for-oracle-cloud.html

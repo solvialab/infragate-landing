@@ -41,6 +41,7 @@ Infragate is a self-hosted, OCI-native Internal Developer Platform for Oracle Ku
 - Markdown docs overview: https://infragate.cloud/docs/readme.md
 - Markdown feature list: https://infragate.cloud/docs/features.md
 - Resources: https://infragate.cloud/resources/
+- Internal Developer Platform for Oracle Kubernetes Engine: https://infragate.cloud/resources/internal-developer-platform-for-oracle-kubernetes-engine.html
 - BYON networking for OKE: https://infragate.cloud/resources/byon-networking-for-oke.html
 - OKE self-service platform: https://infragate.cloud/resources/oke-self-service-platform.html
 - OKE kubeconfig access without OCI CLI: https://infragate.cloud/resources/oke-kubeconfig-access-without-oci-cli.html
