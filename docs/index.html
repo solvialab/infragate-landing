@@ -10,6 +10,8 @@
   <link rel="apple-touch-icon" href="../assets/infragate-logo.png">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="alternate" type="text/plain" href="/llms.txt" title="Infragate AI summary">
+  <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Infragate full AI context">
+  <link rel="alternate" type="text/markdown" href="/ai.md" title="Infragate AI facts and disambiguation">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://infragate.cloud/docs/">
   <meta property="og:title" content="Infragate Docs by Solvia Lab - OKE Platform Features and Deployment Overview">
@@ -462,6 +464,47 @@
       color: #374151; margin-bottom: 0.25rem;
     }
     .dark .modal-content label { color: #cbd5e1; }
+    .file-upload-trigger {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+      width: 100%; min-height: 3.25rem; padding: 0.75rem 0.875rem;
+      border: 1px dashed #b7c4d1; border-radius: 0.75rem;
+      background: #f8fbfd; color: #526173; cursor: pointer;
+      transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+    }
+    .modal-content label.file-upload-trigger { display: flex; margin-bottom: 0; }
+    .file-upload-trigger:hover { border-color: #1C5D7A; background: #EFF6FA; color: #1C5D7A; }
+    .dark .file-upload-trigger { background: #111c2d; border-color: #365168; color: #aebbd0; }
+    .dark .file-upload-trigger:hover { border-color: #5BB8D8; background: rgba(91,184,216,0.1); color: #d7f3fb; }
+    .file-upload-icon {
+      width: 2rem; height: 2rem; border-radius: 9999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #e5f2f7; color: #1C5D7A; flex: 0 0 auto;
+    }
+    .dark .file-upload-icon { background: rgba(91,184,216,0.16); color: #5BB8D8; }
+    .file-upload-action {
+      flex: 0 0 auto; margin-left: auto; padding: 0.25rem 0.55rem;
+      border-radius: 9999px; background: #e5f2f7; color: #1C5D7A;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .dark .file-upload-action { background: rgba(91,184,216,0.16); color: #8bd6ea; }
+    .file-list { display: none; margin-top: 0.625rem; gap: 0.5rem; flex-wrap: wrap; }
+    .file-list.has-files { display: flex; }
+    .file-chip {
+      display: inline-flex; align-items: center; gap: 0.5rem; max-width: 100%;
+      padding: 0.45rem 0.55rem; border: 1px solid #d8e1ea; border-radius: 9999px;
+      background: #ffffff; color: #344256; font-size: 0.75rem; line-height: 1.2;
+    }
+    .dark .file-chip { background: #0F172A; border-color: #2f465e; color: #d8e1ec; }
+    .file-chip-name { min-width: 0; max-width: 16rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+    .file-chip-size { color: #7b8797; flex: 0 0 auto; }
+    .dark .file-chip-size { color: #92a2b8; }
+    .file-chip-remove {
+      width: 1.15rem; height: 1.15rem; border-radius: 9999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: #7b8797; transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .file-chip-remove:hover { background: #eef3f7; color: #1C5D7A; }
+    .dark .file-chip-remove:hover { background: rgba(91,184,216,0.14); color: #5BB8D8; }
     .btn-solid {
       display: inline-flex; align-items: center; justify-content: center;
       background: #1C5D7A; color: white; border: none; cursor: pointer;
@@ -512,8 +555,24 @@
         <label for="support-message">Message <span class="text-red-400">*</span></label>
         <textarea id="support-message" name="message" rows="4" required placeholder="Describe your issue or question..."></textarea>
       </div>
+      <div>
+        <label for="support-attachment">Attachment <span class="text-gray-400 font-normal">(optional)</span></label>
+        <label class="file-upload-trigger" for="support-attachment">
+          <span class="flex items-center gap-3 min-w-0">
+            <span class="file-upload-icon"><i class="fas fa-paperclip text-sm"></i></span>
+            <span class="min-w-0">
+              <span id="attachmentLabel" class="block text-sm font-semibold truncate">Add files</span>
+              <span class="block text-xs text-gray-400 dark:text-gray-500">Screenshots, logs, configs</span>
+            </span>
+          </span>
+          <span class="file-upload-action">Browse</span>
+          <input type="file" id="support-attachment" name="attachment" class="hidden" accept=".png,.jpg,.jpeg,.gif,.pdf,.txt,.log,.zip,.json,.yaml,.yml" multiple>
+        </label>
+        <div id="supportAttachmentList" class="file-list"></div>
+        <p class="text-xs text-gray-400 mt-1">Max 5 MB total. Multiple files allowed.</p>
+      </div>
       <button type="submit" id="supportSubmitBtn" class="w-full btn-solid px-6 py-3 text-sm rounded-xl">
-        <i class="fas fa-paper-plane mr-1.5"></i> Send Message
+        <i class="fas fa-envelope mr-1.5"></i> Send Message
       </button>
       <p class="text-xs text-gray-400 text-center">Or email us directly at <a href="mailto:support@infragate.cloud" class="text-[#1C5D7A] dark:text-[#5BB8D8] hover:underline">support@infragate.cloud</a></p>
     </form>
@@ -1084,10 +1143,80 @@
   // ── Initial load
   loadPage(getPageFromHash());
 
+  var ATTACHMENT_MAX_BYTES = 5 * 1024 * 1024;
+
+  function formatFileSize(bytes) {
+    if (!bytes) return '0 KB';
+    if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(bytes >= 10 * 1024 * 1024 ? 0 : 1) + ' MB';
+  }
+
+  function resetAttachmentInput(inputId, labelId, listId) {
+    var input = document.getElementById(inputId);
+    var label = document.getElementById(labelId);
+    var list = document.getElementById(listId);
+    if (input) input.value = '';
+    if (label) label.textContent = 'Add files';
+    if (list) {
+      list.innerHTML = '';
+      list.classList.remove('has-files');
+    }
+  }
+
+  function renderAttachmentList(inputId, labelId, listId) {
+    var input = document.getElementById(inputId);
+    var label = document.getElementById(labelId);
+    var list = document.getElementById(listId);
+    if (!input || !label || !list) return;
+
+    var files = Array.prototype.slice.call(input.files || []);
+    var total = files.reduce(function(sum, file) { return sum + file.size; }, 0);
+    if (total > ATTACHMENT_MAX_BYTES) {
+      alert('Total file size exceeds 5 MB limit.');
+      resetAttachmentInput(inputId, labelId, listId);
+      return;
+    }
+
+    label.textContent = files.length ? (files.length + ' file' + (files.length > 1 ? 's' : '') + ' selected') : 'Add files';
+    list.innerHTML = '';
+    list.classList.toggle('has-files', files.length > 0);
+
+    files.forEach(function(file, index) {
+      var chip = document.createElement('span');
+      chip.className = 'file-chip';
+      chip.innerHTML =
+        '<i class="fas fa-file-lines text-[#1C5D7A] dark:text-[#5BB8D8]"></i>' +
+        '<span class="file-chip-name" title=""></span>' +
+        '<span class="file-chip-size"></span>' +
+        '<button type="button" class="file-chip-remove" aria-label="Remove attachment"><i class="fas fa-xmark text-[10px]"></i></button>';
+      chip.querySelector('.file-chip-name').textContent = file.name;
+      chip.querySelector('.file-chip-name').setAttribute('title', file.name);
+      chip.querySelector('.file-chip-size').textContent = formatFileSize(file.size);
+      chip.querySelector('.file-chip-remove').addEventListener('click', function() {
+        var dt = new DataTransfer();
+        files.forEach(function(item, itemIndex) {
+          if (itemIndex !== index) dt.items.add(item);
+        });
+        input.files = dt.files;
+        renderAttachmentList(inputId, labelId, listId);
+      });
+      list.appendChild(chip);
+    });
+  }
+
+  function appendAttachments(formData, inputId) {
+    var fileInput = document.getElementById(inputId);
+    if (!fileInput) return;
+    for (var i = 0; i < fileInput.files.length; i++) {
+      formData.append('attachment', fileInput.files[i]);
+    }
+  }
+
   // ── Support modal
   function openSupportModal() {
     document.getElementById('supportForm').classList.remove('hidden');
     document.getElementById('supportSuccess').classList.add('hidden');
+    resetAttachmentInput('support-attachment', 'attachmentLabel', 'supportAttachmentList');
     document.getElementById('supportModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -1099,6 +1228,10 @@
   }
   window.closeSupportModal = closeSupportModal;
 
+  document.getElementById('support-attachment').addEventListener('change', function() {
+    renderAttachmentList('support-attachment', 'attachmentLabel', 'supportAttachmentList');
+  });
+
   document.getElementById('supportForm').addEventListener('submit', function(e) {
     e.preventDefault();
     var form = this;
@@ -1107,31 +1240,33 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i> Sending...';
 
-    var data = {
-      name: form.name.value,
-      email: form.email.value,
-      subject: form.subject.value,
-      message: form.message.value,
-      _subject: 'Infragate Docs — ' + form.subject.value,
-      _captcha: 'false',
-      _template: 'table'
-    };
+    var formData = new FormData();
+    formData.append('name', form.name.value);
+    formData.append('email', form.email.value);
+    formData.append('subject', form.subject.value);
+    formData.append('message', form.message.value);
+    formData.append('_subject', 'Infragate Docs — ' + form.subject.value);
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+    appendAttachments(formData, 'support-attachment');
 
     fetch('https://formsubmit.co/ajax/support@infragate.cloud', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data)
+      headers: { 'Accept': 'application/json' },
+      body: formData
     })
     .then(function(res) { return res.json(); })
     .then(function() {
       form.classList.add('hidden');
       document.getElementById('supportSuccess').classList.remove('hidden');
       form.reset();
+      resetAttachmentInput('support-attachment', 'attachmentLabel', 'supportAttachmentList');
     })
     .catch(function() {
       form.classList.add('hidden');
       document.getElementById('supportSuccess').classList.remove('hidden');
       form.reset();
+      resetAttachmentInput('support-attachment', 'attachmentLabel', 'supportAttachmentList');
     })
     .finally(function() {
       btn.disabled = false;
