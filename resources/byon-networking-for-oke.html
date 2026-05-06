@@ -75,7 +75,7 @@
         <div class="callout"><strong>Short version:</strong> Infragate is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine teams that need governed self-service inside their own tenancy.</div>
         <h2>Why BYON exists</h2>
         <p>Enterprise OCI environments rarely start from an empty tenancy. Network teams usually already own compartments, VCNs, subnets, route tables, gateways, DNS, firewall paths, and VPN access. A Kubernetes platform that always creates a fresh network can conflict with those standards.</p>
-        <p>BYON means bring your own network. For OKE, it lets platform teams deploy clusters into approved OCI network patterns instead of forcing every cluster into a product-created VCN.</p>
+        <p>BYON means bring your own network. For OKE, it lets platform teams deploy clusters into approved OCI compartment, VCN, and subnet patterns instead of forcing every cluster into a product-created VCN.</p>
         <h2>What BYON should not do</h2>
         <p>BYON should not mean an automation tool silently edits production network resources it does not own. Existing VCNs, subnets, route tables, security lists, and gateways are often shared and carefully governed.</p>
         <p>Infragate treats supplied BYO resources as customer-owned boundaries. When users provide existing OCI resource OCIDs, the platform references those resources for cluster deployment patterns instead of taking broad ownership of them.</p>
@@ -92,6 +92,7 @@
           <li>Advanced OCID fields validate expected OCI resource-type prefixes.</li>
           <li>Autocomplete reduces copy-paste mistakes for compartments, VCNs, and subnets.</li>
           <li>Existing compartment OCID alone reuses the compartment but does not auto-discover arbitrary networks.</li>
+          <li>Existing subnet OCID must be paired with an existing VCN OCID, and Infragate validates that relationship before Terraform starts.</li>
           <li>Supplied BYO resources stay read-only from the Terraform ownership perspective.</li>
           <li>Managed network mode can create dedicated public API endpoint subnet rules restricted to runner and VPN/corporate CIDRs.</li>
         </ul>

@@ -141,7 +141,7 @@
           {
             "@type": "Question",
             "name": "What does BYON mean in Infragate?",
-            "acceptedAnswer": { "@type": "Answer", "text": "BYON means bring your own network. Infragate can deploy OKE clusters into existing customer VCN, subnet, route table, security list, and gateway patterns instead of always creating a new network from scratch." }
+            "acceptedAnswer": { "@type": "Answer", "text": "BYON means bring your own network. Infragate can deploy OKE clusters into existing customer compartments, VCNs, and subnets while treating customer-owned route tables, security lists, and gateways as read-only prerequisites." }
           },
           {
             "@type": "Question",
@@ -1425,7 +1425,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Bring your own infra</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab. Managed networks support a dedicated public API endpoint subnet restricted to VPN/runner CIDRs; BYO resources stay read-only.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab. Existing subnet overrides are validated against the supplied VCN; BYO resources stay read-only.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -2084,7 +2084,7 @@
       </details>
       <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
         <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>What does BYON mean?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">BYON means bring your own network. Infragate can deploy OKE into existing customer VCN, subnet, route table, security list, and gateway patterns instead of always creating a new network.</p>
+        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">BYON means bring your own network. Infragate can deploy OKE into existing customer compartments, VCNs, and subnets while treating customer-owned route tables, security lists, and gateways as read-only prerequisites.</p>
       </details>
       <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
         <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>Is Infragate production-ready today?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>

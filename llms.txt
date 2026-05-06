@@ -20,7 +20,7 @@ Infragate is for OCI and Oracle Kubernetes Engine teams that want an internal de
 - Admin-defined cluster templates, role-based access, resource limits, and per-user overrides
 - Protected destroy requests and limit-increase approvals
 - Durable user Activity history for lifecycle events, approvals, denials, TTL warnings, and admin changes
-- BYON / bring your own network support for existing OCI compartments, VCNs, and subnets
+- BYON / bring your own network support for existing OCI compartments, VCNs, and subnets with read-only ownership boundaries
 - VPN-first Kubernetes API access patterns for private enterprise networks
 - Kubeconfig download for authorized users without local OCI CLI setup
 - FinOps visibility through monthly and hourly OKE cost estimates

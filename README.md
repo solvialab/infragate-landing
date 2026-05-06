@@ -24,7 +24,7 @@ It is built for organizations that want faster OKE delivery without giving every
 - **Governed self-service** - admins define cluster templates, resource limits, Kubernetes versions, VM shapes, and allowed deployment options.
 - **Approval workflows** - protected-cluster destroy requests and per-user limit-increase requests flow through an admin review queue.
 - **Activity history** - users receive durable Activity notifications for lifecycle events, approvals, denials, TTL warnings, and admin limit changes.
-- **BYON / bring your own network** - support for existing OCI compartments, VCNs, and subnets while keeping customer-owned network resources read-only.
+- **BYON / bring your own network** - support for existing OCI compartments, VCNs, and subnets with preflight validation while keeping customer-owned network resources read-only.
 - **VPN-first Kubernetes API access** - public OKE API endpoints can be restricted to runner, VPN, and corporate CIDRs for environments avoiding DRG or LPG complexity.
 - **Kubeconfig download** - kubectl-ready kubeconfig generation without requiring users to configure OCI CLI locally.
 - **FinOps visibility** - live monthly/hourly cost estimates for deploy forms, cluster cards, detail views, templates, and admin panels.

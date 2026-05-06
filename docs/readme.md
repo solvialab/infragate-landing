@@ -353,11 +353,21 @@ Users can supply existing OCIDs via the **Advanced tab** in the deploy form. Inf
 
 | Override | Effect |
 |---|---|
-| Existing VCN OCID | Uses your VCN — skips VCN, IGW, and route table creation |
+| Existing VCN OCID | Uses your VCN — skips VCN, IGW, gateway, and route table creation; generated subnets use the VCN's existing/default routing |
 | Existing Compartment OCID | Places resources in your compartment — skips compartment creation |
-| Existing Subnet OCID | Places nodes in your subnet — skips subnet and security list creation |
+| Existing Subnet OCID | Places nodes in your subnet — requires Existing VCN OCID, and skips subnet and security list creation |
 
-Any combination is supported for private-endpoint mode. Restricted public API endpoint mode requires Infragate-managed networking when `Existing VCN OCID` or `Existing Subnet OCID` would otherwise make the network read-only.
+Supported private-endpoint combinations:
+
+| Combination | Behavior |
+|---|---|
+| No overrides | Infragate creates and manages the compartment, VCN, subnets, gateways, route tables, and security lists |
+| Existing Compartment OCID only | Infragate creates a new managed VCN/network stack inside that compartment |
+| Existing VCN OCID, with or without Existing Compartment OCID | Infragate reuses the VCN and creates cluster subnets/security lists inside it; existing VCN gateways and route tables are not managed |
+| Existing VCN OCID + Existing Subnet OCID, with or without Existing Compartment OCID | True BYON networking: Infragate creates OKE/node-pool resources and references the supplied network read-only |
+| Existing Subnet OCID without Existing VCN OCID | Unsupported and rejected before Terraform starts |
+
+Restricted public API endpoint mode requires Infragate-managed networking when `Existing VCN OCID` or `Existing Subnet OCID` would otherwise make the network read-only.
 
 Important behavior: `Existing Compartment OCID` does **not** auto-discover an existing VCN or subnet from that compartment. If VCN/subnet fields are left empty, Infragate creates a new VCN/subnets/network stack inside the provided compartment.
 
