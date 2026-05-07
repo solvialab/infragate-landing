@@ -15,6 +15,7 @@ A complete overview of Infragate by Solvia Lab as an OCI-native Internal Develop
 - **BYON scope behavior** - `Existing Compartment OCID` alone reuses only the compartment. Infragate does not auto-discover existing VCN/subnet objects inside that compartment; leave VCN/subnet blank only when you want Infragate to create a fresh network stack there.
 - **Advanced override guardrails** - Advanced OCID fields validate resource-type prefixes and provide OCI-backed autocomplete for compartments, VCNs, and subnets to reduce typo/copy-paste errors before deploy.
 - **Shared compartment pattern** — for multiple clusters in one compartment, use a dedicated BYO compartment OCID in Advanced for every cluster in that shared domain; avoid reusing an auto-created per-cluster compartment as a shared target.
+- **Compartment subtree enforcement** — `Existing Compartment OCID` is validated against the install-time anchor compartment (set by the customer at install — can be the tenancy root, an existing org compartment, or a dedicated one) before Terraform runs. Descendants of the anchor at any depth are accepted; siblings, ancestors, or compartments in unrelated subtrees are rejected with a clear 400. This catches the misconfiguration upfront instead of letting it surface as a confusing mid-`terraform apply` IAM failure, since the runner's IAM `manage` policies are scoped to the anchor subtree. Customers who want a flat "anywhere goes" model anchor at the tenancy root; customers who want narrower blast radius pick a smaller anchor. Non-existent OCIDs return "compartment not found"; transient OCI API errors return 503 so the deploy can be retried.
 - **CIDR pool management** — admins pre-populate a pool of /24 ranges; each cluster allocates one on deploy and releases it on destroy
 - **Multi-pool support** — configure 1–N node pools per cluster, each with independent node count, OCPU, RAM, and storage sizing
 - **Shape sync from OCI** - Admin Configuration includes **Sync from OCI** for VM shapes, pulling OKE-compatible shapes for the current region/tenancy and merging them into `allowed_shapes` while preserving existing labels/toggles
@@ -80,11 +81,13 @@ Infragate provides live cost estimation across the entire platform using OCI Pay
 - **Full resource scaling** — adjust nodes, OCPU, RAM, and storage per pool from the portal
 - **Scale to zero** — node counts accept `0` on deploy and scale, letting users park a cluster configuration without running compute. Useful for pausing charges on idle Basic clusters where the control plane is free
 - **Pool add/remove** — add new node pools or remove existing ones directly from the scale modal, no redeployment needed
+- **Optional new-pool naming** — new pools added during scale default their name to the cluster's bare name and accept any value matching the standard pool-name rules (lowercase letters/digits/hyphens, 32 chars max). Existing pool names remain immutable so Terraform/OKE state stays aligned. The form rejects collisions with sibling pools upfront
 - **Per-pool control** — scale each pool independently
 - **Change preview** — review all changes before applying (current vs. new values, new pools highlighted, removed pools shown)
 - **Separate K8s upgrade flow** — Kubernetes version upgrades use a dedicated Upgrade action/modal (not the scale flow)
 - **Enhanced tier** — full in-place scaling via OKE API, no manual node cycling
 - **Basic tier** — adding/removing nodes or node pools is automatic; changing shape/OCPU/RAM/storage requires rolling node cycling (`N -> 2N -> N` after new nodes are `Ready/Active`)
+- **Both-tier admin policy** — admins can allow Basic, Enhanced, or both tiers platform-wide. When both are allowed the deploy form shows a per-cluster tier picker; when only one is allowed the choice is implicit. Per-user overrides remain force-only (pin a user to Basic or Enhanced regardless of the global policy)
 
 ## Kubernetes upgrades
 

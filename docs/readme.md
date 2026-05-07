@@ -112,7 +112,7 @@ Infragate runs `terraform apply` and streams the live output in the portal. The 
 
 1. In **My Clusters**, click **Scale** on a running cluster
 2. Adjust resources per pool — nodes, OCPU, RAM, and storage
-3. Add new node pools or remove existing ones as needed
+3. Add new node pools or remove existing ones as needed; new pools default their name to the cluster's bare name and accept any name that matches the standard pool-name rules (lowercase, alphanumeric + hyphen, 32 chars max). Existing pool names stay immutable to keep Terraform/OKE state aligned.
 4. Review the change preview and click **Apply**
 
 Scaling behaviour depends on the cluster tier configured by your admin — see [Cluster tiers](#4-cluster-tiers).
@@ -179,7 +179,7 @@ Platform-wide settings manageable at runtime — no redeployment needed:
 
 | Setting | Description |
 |---|---|
-| Cluster tier | Basic (free) or Enhanced (~$0.10/hr) — applies to all new clusters |
+| Cluster tier | Basic (free), Enhanced (~$0.10/hr), or Both — applies to all new clusters; "Both" lets the user pick per cluster on the deploy form |
 | Cluster limit | Default max active clusters per user |
 | Node pool limit | Max pools per cluster |
 | Nodes per pool | Max nodes per pool |
@@ -246,7 +246,7 @@ Every provisioning, scaling, upgrade, and destroy operation is recorded with use
 
 ## 4. Cluster tiers
 
-The admin configures the cluster tier for the entire platform. Individual users do not choose — they see the current tier as an informational indicator on the deploy form and on their cluster cards.
+The admin configures which cluster tier(s) the platform allows: **Basic only**, **Enhanced only**, or **Both**. When a single tier is allowed, users see it as an informational indicator on the deploy form. When **Both** is allowed, the deploy form shows a tier picker so each user picks per cluster — useful when one team wants free/dev clusters and another wants production-grade scaling, all served by the same platform.
 
 | | Basic | Enhanced |
 |---|---|---|
@@ -272,9 +272,9 @@ The portal shows tier-specific warnings/messages for this flow.
 - Basic: perform rolling worker refresh per pool (`N -> 2N -> N`) after nodes become `Ready/Active`; the Upgrade modal shows live per-pool steps based on current node counts.
 - Enhanced: rollout is fully automated (control plane plus worker refresh), no manual cycling required.
 
-**Switching tiers:** Admins can switch the platform tier at any time in Configuration. The change applies to all new clusters — existing clusters retain the tier they were provisioned with.
+**Switching tiers:** Admins can switch the platform tier at any time in Configuration — Basic, Enhanced, or Both. The change applies to all new clusters; existing clusters retain the tier they were provisioned with.
 
-**Per-user tier override:** Admins can give a specific user Enhanced access while keeping the global default as Basic — useful for individual teams that need production-grade scaling without upgrading the entire platform.
+**Per-user tier override:** Admins can pin a specific user to Basic or to Enhanced, regardless of the global setting. The override is force-only (single tier per user); a user without an override inherits whatever the global setting allows, including the per-cluster picker when the global is **Both**.
 
 ---
 
@@ -366,6 +366,16 @@ Supported private-endpoint combinations:
 | Existing VCN OCID, with or without Existing Compartment OCID | Infragate reuses the VCN and creates cluster subnets/security lists inside it; existing VCN gateways and route tables are not managed |
 | Existing VCN OCID + Existing Subnet OCID, with or without Existing Compartment OCID | True BYON networking: Infragate creates OKE/node-pool resources and references the supplied network read-only |
 | Existing Subnet OCID without Existing VCN OCID | Unsupported and rejected before Terraform starts |
+
+**Compartment subtree rule.** `Existing Compartment OCID` must be a descendant (any depth) of the **anchor compartment** chosen at install time — the compartment Infragate uses as the parent for new cluster compartments. The anchor is whatever existing compartment you point us at; it does not have to be a dedicated Infragate-owned compartment. Direct children, grandchildren, and the anchor itself are all accepted. Siblings, ancestors, or compartments in unrelated subtrees are rejected with a 400 *before* Terraform starts — without this guard the deploy would fail mid-`terraform apply` with a confusing IAM error, because the runner's `manage` policies are scoped to the anchor subtree. Non-existent OCIDs return "compartment not found"; if OCI is briefly unreachable for the validation call, the API returns 503 so the deploy can simply be retried.
+
+The anchor is a knob, not a fixture. Pick the layout that matches your tenancy posture:
+
+- **Tenancy root anchor.** No new compartments, nothing to rearrange — the entire tenancy is BYON-eligible. Right for "we don't want Infragate adding any hierarchy on top of what we already have." Trade-off: the runner's IAM group needs `manage` permissions at tenancy scope (or scoped to the relevant resource families).
+- **Anchor at an existing org compartment.** Slot Infragate into a `platforms`, `production`, or `infra` compartment you already maintain. BYON works for anything under it, including peer compartments that already existed there. You don't have to create a new compartment to enable Infragate.
+- **Dedicated anchor compartment.** Create one (e.g. `infragate`) for explicit blast-radius isolation. Functionally identical to the previous case, just a narrower IAM scope.
+
+The single-install pattern that's *not* supported today is "one Infragate spanning multiple unrelated subtrees of the same tenancy." That posture requires either tenancy-wide grants (use the tenancy-root anchor) or two installs.
 
 Restricted public API endpoint mode requires Infragate-managed networking when `Existing VCN OCID` or `Existing Subnet OCID` would otherwise make the network read-only.
 

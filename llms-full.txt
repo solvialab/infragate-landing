@@ -61,6 +61,7 @@ Guardrail:
 
 - An existing subnet OCID requires an existing VCN OCID.
 - Existing subnet overrides are validated against the supplied VCN before cluster creation.
+- An existing compartment OCID must sit inside the install-time anchor compartment subtree (any depth). The anchor is whatever existing compartment the customer points Infragate at — it can be the tenancy root, an existing org compartment, or a dedicated one. Compartments outside that subtree (siblings, ancestors, unrelated subtrees) are rejected before Terraform starts; the customer can broaden BYON eligibility by anchoring higher up. Non-existent OCIDs return "compartment not found"; transient OCI lookup errors return 503 so the deploy can be retried.
 - Existing network resources are treated as prerequisites, not as Terraform-managed objects.
 
 ## Delivery model
