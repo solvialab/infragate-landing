@@ -1565,7 +1565,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-hourglass-half text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Approvals + Activity</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Protected destroys, limit-increase requests, TTL warnings, lifecycle events, and admin limit changes all flow into durable Activity history with unread tracking. Optional email pings add requester, action, comments, and request parameters for admins and users.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Protected destroys, limit-increase requests, TTL warnings, lifecycle events, K8s upgrade recommendations, and admin limit changes all flow into durable Activity history with unread tracking. Optional email pings cover request submit/approve/deny, admin-initiated scale/upgrade/destroy on user-owned clusters (every state), and per-cluster upgrade-recommended notifications when a newer enabled K8s version becomes available.</p>
     </div>
 
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
@@ -1586,7 +1586,7 @@
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-plug text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
       <h3 class="text-xl font-bold text-gray-900 dark:text-white">Bring your own infra</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab. Existing subnet overrides are validated against the supplied VCN; BYO resources stay read-only.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Supply existing VCN, compartment, or subnet OCIDs via the Advanced tab. Existing subnet overrides are validated against the supplied VCN; BYO compartments are validated against the install-time anchor subtree before Terraform runs (out-of-subtree compartments rejected with a clear 400 instead of mid-apply IAM failure); BYO resources stay read-only.</p>
     </div>
     <div class="glass-card rounded-2xl p-6 tilt-card flex flex-col items-center sm:items-start">
       <div class="feature-icon mb-4"><i class="fas fa-gauge-high text-xl text-[#1C5D7A] dark:text-[#5BB8D8]"></i></div>
@@ -1696,7 +1696,7 @@
     <div class="text-center mb-10 reveal">
       <span class="section-pill">Admin &amp; governance</span>
       <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white"><span data-count-to="6" data-count-duration="1000">6</span> dedicated admin panels</h2>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, Requests, Activity-backed approvals, optional request email pings, and audit logs - all changes take effect immediately.</p>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Global oversight, resource limits, configuration, templates, Requests, Activity-backed approvals, optional email pings (requests, admin-initiated cluster actions, K8s upgrade recommendations), and audit logs - all changes take effect immediately.</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 stagger-children text-center sm:text-left mx-auto">
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
@@ -1712,7 +1712,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-sliders text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
         <h4 class="font-bold mt-2 text-gray-900 dark:text-white">Configuration</h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">CIDR pool, OCI-synced VM shapes, refreshed K8s versions, node images, global resource limits, and fallback manual curation. No restart needed.</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">CIDR pool, OCI-synced VM shapes, K8s versions (background auto-sync, default daily, plus on-demand Refresh from OCI), node images, global resource limits, and fallback manual curation. No restart needed.</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-[#1C5D7A] dark:border-[#5BB8D8] hover-lift flex flex-col items-center sm:items-start">
         <i class="fas fa-layer-group text-[#1C5D7A] dark:text-[#5BB8D8] text-xl"></i>
@@ -2010,7 +2010,7 @@
       <div class="stat-label">Typical provisioning</div>
     </div>
     <div class="stat-card text-center" data-stat-index="1">
-      <div class="stat-number" data-count-to="138" data-count-suffix="+" data-count-duration="2800">138+</div>
+      <div class="stat-number" data-count-to="160" data-count-suffix="+" data-count-duration="2800">160+</div>
       <div class="stat-bar-track"><div class="stat-bar-fill" data-fill="100"></div></div>
       <div class="stat-label">Automated tests</div>
     </div>
@@ -2047,7 +2047,7 @@
       </div>
       <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Deploy, scale, Kubernetes upgrade, and destroy with live Terraform logs</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user override requests, templates, destroy approvals, Activity inbox, request email pings, audit log, and OCI config sync</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Admin governance: limits, per-user override requests, templates, destroy approvals, Activity inbox, email pings (requests, admin actions, K8s upgrade recommendations), audit log, and OCI config sync (background K8s version auto-sync + on-demand shape/version refresh)</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>Shape-aware Kubernetes compatibility filtering, OCI shape/version sync, and node-image auto-selection to prevent invalid deploy combinations</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>VPN-first access: kubectl-ready kubeconfig plus OKE API endpoint allowlists for runner and corporate/VPN CIDRs</span></li>
         <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-600 dark:text-emerald-400 mt-1 text-xs"></i><span>FinOps visibility: live estimates, cluster-level cost cards, and admin total spend</span></li>

@@ -20,6 +20,8 @@ A complete overview of Infragate by Solvia Lab as an OCI-native Internal Develop
 - **Multi-pool support** — configure 1–N node pools per cluster, each with independent node count, OCPU, RAM, and storage sizing
 - **Shape sync from OCI** - Admin Configuration includes **Sync from OCI** for VM shapes, pulling OKE-compatible shapes for the current region/tenancy and merging them into `allowed_shapes` while preserving existing labels/toggles
 - **K8s version sync from OCI** - Admin Configuration can refresh available OKE versions for the configured region so deploy options and upgrade recommendation pills stay aligned with newly published patch versions
+- **Automatic K8s version auto-sync** - the platform refreshes OCI's available OKE versions on a recurring interval (default daily) so newly-released patch versions appear in admin config without manual *Sync from OCI*. Newly-fetched versions land disabled by default; admins still curate enablement
+- **Automatic upgrade-recommendation notifications** - a separate sweeper (default hourly) walks running clusters and, when an enabled K8s version newer than the cluster's current one appears, emits one durable Activity entry plus one email to the cluster owner per (cluster, target version) pair. Idempotent so steady-state runs never spam; auto-resets after the cluster is upgraded, ready to fire again on the next bump
 - **Sync fallback behavior** - if OCI shape sync is unavailable (credentials/policy/network), existing `allowed_shapes` remain unchanged and admins can continue with manual shape curation from `oci ce node-pool-options get --node-pool-option-id all`
 - **Shape-aware K8s picker** - deploy form Kubernetes options are filtered by the selected VM shape and region, and only include admin-enabled versions with OKE node-image compatibility for that shape. If compatibility lookup fails, the picker is fail-closed (no permissive fallback list), preventing invalid shape/version combinations before apply
 - **Node image selection** - admins configure allowed OCI compute images; users select an image on the deploy form or leave it as auto-select (latest OKE-compatible image). Templates can lock a specific image. Recommended onboarding flow: sync shapes from OCI first, then curate images from `oci ce node-pool-options get --node-pool-option-id all`
@@ -174,6 +176,7 @@ Six dedicated admin pages accessible to users with the `admin` role:
 - **Review** action opens a modal: optional admin note, then **Approve** opens the destroy plan for a second confirmation, or **Deny** (note surfaces on user's cluster card as "Destroy denied")
 - Limit-request review lets admins grant requested or adjusted values for cluster count, pools, nodes, OCPU, RAM, and storage; approve/deny results notify the user in Activity
 - Optional request emails notify admins on submit and users on submit/approve/deny; email content includes requester, action, request id, comments, cluster details for destroy requests, and requested/granted values for limit requests
+- **Admin-action emails to cluster owner** — when an admin scales, upgrades, or force-destroys a cluster owned by another user, the owner is emailed at every lifecycle state (started, succeeded, failed) with the operation, the admin who initiated it, cluster details, and a link back to Infragate. Failure emails explicitly note that admins with OCI Console access can intervene/clean up directly. Owner-on-own actions stay silent
 - Row-locked approval prevents double-approval when two admins click simultaneously
 - Every submit / approve / deny is audit-logged
 - Bypass path: admins can still force-destroy directly via `?force=true` for incident response
@@ -198,7 +201,7 @@ Six dedicated admin pages accessible to users with the `admin` role:
 
 ## Testing & CI
 
-- **143 automated tests** — business logic, validation rules, API contracts, access control, lifecycle notifications, request emails, and cost estimation
+- **160 automated tests** — business logic, validation rules, API contracts, access control, lifecycle notifications, request emails, admin-action owner emails, K8s upgrade recommendations + auto-sync, and cost estimation
 - **Zero external dependencies** — in-memory SQLite with mocked auth; no database server, IdP, or OCI access needed to run tests
 - **Coverage areas** — user provisioning, limit resolution, admin config CRUD, cluster templates, cost engine (basic/enhanced tiers, multi-pool, custom pricing)
 - **Reference CI pipeline (maintainer-owned)** — GitHub Actions and GitLab CI run validation and publish images for maintainer release flow; customer operators consume published image tags/digests

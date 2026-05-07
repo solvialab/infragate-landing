@@ -197,7 +197,9 @@ Platform-wide settings manageable at runtime — no redeployment needed:
 >
 > If **Sync from OCI** is unavailable, Infragate keeps existing shape config unchanged and you can continue with manual curation from the CLI output above. Sync uses the API pod OCI service account credentials/policies (not the browser/user profile).
 >
-> K8s version freshness: OCI can publish new OKE patch versions after Infragate is deployed. In **Admin -> Configuration -> K8s versions**, use **Refresh from OCI** periodically (recommended monthly, and before template reviews or upgrade waves), then enable the versions users may deploy. Upgrade recommendation pills use the latest enabled version, so stale config can hide available upgrades.
+> K8s version freshness: OCI can publish new OKE patch versions after Infragate is deployed. The platform now auto-syncs available OKE versions in the background (default daily) so admin config stays current without anyone clicking **Refresh from OCI**. Newly-fetched versions land disabled by default — admins still curate which versions users may deploy. **Refresh from OCI** remains available for on-demand pulls (e.g. before template reviews or upgrade waves). Upgrade recommendation pills use the latest enabled version, so stale enablement can hide available upgrades.
+>
+> Once a cluster's K8s version falls behind the latest enabled, a separate sweeper (default hourly) emits one Activity entry plus one email to the cluster owner per (cluster, target version) pair, so the owner is told about new upgrade options even when not actively logged in. The notification is idempotent — it does not re-fire for the same target — and the marker auto-resets after the cluster is upgraded, ready to fire again on the next enabled-version bump.
 >
 > Deploy form behavior: Kubernetes versions are filtered by the currently selected VM shape and region. Users only see versions that are both OCI-compatible for that shape (based on OKE node image availability) and enabled in Admin Configuration. If compatibility lookup is unavailable, the K8s list is not shown (fail-closed) and deploy is blocked until validation succeeds. If a version is missing, either enable it in Admin Configuration or choose a shape that supports it.
 
@@ -405,7 +407,7 @@ pip install -r requirements.txt
 pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 ```
 
-143 automated tests covering user provisioning, limit resolution and limit requests, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), lifecycle notifications, request emails, and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
+160 automated tests covering user provisioning, limit resolution and limit requests, admin config CRUD, cluster templates, cost estimation, access control (kubeconfig + SSH key), lifecycle notifications, request emails, admin-action owner emails, K8s upgrade-recommendation sweeper, and API contracts. Tests run against an in-memory SQLite database with mocked authentication — no external services required.
 
 ### CI pipeline (maintainer-owned)
 
@@ -415,7 +417,7 @@ Infragate includes reference CI/CD pipelines for maintainers on GitHub and GitLa
 
 | Job | What it validates |
 |---|---|
-| `test` | 138 Python unit tests with coverage |
+| `test` | 160 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `docker-build-push` | Build + push images to GHCR (`dev-latest` on DEV, `latest` on main) |
 | `terraform-validate` | Core module and runner template |
@@ -424,7 +426,7 @@ Infragate includes reference CI/CD pipelines for maintainers on GitHub and GitLa
 
 | Job | What it validates |
 |---|---|
-| `test` | 138 Python unit tests with coverage |
+| `test` | 160 Python unit tests with coverage |
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `build-api` / `build-frontend` | Build + push images to GitLab Container Registry |
 | `terraform-validate` | Core module and runner template |

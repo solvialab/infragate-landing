@@ -44,6 +44,7 @@ Infragate gives OCI and Oracle Kubernetes Engine teams a private, governed self-
 - Kubeconfig access for authorized users without requiring local OCI CLI setup
 - Private and VPN-first Kubernetes API access patterns
 - OCI shape sync, OKE version sync, compatibility checks, and node image selection
+- Automatic background OKE version refresh and per-cluster upgrade-recommendation notifications (Activity + email to owner) when a newer enabled K8s version becomes available, idempotent per cluster/target pair
 - FinOps visibility through monthly and hourly OKE cost estimates
 - OIDC authentication with providers such as Keycloak, Azure AD, Okta, and Google Workspace
 
