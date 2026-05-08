@@ -1278,6 +1278,35 @@
     .theme-toggle .fa-sun { display: none; }
     .dark .theme-toggle .fa-sun { display: inline; }
     .dark .theme-toggle .fa-moon { display: none; }
+    .faq-item {
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+    .faq-item.is-open {
+      border-color: rgba(91, 184, 216, 0.55);
+      box-shadow: 0 0 0 1px rgba(91, 184, 216, 0.18), 0 18px 40px -28px rgba(91, 184, 216, 0.45);
+    }
+    .faq-question {
+      width: 100%;
+      text-align: left;
+    }
+    .faq-answer {
+      height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: height 0.34s cubic-bezier(.22, 1, .36, 1), opacity 0.22s ease;
+    }
+    .faq-answer-inner {
+      padding: 0.25rem 1.25rem 1.25rem;
+    }
+    .faq-item.is-open .faq-answer {
+      opacity: 1;
+    }
+    .faq-chevron {
+      transition: transform 0.25s ease;
+    }
+    .faq-item.is-open .faq-chevron {
+      transform: rotate(180deg);
+    }
     /* Smooth transitions for theme switch - use only for specific elements to avoid layout flickering */
     .dark body, .glass-card, .btn-outline-premium, .btn-solid-premium, .feature-icon, .stat-number, .theme-toggle, .modal-content, input, textarea {
       transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
@@ -2103,7 +2132,7 @@
 
       <!-- Business (highlighted) -->
       <div class="rounded-2xl border-2 border-[#1C5D7A] dark:border-[#5BB8D8] bg-white dark:bg-gray-900/60 p-6 md:p-8 flex flex-col relative shadow-xl reveal">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#1C5D7A] dark:bg-[#5BB8D8] text-white dark:text-gray-900 text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Most popular</div>
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#1C5D7A] dark:bg-[#5BB8D8] text-white dark:text-gray-900 text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Production plan</div>
         <div class="mb-5">
           <div class="text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] uppercase tracking-wider">Business</div>
           <div class="mt-3 flex items-baseline gap-1">
@@ -2223,42 +2252,60 @@
     </div>
 
     <div class="faq-accordion mx-auto max-w-3xl space-y-3">
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>What is Infragate?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Infragate by Solvia Lab is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine. It gives platform teams governed self-service provisioning, lifecycle automation, kubeconfig access, BYON networking, approvals, Activity history, and cost visibility inside the customer tenancy.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>Where does Infragate run?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Inside your OCI tenancy or customer-managed Kubernetes environment. There is no external SaaS control plane; application services, credentials, logs, and operational data stay inside your boundary.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>Does it require public internet access?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Production deployments are designed for VPN-first access. The Infragate runner and approved corporate/VPN CIDRs need network reachability to the OKE API endpoint; public access can stay restricted.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>Do engineers need Terraform or OCI Console access?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">No. Engineers use the portal for provisioning and day-2 actions. Platform administrators control templates, limits, OCI configuration, approvals, RBAC, protected destroy rules, and audit history.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>Can users download kubeconfig?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Yes. Authorized users can download kubeconfig for clusters they are allowed to access. Network reachability still follows your cluster API endpoint design and VPN/private access model.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>What does BYON mean?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">BYON means bring your own network. Infragate can deploy OKE into existing customer compartments, VCNs, and subnets while treating customer-owned route tables, security lists, and gateways as read-only prerequisites.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>Is Infragate production-ready today?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">The core OKE lifecycle platform is available today: deploy, scale, upgrade, destroy, kubeconfig access, BYON networking, cost visibility, approvals, Activity history, and admin controls. AI advisor and Gatekeeper-style automation are roadmap items.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>How is it delivered?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Customers receive released container images, registry access, Helm values, and deployment runbooks. Infragate is installed into the customer environment rather than consumed as a hosted SaaS service.</p>
-      </details>
-      <details class="group rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition group-open:bg-gray-50 dark:group-open:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset"><span>Do customers receive source code?</span><i class="fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8] transition group-open:rotate-180"></i></summary>
-        <p class="px-5 pt-3 pb-5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">Standard delivery includes released images, Helm deployment assets, documentation, and support. Source code and release automation stay private unless a separate commercial agreement says otherwise.</p>
-      </details>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>What is Infragate?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">Infragate by Solvia Lab is an OCI-native Internal Developer Platform for Oracle Kubernetes Engine. It gives platform teams governed self-service provisioning, lifecycle automation, kubeconfig access, BYON networking, approvals, Activity history, and cost visibility inside the customer tenancy.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Where does Infragate run?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">Inside your OCI tenancy or customer-managed Kubernetes environment. There is no external SaaS control plane; application services, credentials, logs, and operational data stay inside your boundary.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Does it require public internet access?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">Production deployments are designed for VPN-first access. The Infragate runner and approved corporate/VPN CIDRs need network reachability to the OKE API endpoint; public access can stay restricted.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Do engineers need Terraform or OCI Console access?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">No. Engineers use the portal for provisioning and day-2 actions. Platform administrators control templates, limits, OCI configuration, approvals, RBAC, protected destroy rules, and audit history.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Can users download kubeconfig?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">Yes. Authorized users can download kubeconfig for clusters they are allowed to access. Network reachability still follows your cluster API endpoint design and VPN/private access model.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>What does BYON mean?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">BYON means bring your own network. Infragate can deploy OKE into existing customer compartments, VCNs, and subnets while treating customer-owned route tables, security lists, and gateways as read-only prerequisites.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Is Infragate production-ready today?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">The core OKE lifecycle platform is available today: deploy, scale, upgrade, destroy, kubeconfig access, BYON networking, cost visibility, approvals, Activity history, and admin controls. AI advisor and Gatekeeper-style automation are roadmap items.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>How is it delivered?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">Customers receive released container images, registry access, Helm values, and deployment runbooks. Infragate is installed into the customer environment rather than consumed as a hosted SaaS service.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Do customers receive source code?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">Standard delivery includes released images, Helm deployment assets, documentation, and support. Source code and release automation stay private unless a separate commercial agreement says otherwise.</p>
+        </div>
+      </div>
     </div>
 
     <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 reveal">
@@ -2322,17 +2369,54 @@
 </footer>
 
 <script>
-  document.querySelectorAll('.faq-accordion details').forEach(function(item) {
-    item.addEventListener('toggle', function() {
-      if (!item.open) return;
+  (function() {
+    function setOpen(item, isOpen) {
+      var btn = item.querySelector('.faq-question');
+      var answer = item.querySelector('.faq-answer');
+      if (!btn || !answer) return;
 
-      document.querySelectorAll('.faq-accordion details[open]').forEach(function(openItem) {
-        if (openItem !== item) {
-          openItem.open = false;
-        }
+      if (answer._faqOnEnd) {
+        answer.removeEventListener('transitionend', answer._faqOnEnd);
+        answer._faqOnEnd = null;
+      }
+
+      if (isOpen) {
+        item.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        answer.setAttribute('aria-hidden', 'false');
+        answer.style.height = answer.scrollHeight + 'px';
+        var onEnd = function(e) {
+          if (e.propertyName !== 'height') return;
+          answer.style.height = 'auto';
+          answer.removeEventListener('transitionend', onEnd);
+          answer._faqOnEnd = null;
+        };
+        answer._faqOnEnd = onEnd;
+        answer.addEventListener('transitionend', onEnd);
+      } else {
+        answer.style.height = answer.scrollHeight + 'px';
+        answer.offsetHeight;
+        item.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        answer.setAttribute('aria-hidden', 'true');
+        requestAnimationFrame(function() {
+          answer.style.height = '0px';
+        });
+      }
+    }
+
+    document.querySelectorAll('.faq-accordion .faq-item').forEach(function(item) {
+      var btn = item.querySelector('.faq-question');
+      if (!btn) return;
+      btn.addEventListener('click', function() {
+        var willOpen = !item.classList.contains('is-open');
+        document.querySelectorAll('.faq-accordion .faq-item.is-open').forEach(function(other) {
+          if (other !== item) setOpen(other, false);
+        });
+        setOpen(item, willOpen);
       });
     });
-  });
+  })();
 
   // Theme toggle
   document.getElementById('themeToggle').addEventListener('click', function() {
