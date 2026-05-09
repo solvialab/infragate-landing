@@ -206,9 +206,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
     * { font-family: 'Lato', sans-serif; }
-    html { scroll-behavior: auto; }
-    body { background: #ffffff; transition: background-color 0.3s ease, color 0.3s ease; overflow-x: clip !important; }
+    html { scroll-behavior: auto; max-width: 100%; overflow-x: hidden; }
+    body { background: #ffffff; transition: background-color 0.3s ease, color 0.3s ease; overflow-x: clip !important; max-width: 100%; }
     .dark body { background: #0B1120; }
     .gradient-text {
       background: linear-gradient(135deg, #0B2B3F 0%, #1C5D7A 100%);
@@ -737,6 +738,9 @@
       opacity: 1;
       transform: translateY(0);
     }
+    .mobile-decorative-glow {
+      pointer-events: none;
+    }
     /* Lifecycle-ops stat uses count-up like other metric cards */
     @keyframes counter-pop {
       0% { transform: scale(1); }
@@ -892,7 +896,7 @@
       .wave-divider::before { height: 20px; }
 
       /* Ensure no horizontal overflow at root */
-      html, body { overflow-x: hidden; position: relative; width: 100%; }
+      html, body { overflow-x: hidden; position: relative; width: 100%; max-width: 100%; }
 
       /* Disable 3D tilt on touch - flat hover only */
       .tilt-card {
@@ -905,7 +909,7 @@
       h2 { font-size: 1.75rem !important; line-height: 2.25rem !important; }
       p { font-size: 0.9375rem !important; line-height: 1.5rem !important; overflow-wrap: break-word; }
 
-      .hero-section { overflow-x: hidden; }
+      .hero-section { overflow: hidden; }
       .hero-section .hero-copy,
       .hero-section .max-w-7xl,
       .hero-section .grid,
@@ -914,11 +918,49 @@
       .hero-section .terminal { min-width: 0; max-width: 100%; box-sizing: border-box; }
       .hero-section .max-w-7xl { width: 100%; padding-left: 1rem; padding-right: 1rem; }
       .hero-section h1,
-      .hero-section p { width: calc(100vw - 2rem); max-width: calc(100vw - 2rem); margin-left: auto; margin-right: auto; overflow-wrap: break-word; }
+      .hero-section p { width: 100%; max-width: 100%; margin-left: auto; margin-right: auto; overflow-wrap: break-word; }
+      .hero-section .cta-btn { width: 100%; }
+      .hero-section .stagger-children > span { display: flex; align-items: flex-start; justify-content: center; width: 100%; text-align: center; }
+      .mobile-decorative-glow { display: none; }
+
+      .section-pill,
+      .ga-today-chip,
+      .inline-flex {
+        max-width: 100%;
+        white-space: normal;
+      }
 
       /* Mobile menu fixes */
-      .mobile-nav-item { font-size: 1.125rem; padding: 0.75rem 1rem; }
-      #mobileNav { padding: 1rem; width: 100vw; left: 0; right: 0; box-sizing: border-box; }
+      .mobile-nav-item { font-size: 1rem; padding: 0.75rem 1rem; }
+      #mobileNav { padding: 1rem; width: 100%; max-width: 100%; left: 0; right: 0; box-sizing: border-box; }
+      #mobileNav .border-t { flex-direction: column; }
+      #mobileNav a,
+      #mobileNav button { min-width: 0; white-space: normal; }
+
+      .compare-table + .md\:hidden .flex.justify-between {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .compare-table + .md\:hidden .text-right {
+        text-align: left;
+      }
+
+      #pricing .flex.items-baseline {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      #pricing .text-4xl {
+        font-size: 2rem !important;
+        line-height: 2.25rem !important;
+      }
+      #pricing .inline-flex {
+        display: flex;
+        width: 100%;
+      }
+      #pricing .whitespace-nowrap {
+        white-space: normal;
+        text-align: center;
+      }
 
       /* Reduce glow intensity on mobile (saves battery / GPU) */
       .pulse-glow-btn {
@@ -1044,8 +1086,8 @@
     }
     @media (max-width: 639px) {
       h1 { font-size: 1.65rem !important; line-height: 1.3 !important; }
-      .hero-section h1 { width: min(350px, calc(100vw - 2rem)) !important; max-width: min(350px, calc(100vw - 2rem)) !important; }
-      .hero-section p { width: min(340px, calc(100vw - 2rem)) !important; max-width: min(340px, calc(100vw - 2rem)) !important; }
+      .hero-section h1 { width: 100% !important; max-width: 350px !important; }
+      .hero-section p { width: 100% !important; max-width: 340px !important; }
       h2 { font-size: 1.5rem !important; }
       .py-14 { padding-top: 2rem; padding-bottom: 2rem; }
       .px-6 { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -1503,14 +1545,14 @@
   <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-[#0B1120] dark:to-gray-900 -z-10"></div>
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
-  <div class="absolute top-40 right-0 w-96 h-96 bg-[#1C5D7A]/5 dark:bg-[#1C5D7A]/10 rounded-full blur-3xl -z-10"></div>
+  <div class="absolute top-40 right-0 w-96 h-96 bg-[#1C5D7A]/5 dark:bg-[#1C5D7A]/10 rounded-full blur-3xl -z-10 mobile-decorative-glow"></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
       <div class="hero-copy max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white reveal from-left text-center lg:text-left" style="width:100%;max-width:min(42rem,calc(100vw - 2rem));margin-left:auto;margin-right:auto;">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white reveal from-left text-center lg:text-left" style="width:100%;max-width:42rem;margin-left:auto;margin-right:auto;">
           Infragate builds Kubernetes on Oracle Cloud for you
         </h1>
-        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="width:100%;max-width:min(36rem,calc(100vw - 2rem));margin-left:auto;margin-right:auto;transition-delay: 0.15s;">
+        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl mt-4 sm:mt-6 leading-relaxed reveal from-left mx-auto lg:mx-0 text-center lg:text-left" style="width:100%;max-width:36rem;margin-left:auto;margin-right:auto;transition-delay: 0.15s;">
           A simple portal for teams that need production-ready Kubernetes clusters on Oracle Cloud without writing all the Terraform, networking, access, approvals, and day-2 automation by hand. It runs in your tenancy, so your credentials, logs, and operational data stay with you.
         </p>
         <div class="flex flex-col sm:flex-row gap-3 mt-6 sm:mt-8 reveal from-left justify-center lg:justify-start" style="transition-delay: 0.22s;">
