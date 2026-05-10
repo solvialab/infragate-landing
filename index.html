@@ -336,16 +336,28 @@
       background: rgba(15,23,42,0.96);
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
+    .video-modal-copy {
+      min-width: 0;
+      padding-right: 0.25rem;
+    }
+    .video-modal-title {
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 700;
+      line-height: 1.2rem;
+    }
     .video-modal-kicker {
       margin-top: 0.12rem;
       color: #94A3B8;
       font-size: 0.75rem;
       line-height: 1rem;
+      max-width: 56rem;
     }
     .video-modal-close {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      flex: 0 0 auto;
       width: 2rem;
       height: 2rem;
       border-radius: 0.5rem;
@@ -374,11 +386,31 @@
         height: 2.25rem;
       }
       .video-modal-content {
-        width: 92vw;
+        width: 94vw;
         max-height: 82vh;
+        border-radius: 0.75rem;
+      }
+      .video-modal-header {
+        min-height: 4.25rem;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.58rem 0.65rem;
+      }
+      .video-modal-title {
+        font-size: 0.82rem;
+        line-height: 1.05rem;
+      }
+      .video-modal-kicker {
+        display: -webkit-box;
+        max-width: 100%;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        font-size: 0.68rem;
+        line-height: 0.92rem;
       }
       .video-modal-player {
-        max-height: calc(82vh - 3.7rem);
+        max-height: calc(82vh - 4.25rem);
       }
     }
     .feature-icon {
@@ -989,6 +1021,11 @@
         opacity: 1;
         transform: translateY(0) translateX(0) scale(1) rotate(0deg);
       }
+      .hero-section .reveal,
+      .hero-section .stagger-children > * {
+        opacity: 1;
+        transform: none;
+      }
 
       /* Smaller blobs to prevent horizontal overflow */
       .blob { max-width: 100px; max-height: 100px; filter: blur(30px); pointer-events: none; }
@@ -1026,6 +1063,18 @@
       .hero-section .max-w-7xl { width: 100%; padding-left: 1rem; padding-right: 1rem; }
       .hero-section h1,
       .hero-section p { width: 100%; max-width: 100%; margin-left: auto; margin-right: auto; overflow-wrap: break-word; }
+      .hero-section .grid {
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        max-width: 100%;
+      }
+      .hero-section .hero-copy,
+      .hero-section .grid > div {
+        width: 100%;
+        max-width: calc(100vw - 2rem) !important;
+        margin-left: auto;
+        margin-right: auto;
+      }
       .hero-section .cta-btn { width: 100%; }
       .hero-section .stagger-children > span { display: flex; align-items: flex-start; justify-content: center; width: 100%; text-align: center; }
       .mobile-decorative-glow { display: none; }
@@ -1192,9 +1241,13 @@
       .terminal .text-sm { font-size: 0.7rem; }
     }
     @media (max-width: 639px) {
-      h1 { font-size: 1.65rem !important; line-height: 1.3 !important; }
-      .hero-section h1 { width: 100% !important; max-width: 350px !important; }
-      .hero-section p { width: 100% !important; max-width: 340px !important; }
+      h1 { font-size: 1.58rem !important; line-height: 1.28 !important; }
+      .hero-section .hero-copy,
+      .hero-section .grid > div {
+        max-width: min(358px, calc(100vw - 2rem)) !important;
+      }
+      .hero-section h1 { width: 100% !important; max-width: 280px !important; }
+      .hero-section p { width: 100% !important; max-width: 292px !important; }
       h2 { font-size: 1.5rem !important; }
       .py-14 { padding-top: 2rem; padding-bottom: 2rem; }
       .px-6 { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -1538,9 +1591,9 @@
 <div id="videoModal" class="modal-overlay" aria-hidden="true">
   <div class="video-modal-content" role="dialog" aria-modal="true" aria-label="Infragate deployment walkthrough">
     <div class="video-modal-header">
-      <div class="min-w-0">
-        <div class="text-sm font-semibold">Infragate deployment walkthrough</div>
-        <div class="video-modal-kicker">This demo shows deployment. Infragate also supports scale, upgrade, destroy, and day-2 Kubernetes operations.</div>
+      <div class="video-modal-copy">
+        <div class="video-modal-title">Deployment walkthrough</div>
+        <div class="video-modal-kicker">Deployment shown. Infragate also supports scale, upgrade, destroy, and day-2 Kubernetes operations.</div>
       </div>
       <button type="button" id="videoModalClose" class="video-modal-close" aria-label="Close demo video popup">
         <i class="fas fa-xmark"></i>
