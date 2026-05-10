@@ -437,7 +437,7 @@ Infragate includes maintainer CI on GitHub and GitLab. GitHub Actions is the sin
 | `helm-lint` | Helm lint + template rendering (default + k3s + OKE values) |
 | `terraform-validate` | Core module and runner template |
 
-The release publisher uses the same tagging scheme (`latest` / `dev-latest` + commit SHA, plus immutable `v*` release tags) across all three registries. GHCR is canonical, and GitLab Container Registry plus OCIR are 1:1 mirrors from the same build. For customer environments, prefer pinned release tags or digests from your approved registry. The Helm chart's `imagePullSecrets` support makes this work with any private container registry.
+The release publisher uses the same channel tags across all three registries: `dev-latest` for `DEV`, `latest` for `main`, and exact `v*` release tags. GHCR is canonical, and GitLab Container Registry plus OCIR are 1:1 mirrors from the same build. The Helm chart's `imagePullSecrets` support makes this work with any private container registry.
 
 ---
 
