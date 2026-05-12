@@ -95,7 +95,7 @@
             "@type": "Offer",
             "name": "Evaluation",
             "url": "https://infragate.cloud/#pricing",
-            "price": "2500",
+            "price": "1500",
             "priceCurrency": "EUR",
             "availability": "https://schema.org/InStock",
             "description": "14-day non-production evaluation in the customer's tenancy; fee credited on conversion within 30 days."
@@ -111,21 +111,30 @@
           },
           {
             "@type": "Offer",
-            "name": "Business",
+            "name": "Business 6-month",
             "url": "https://infragate.cloud/#pricing",
-            "price": "36000",
+            "price": "16500",
             "priceCurrency": "EUR",
             "availability": "https://schema.org/InStock",
-            "description": "Annual upfront Business subscription for production use."
+            "description": "6-month upfront Business license for production use; displayed as a monthly equivalent."
+          },
+          {
+            "@type": "Offer",
+            "name": "Business Annual",
+            "url": "https://infragate.cloud/#pricing",
+            "price": "30000",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "description": "Annual upfront Business license for production use with the lowest monthly equivalent."
           },
           {
             "@type": "Offer",
             "name": "Enterprise",
             "url": "https://infragate.cloud/#pricing",
-            "price": "45000",
+            "price": "39000",
             "priceCurrency": "EUR",
             "availability": "https://schema.org/InStock",
-            "description": "Enterprise plan with a 6-month minimum commitment, paid upfront."
+            "description": "Enterprise plan with a 6-month minimum commitment, paid upfront; displayed as a monthly equivalent."
           }
         ]
       },
@@ -480,6 +489,155 @@
       background: rgba(91, 184, 216, 0.08);
       color: #9DD9EE;
       box-shadow: none;
+    }
+
+    /* Pricing */
+    .pricing-card {
+      position: relative;
+    }
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(28,93,122,.22), rgba(91,184,216,.82), rgba(16,185,129,.36));
+      opacity: .9;
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
+    }
+    .pricing-card-muted::before {
+      background: linear-gradient(90deg, rgba(148,163,184,.22), rgba(91,184,216,.38), rgba(148,163,184,.18));
+    }
+    .pricing-card-featured {
+      box-shadow: 0 22px 70px rgba(28,93,122,.14);
+    }
+    .dark .pricing-card-featured {
+      box-shadow: 0 24px 80px rgba(91,184,216,.10);
+    }
+    .pricing-credit-ribbon {
+      border-left: 3px solid #10B981;
+      background: linear-gradient(90deg, rgba(16,185,129,.10), rgba(91,184,216,.06));
+    }
+    .dark .pricing-credit-ribbon {
+      background: linear-gradient(90deg, rgba(16,185,129,.16), rgba(91,184,216,.08));
+    }
+    .pricing-list-price {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      color: #6B7280;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .dark .pricing-list-price {
+      color: #9CA3AF;
+    }
+    .pricing-option {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: .75rem;
+      align-items: center;
+      padding: .85rem 0;
+      border-top: 1px solid rgba(148,163,184,.28);
+    }
+    .pricing-option:last-child {
+      border-bottom: 1px solid rgba(148,163,184,.22);
+    }
+    .pricing-option-highlight {
+      border-top-color: rgba(91,184,216,.55);
+    }
+    .pricing-save-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: .15rem .45rem;
+      background: rgba(16,185,129,.12);
+      color: #047857;
+      font-size: .62rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .dark .pricing-save-badge {
+      background: rgba(16,185,129,.18);
+      color: #6EE7B7;
+    }
+    .pricing-term-label {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .5rem;
+      min-width: 0;
+      font-weight: 700;
+      color: #111827;
+    }
+    .pricing-term-label > span:first-child {
+      white-space: nowrap;
+    }
+    .dark .pricing-term-label {
+      color: #F9FAFB;
+    }
+    .pricing-term-meta {
+      margin-top: .18rem;
+      color: #6B7280;
+      font-size: .78rem;
+      line-height: 1.35;
+    }
+    .dark .pricing-term-meta {
+      color: #9CA3AF;
+    }
+    .pricing-term-price {
+      text-align: right;
+      font-weight: 800;
+      color: #111827;
+      white-space: nowrap;
+    }
+    .dark .pricing-term-price {
+      color: #F9FAFB;
+    }
+    .founding-price-panel {
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid rgba(251,191,36,.32);
+      background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(251,191,36,.08));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 18px 60px rgba(0,0,0,.18);
+    }
+    .founding-list-price {
+      color: rgba(254,243,199,.88);
+    }
+    .founding-price-panel .pricing-option {
+      border-top-color: rgba(254,243,199,.22);
+    }
+    .founding-price-panel .pricing-option:last-child {
+      border-bottom-color: rgba(254,243,199,.18);
+    }
+    .founding-price-panel .pricing-term-label,
+    .founding-price-panel .pricing-term-price {
+      color: #fff;
+    }
+    .founding-price-panel .pricing-term-meta {
+      color: rgba(254,243,199,.78);
+    }
+    .pricing-save-badge-amber {
+      background: rgba(251,191,36,.18);
+      color: #FDE68A;
+    }
+    @media (max-width: 640px) {
+      .pricing-option {
+        grid-template-columns: 1fr;
+        gap: .35rem;
+      }
+      .pricing-term-price {
+        text-align: left;
+        white-space: normal;
+      }
+      .founding-price-panel {
+        padding: 1rem;
+      }
     }
 
     /* Comparison table polish */
@@ -1701,7 +1859,7 @@
         
         <a href="#why-infragate" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Why Infragate</a>
         <a href="#ga-roadmap" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Status</a>
-        <a href="#pricing" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Pricing</a>
+        <a href="#founding" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">Pricing</a>
         <a href="#faq" class="nav-item hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] transition">FAQ</a>
       </div>
       <div class="flex items-center gap-2 sm:gap-3">
@@ -1726,7 +1884,7 @@
       
       <a href="#why-infragate" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Why Infragate</a>
       <a href="#ga-roadmap" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Status</a>
-      <a href="#pricing" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Pricing</a>
+      <a href="#founding" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">Pricing</a>
       <a href="#faq" class="mobile-nav-item text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-[#1C5D7A] dark:hover:text-[#5BB8D8] py-2">FAQ</a>
       <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex gap-3">
         <a href="/docs/" class="flex-1 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 px-4 py-2.5 rounded-lg text-center hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition flex items-center justify-center gap-1.5"><i class="fas fa-book text-xs"></i> Docs</a>
@@ -2388,92 +2546,6 @@
     </div>
   </div>
 </section>
-<!-- Pricing -->
-<section id="pricing" class="py-14 md:py-20 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-12 reveal">
-      <div class="section-pill mb-4">Pricing</div>
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Simple, transparent pricing</h2>
-      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Infragate is delivered as a private commercial product. Packaging scales with <strong class="text-gray-800 dark:text-gray-200">evaluation scope, production licensing, support response, and operating guarantees</strong>.</p>
-      <p class="mt-4 inline-flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/60 px-4 py-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">Prices are listed in EUR. USD invoicing is available on request using the exchange rate agreed at contracting.</p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-6 md:gap-8">
-      <!-- Evaluation -->
-      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
-        <div class="mb-5">
-          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Evaluation</div>
-          <div class="mt-3 flex items-baseline gap-1">
-            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">&euro;2,500</span>
-            <span class="text-gray-500 dark:text-gray-400 text-sm">/ 14 days</span>
-          </div>
-          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">100% credited on conversion within 30 days</div>
-        </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For qualified teams validating Infragate in their own OCI tenancy. Non-production scope, hard 14-day window.</p>
-        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Time-limited registry access (revokes at day 14)</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Guided 60-minute deployment call in your tenancy</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support during the evaluation window (business hours)</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Evaluation runbook and onboarding checklist</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Fee credited toward Founding, Business, or Enterprise if you convert within 30 days</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">No production use, redistribution, or managed-service use</span></li>
-        </ul>
-        <button onclick="openDemoModal('poc')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-lg hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Start evaluation</button>
-      </div>
-
-      <!-- Business (highlighted) -->
-      <div class="rounded-2xl border-2 border-[#1C5D7A] dark:border-[#5BB8D8] bg-white dark:bg-gray-900/60 p-6 md:p-8 flex flex-col relative shadow-xl reveal">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#1C5D7A] dark:bg-[#5BB8D8] text-white dark:text-gray-900 text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Production plan</div>
-        <div class="mb-5">
-          <div class="text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] uppercase tracking-wider">Business</div>
-          <div class="mt-3 flex items-baseline gap-1">
-            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">&euro;3,000</span>
-            <span class="text-gray-500 dark:text-gray-400 text-sm">/ month</span>
-          </div>
-          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Annual upfront - &euro;36,000 / year</div>
-        </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For teams running Infragate in production with self-managed day-2 operations.</p>
-        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Commercial &amp; production license</strong> for internal and customer-facing environments</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support with <strong class="text-gray-800 dark:text-gray-200">48h response SLA</strong> (business hours)</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private registry access with versioned, pinned release channel</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Versioned release channel with stable upgrade path</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Security advisories - early private notice before public disclosure</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Onboarding workshop and deployment review</span></li>
-        </ul>
-        <button onclick="openDemoModal()" class="block text-center px-5 py-3 text-sm font-semibold rounded-lg btn-solid-premium cursor-pointer">Book a discovery call</button>
-      </div>
-
-      <!-- Enterprise -->
-      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
-        <div class="mb-5">
-          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Enterprise</div>
-          <div class="mt-3 flex items-baseline gap-1">
-            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">&euro;7,500</span>
-            <span class="text-gray-500 dark:text-gray-400 text-sm">/ month</span>
-          </div>
-          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">6-month minimum - &euro;45,000 upfront</div>
-        </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For regulated or mission-critical organizations that require formal operating guarantees and shared responsibility.</p>
-        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Business</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">6-month minimum contract</strong> for high-touch rollout and procurement support</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">4h response SLA</strong> with named support engineer and shared Slack / Teams channel</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Managed install</strong> plus upgrade planning and rollout assistance</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Multi-tenancy and multiple OCI-tenancy organization scoping</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Air-gapped / mirrored registry delivery - LTS pinning</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance support pack: SOC 2 / ISO questionnaires, DPA, and audit-evidence guidance</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Production incident escalation support and change-advisory guidance</span></li>
-          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Quarterly architecture and cost governance reviews</span></li>
-        </ul>
-        <button onclick="openDemoModal('enterprise')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-lg hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Contact us</button>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
 <!-- Founding Customer Program -->
 <section class="py-14 md:py-18 px-4 sm:px-6 lg:px-8 overflow-hidden" id="founding">
   <div class="max-w-5xl mx-auto gradient-bg-premium animated-gradient-bg rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 shadow-2xl reveal scale-up relative overflow-hidden">
@@ -2487,9 +2559,36 @@
       <p class="text-gray-200 mt-4 text-lg max-w-2xl mx-auto reveal" style="transition-delay:0.3s">
         A small group of production teams helping us build the first year of the roadmap. Early-access program with discounted pricing and direct product feedback.
       </p>
-      <div class="mt-7 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center reveal" style="transition-delay:0.35s">
-        <span class="text-3xl font-bold text-white">&euro;18,000</span>
-        <span class="text-sm text-amber-100">first 12 months &middot; paid upfront before access &middot; 5 spots</span>
+      <div class="founding-price-panel mt-8 rounded-2xl p-5 sm:p-6 text-left reveal" style="transition-delay:0.35s">
+        <div class="founding-list-price pricing-list-price">
+          <span class="line-through decoration-2">&euro;30,000 standard Business annual</span>
+          <span>first-five price</span>
+        </div>
+        <div class="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span class="text-4xl md:text-5xl font-bold text-white">&euro;18,000</span>
+          <span class="text-sm font-medium text-amber-100">first 12 months, paid upfront</span>
+        </div>
+        <div class="mt-5 text-sm">
+          <div class="pricing-option">
+            <div>
+              <div class="pricing-term-label"><span>12 months</span><span class="pricing-save-badge pricing-save-badge-amber">Founding</span></div>
+              <div class="pricing-term-meta">&euro;1,500 / month equivalent</div>
+            </div>
+            <div class="pricing-term-price">&euro;18,000 upfront</div>
+          </div>
+          <div class="pricing-option">
+            <div>
+              <div class="pricing-term-label"><span>First-five discount</span><span class="pricing-save-badge pricing-save-badge-amber">Limited</span></div>
+              <div class="pricing-term-meta">40% below standard annual Business</div>
+            </div>
+            <div class="pricing-term-price">Save &euro;12,000</div>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-100 sm:justify-start">
+          <span class="inline-flex items-center rounded-full bg-amber-500/20 px-2.5 py-1">5 spots</span>
+          <span class="inline-flex items-center rounded-full bg-white/10 px-2.5 py-1">case-study rights</span>
+          <span class="inline-flex items-center rounded-full bg-white/10 px-2.5 py-1">monthly feedback calls</span>
+        </div>
       </div>
     </div>
 
@@ -2499,8 +2598,8 @@
         <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
           <i class="fas fa-percentage text-amber-300"></i>
         </div>
-        <h3 class="text-white font-semibold text-sm mb-1">50% off Business</h3>
-        <p class="text-gray-300 text-xs leading-relaxed">First-year discount on the &euro;36,000 Business plan. Renewal returns to standard Business pricing.</p>
+        <h3 class="text-white font-semibold text-sm mb-1">Synced with Business</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">&euro;18,000 for the first 12 months, compared with the &euro;30,000 standard annual Business license.</p>
       </div>
       <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
         <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
@@ -2532,6 +2631,127 @@
     <p class="text-gray-300 text-sm text-center mt-6 reveal" style="transition-delay:0.6s">Not ready for a commitment? <a href="#pricing" class="text-white hover:underline">See standard pricing</a></p>
   </div>
 </section>
+
+<!-- Pricing -->
+<section id="pricing" class="py-14 md:py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12 reveal">
+      <div class="section-pill mb-4">Pricing</div>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Simple, transparent pricing</h2>
+      <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Infragate is delivered as a private commercial product, not a hosted SaaS control plane. Pricing is shown as a monthly equivalent, but production access is contracted upfront to keep procurement and support simple.</p>
+      <p class="mt-4 inline-flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/60 px-4 py-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">Prices are listed in EUR. USD invoicing is available on request using the exchange rate agreed at contracting.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+      <!-- Evaluation -->
+      <div class="pricing-card pricing-card-muted rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Evaluation</div>
+          <div class="mt-3 flex items-baseline gap-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">&euro;1,500</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">/ 14 days</span>
+          </div>
+          <div class="pricing-credit-ribbon mt-4 rounded-r-lg px-3 py-2 text-sm text-gray-600 dark:text-gray-300">
+            <span class="font-semibold text-emerald-700 dark:text-emerald-300">100% credited</span> toward a fixed-term production contract within 30 days
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For qualified teams validating Infragate in their own OCI tenancy. Non-production scope, hard 14-day window.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Time-limited registry access (revokes at day 14)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Guided 60-minute deployment call in your tenancy</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support during the evaluation window (business hours)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Evaluation runbook and onboarding checklist</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Fee credited toward Founding, 6-month / annual Business, or Enterprise if you convert within 30 days</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-times text-gray-400 mt-1 text-xs"></i><span class="text-gray-500 dark:text-gray-400">No production use, redistribution, or managed-service use</span></li>
+        </ul>
+        <button onclick="openDemoModal('poc')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-lg hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Start evaluation</button>
+      </div>
+
+      <!-- Business (highlighted) -->
+      <div class="pricing-card pricing-card-featured rounded-2xl border-2 border-[#1C5D7A] dark:border-[#5BB8D8] bg-white dark:bg-gray-900/60 p-6 md:p-8 flex flex-col relative shadow-xl reveal">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#1C5D7A] dark:bg-[#5BB8D8] text-white dark:text-gray-900 text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Production plan</div>
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] uppercase tracking-wider">Business</div>
+          <div class="pricing-list-price mt-4">
+            <span class="line-through decoration-2">&euro;3,000 / month</span>
+            <span>list-rate anchor</span>
+          </div>
+          <div class="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">from &euro;2,500</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">/ month equivalent</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Minimum 6-month production contract, paid upfront.</div>
+          <div class="mt-5 text-sm">
+            <div class="pricing-option">
+              <div>
+                <div class="pricing-term-label"><span>6 months</span></div>
+                <div class="pricing-term-meta">&euro;2,750 / month equivalent</div>
+              </div>
+              <div class="pricing-term-price">&euro;16,500 upfront</div>
+            </div>
+            <div class="pricing-option pricing-option-highlight">
+              <div>
+                <div class="pricing-term-label"><span>12 months</span><span class="pricing-save-badge">Best value</span></div>
+                <div class="pricing-term-meta">&euro;2,500 / month equivalent, instead of &euro;36,000 list-rate</div>
+              </div>
+              <div class="pricing-term-price">&euro;30,000 upfront</div>
+            </div>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For teams running Infragate in production with self-managed day-2 operations.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Commercial &amp; production license</strong> for internal and customer-facing environments</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Email support with <strong class="text-gray-800 dark:text-gray-200">48h response SLA</strong> (business hours)</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Private registry access with versioned, pinned release channel</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Versioned release channel with stable upgrade path</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Security advisories - early private notice before public disclosure</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Onboarding workshop and deployment review</span></li>
+        </ul>
+        <button onclick="openDemoModal()" class="block text-center px-5 py-3 text-sm font-semibold rounded-lg btn-solid-premium cursor-pointer">Book a discovery call</button>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card pricing-card-muted rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6 md:p-8 flex flex-col reveal">
+        <div class="mb-5">
+          <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Enterprise</div>
+          <div class="pricing-list-price mt-4">
+            <span class="line-through decoration-2">&euro;7,500 / month</span>
+            <span>list-rate anchor</span>
+          </div>
+          <div class="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">&euro;6,500</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm">/ month equivalent</span>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">6-month minimum, paid upfront.</div>
+          <div class="mt-5 text-sm">
+            <div class="pricing-option pricing-option-highlight">
+              <div>
+                <div class="pricing-term-label"><span>6 months</span><span class="pricing-save-badge">High-touch rollout</span></div>
+                <div class="pricing-term-meta">Instead of &euro;45,000 list-rate</div>
+              </div>
+              <div class="pricing-term-price">&euro;39,000 upfront</div>
+            </div>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">For regulated or mission-critical organizations that require formal operating guarantees and shared responsibility.</p>
+        <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-8 flex-1">
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Everything in Business</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">6-month minimum contract</strong> for high-touch rollout and procurement support</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">4h response SLA</strong> with named support engineer and shared Slack / Teams channel</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span><strong class="text-gray-800 dark:text-gray-200">Managed install</strong> plus upgrade planning and rollout assistance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Multi-tenancy and multiple OCI-tenancy organization scoping</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Air-gapped / mirrored registry delivery - LTS pinning</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Compliance support pack: SOC 2 / ISO questionnaires, DPA, and audit-evidence guidance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Production incident escalation support and change-advisory guidance</span></li>
+          <li class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1 text-xs"></i><span>Quarterly architecture and cost governance reviews</span></li>
+        </ul>
+        <button onclick="openDemoModal('enterprise')" class="block w-full text-center px-5 py-3 text-sm font-semibold text-[#1C5D7A] dark:text-[#5BB8D8] border border-[#1C5D7A]/30 dark:border-[#5BB8D8]/30 rounded-lg hover:bg-[#EFF6FA] dark:hover:bg-[#5BB8D8]/10 transition cursor-pointer">Contact us</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
 <!-- FAQ -->
 <section id="faq" class="py-14 md:py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900/50">
@@ -2846,7 +3066,7 @@
   var DEMO_MODAL_CONFIGS = {
     demo: {
       title: 'Book a discovery call',
-      subtitle: "30-min call to understand fit. We'll follow up with the platform tour and a deep-dive call if there's a match.",
+      subtitle: "30-min call to understand fit. Business starts at EUR 16,500 for 6 months, or EUR 30,000 annually upfront. We'll follow up with the platform tour and a deep-dive call if there's a match.",
       messageLabel: 'Tell us about your environment',
       messagePlaceholder: "How many Oracle Cloud tenancies / Kubernetes clusters? Team size? Current workflow?",
       submitText: 'Request a call',
@@ -2855,7 +3075,7 @@
     },
     poc: {
       title: 'Start your evaluation',
-      subtitle: 'EUR 2,500, 14 days, in your tenancy. Fee is credited toward Founding, Business, or Enterprise if you convert within 30 days. Kickoff scheduled within one business day.',
+      subtitle: 'EUR 1,500, 14 days, in your tenancy. Fee is credited toward the first fixed-term production contract if you convert within 30 days. Kickoff scheduled within one business day.',
       messageLabel: 'Tell us about your environment',
       messagePlaceholder: 'How many Oracle Cloud tenancies / Kubernetes clusters? What does success look like for the evaluation?',
       submitText: 'Start evaluation',
@@ -2864,7 +3084,7 @@
     },
     enterprise: {
       title: 'Talk to sales - Enterprise',
-      subtitle: 'EUR 7,500/month with a 6-month minimum. Tell us what you need; we\'ll respond within one business day.',
+      subtitle: 'EUR 6,500/month equivalent with a 6-month minimum (EUR 39,000 upfront). Tell us what you need; we\'ll respond within one business day.',
       messageLabel: 'What are you looking for?',
       messagePlaceholder: 'Multi-tenancy, compliance support (SOC 2 / ISO), managed install, air-gapped delivery, LTS pinning...',
       submitText: 'Get in touch',
