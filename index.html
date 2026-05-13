@@ -169,13 +169,18 @@
           },
           {
             "@type": "Question",
+            "name": "Is Infragate multicloud?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Infragate is OCI and OKE-native today. The roadmap adds customer-boundary multicloud governance first: read-only inventory, policy, compliance, and Gatekeeper insights for existing EKS, AKS, and GKE clusters without Terraform import or state adoption. Full non-OCI provisioning is planned later, still without a Solvia-hosted SaaS control plane." }
+          },
+          {
+            "@type": "Question",
             "name": "Can Infragate use our existing network?",
             "acceptedAnswer": { "@type": "Answer", "text": "Yes. Infragate can create clusters in existing Oracle Cloud compartments, virtual cloud networks, and subnets. Customer-owned route tables, security lists, and gateways remain prerequisites rather than resources Infragate takes over." }
           },
           {
             "@type": "Question",
             "name": "Is Infragate production-ready today?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Core lifecycle workflows are available today: create, scale, upgrade, destroy, user access, existing-network support, cost visibility, approvals, activity history, and admin controls. AI advisor and policy automation are roadmap items." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Core OCI and OKE lifecycle workflows are available today: create, scale, upgrade, destroy, user access, existing-network support, cost visibility, approvals, activity history, and admin controls. Gatekeeper AI, Oracle AI Database deployment options, multicloud governance, and full multicloud deployment are roadmap items." }
           },
           {
             "@type": "Question",
@@ -2515,10 +2520,10 @@
   <div class="text-center mb-10 reveal">
     <span class="section-pill">Product status</span>
     <h2 class="text-3xl md:text-4xl font-bold mt-4 text-gray-900 dark:text-white">What works today, what comes later</h2>
-    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Clear separation between available product capabilities and roadmap ideas.</p>
+    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-3">Clear separation between available product capabilities and roadmap ideas. Every phase keeps the same customer-boundary model: no Solvia-hosted control plane and no credentials, Terraform state, audit logs, or cluster data sent to a vendor SaaS.</p>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 stagger-children">
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8 stagger-children">
     <div class="ga-today-card rounded-2xl border border-emerald-200/70 dark:border-emerald-700/60 bg-emerald-50/40 dark:bg-emerald-900/10 p-6">
       <div class="ga-today-chip inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-white dark:bg-gray-900/70 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-700">
         <i class="fas fa-check-circle"></i> Available today
@@ -2534,14 +2539,39 @@
 
     <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
       <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full border border-[#1C5D7A]/20 dark:border-[#5BB8D8]/30">
-        <i class="fas fa-map"></i> Planned next
+        <i class="fas fa-wand-magic-sparkles"></i> v1.1 Gatekeeper AI
       </div>
       <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
-        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>AI-assisted troubleshooting that explains Terraform, Oracle Cloud, quota, and networking failures</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Cost watcher: idle-cluster detection, anomaly alerts, and right-sizing guidance</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>In-cluster access agent for environments with no public Kubernetes API endpoint after bootstrap</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Policy guardrails: drift detection, Kubernetes lifecycle risk flags, and weekly compliance digests</span></li>
-        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Approval-gated remediation with full audit trail (suggest -> review -> apply)</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Oracle-native Gatekeeper insights powered by OCI Generative AI / OCI Enterprise AI</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Cost watcher: idle-cluster detection, anomaly alerts, right-sizing guidance, and weekly digests</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Policy guardrails: drift detection, Kubernetes lifecycle risk flags, and compliance summaries</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Optional Oracle AI Database / Autonomous Database backend for full Oracle-stack deployments</span></li>
+      </ul>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
+      <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full border border-[#1C5D7A]/20 dark:border-[#5BB8D8]/30">
+        <i class="fas fa-shield-halved"></i> v1.2 Multicloud governance
+      </div>
+      <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Register existing EKS, AKS, and GKE clusters as observed resources</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Unified Kubernetes inventory, ownership, environment, version, and compliance visibility</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Read-only governance without Terraform import, state adoption, or cloud resource mutation</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>External cluster metadata stays inside the customer's Infragate installation</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Gatekeeper insights across OKE and observed external Kubernetes clusters</span></li>
+      </ul>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50 p-6">
+      <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1C5D7A] dark:text-[#5BB8D8] bg-[#EFF6FA] dark:bg-[#5BB8D8]/10 px-3 py-1 rounded-full border border-[#1C5D7A]/20 dark:border-[#5BB8D8]/30">
+        <i class="fas fa-cloud"></i> v2.0 Multicloud deployment
+      </div>
+      <ul class="mt-5 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Full lifecycle automation for a first non-OCI Kubernetes provider chosen by customer demand</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Provider-specific Terraform modules, networking, IAM, version, quota, and cost workflows</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Infragate-managed state only for clusters created by Infragate</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Provider credentials and Terraform state remain under customer control</span></li>
+        <li class="flex items-start gap-2"><i class="fas fa-arrow-right text-[#1C5D7A] dark:text-[#5BB8D8] mt-1 text-xs"></i><span>Existing external clusters remain observed until explicitly migrated</span></li>
       </ul>
     </div>
   </div>
@@ -2609,12 +2639,12 @@
         <p class="text-gray-300 text-xs leading-relaxed">Monthly roadmap calls, private Slack / email with engineering. Your feedback shapes what ships next.</p>
       </div>
       <div class="bg-white/5 border border-white/10 rounded-xl p-5 backdrop-blur-sm relative">
-        <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider text-amber-200 bg-amber-500/20 px-2 py-0.5 rounded-full">Roadmap v1.1</span>
+        <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider text-amber-200 bg-amber-500/20 px-2 py-0.5 rounded-full">Roadmap v1.1-v1.2</span>
         <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
           <i class="fas fa-wand-magic-sparkles text-amber-300"></i>
         </div>
-        <h3 class="text-white font-semibold text-sm mb-1">AI advisor + Gatekeeper roadmap</h3>
-        <p class="text-gray-300 text-xs leading-relaxed">Near-term scope: read-only troubleshooting explanations for Terraform, Oracle Cloud, identity, quota, and networking failures. Policy guardrails, drift checks, cost watcher, and approval-gated remediation stay on the roadmap for customer-shaped v1.1.</p>
+        <h3 class="text-white font-semibold text-sm mb-1">Gatekeeper AI + multicloud roadmap</h3>
+        <p class="text-gray-300 text-xs leading-relaxed">Near-term scope: Oracle-native Gatekeeper insights for cost, policy drift, compliance, and troubleshooting. Founding feedback also shapes v1.2 multicloud governance for observed EKS, AKS, and GKE clusters without Terraform state adoption.</p>
       </div>
     </div>
 
@@ -2800,9 +2830,15 @@
         </div>
       </div>
       <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
+        <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Is Infragate multicloud?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
+        <div class="faq-answer" aria-hidden="true">
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">Infragate is OCI and OKE-native today. The roadmap adds customer-boundary multicloud governance first: read-only inventory, policy, compliance, and Gatekeeper insights for existing EKS, AKS, and GKE clusters without Terraform import or state adoption. Full non-OCI provisioning is planned later, still without a Solvia-hosted SaaS control plane.</p>
+        </div>
+      </div>
+      <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
         <button type="button" class="faq-question flex cursor-pointer items-start justify-between gap-4 px-5 py-4 font-semibold text-gray-900 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5BB8D8]/60 focus-visible:ring-inset" aria-expanded="false"><span>Is Infragate production-ready today?</span><i class="faq-chevron fas fa-chevron-down mt-1 text-xs text-[#1C5D7A] dark:text-[#5BB8D8]"></i></button>
         <div class="faq-answer" aria-hidden="true">
-          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">The core lifecycle platform is available today: create, scale, upgrade, destroy, user access, existing-network support, cost visibility, approvals, activity history, and admin controls. AI advisor and policy automation are roadmap items.</p>
+          <p class="faq-answer-inner text-sm leading-relaxed text-gray-600 dark:text-gray-400">The core OCI and OKE lifecycle platform is available today: create, scale, upgrade, destroy, user access, existing-network support, cost visibility, approvals, activity history, and admin controls. Gatekeeper AI, Oracle AI Database deployment options, multicloud governance, and full multicloud deployment are roadmap items.</p>
         </div>
       </div>
       <div class="faq-item rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/60 overflow-hidden reveal">
@@ -3093,7 +3129,7 @@
     },
     founding: {
       title: 'Apply for a founding spot',
-      subtitle: '5 founding customer spots. EUR 18,000 for the first 12 months, paid upfront before access. Includes direct product feedback loops and early input on AI advisor / Gatekeeper roadmap.',
+      subtitle: '5 founding customer spots. EUR 18,000 for the first 12 months, paid upfront before access. Includes direct product feedback loops and early input on Gatekeeper AI and multicloud governance roadmap.',
       messageLabel: 'Tell us about your team',
       messagePlaceholder: 'Team size, current OCI usage, what would success look like in 6 months?',
       submitText: 'Submit application',

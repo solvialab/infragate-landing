@@ -21,6 +21,20 @@ It should not be confused with other similarly named Infragate products or compa
 
 Infragate is a self-hosted portal that lets enterprise platform teams create and operate governed Kubernetes clusters on Oracle Cloud inside their own tenancy.
 
+## Current Product Status
+
+Infragate is OCI-native and Oracle Kubernetes Engine-native today. Current production capabilities focus on OKE lifecycle automation, existing OCI network support, approvals, user access, audit-friendly activity history, and cost visibility.
+
+## Customer-Boundary Principle
+
+Infragate is designed as customer-controlled software, not a vendor SaaS control plane. Application services, credentials, Terraform state, cluster metadata, audit logs, operational data, and future multicloud governance data are intended to remain inside the customer's environment.
+
+## Roadmap Summary
+
+- v1.1: Gatekeeper AI, an Oracle-native platform copilot using OCI Generative AI / OCI Enterprise AI for cost watcher, policy drift, compliance, troubleshooting, and right-sizing insights. Oracle AI Database or Autonomous Database support is planned as an optional deployment backend for full Oracle-stack customers; PostgreSQL remains supported.
+- v1.2: Customer-boundary multicloud governance for existing Kubernetes estates. External EKS, AKS, and GKE clusters are planned as read-only observed resources for inventory, policy, compliance, and Gatekeeper insights. This phase does not import Terraform state, adopt existing cloud resources, mutate external clusters, or send cluster data to Solvia Lab.
+- v2.0: Full multicloud deployment. Infragate plans to add provider-specific lifecycle automation for non-OCI Kubernetes platforms based on customer demand. Infragate-owned Terraform state applies only to clusters created by Infragate or explicitly migrated later, and provider credentials and state remain under customer control.
+
 ## Key Capabilities
 
 - Oracle Kubernetes Engine self-service provisioning

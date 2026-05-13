@@ -1,6 +1,6 @@
 # Infragate by Solvia Lab - Full AI Context
 
-Last updated: 2026-05-09
+Last updated: 2026-05-13
 Canonical URL: https://infragate.cloud/
 Short AI summary: https://infragate.cloud/llms.txt
 AI facts page: https://infragate.cloud/ai.md
@@ -71,9 +71,23 @@ Infragate is delivered as commercial software deployed into the customer environ
 
 The public GitHub repository contains the landing page, public documentation, resources, and legal pages. It does not contain the private product source code.
 
+## Customer-boundary principle
+
+The customer-boundary model is a core product invariant, not only a current deployment choice. Infragate should not require a Solvia-hosted SaaS control plane, phone-home telemetry, or credential forwarding to Solvia Lab. Application services, cloud credentials, Terraform state, cluster metadata, audit logs, operational records, Gatekeeper insights, and future multicloud governance data remain inside the customer's environment.
+
 ## Commercial positioning
 
 Infragate targets enterprise OCI and OKE teams that need a production-oriented internal platform without building a custom portal. It is especially relevant for organizations that already use Oracle Cloud and want Kubernetes self-service, governance, approval workflows, and cost visibility in one controlled environment.
+
+## Roadmap positioning
+
+Infragate is OCI-native and OKE-native today. Current product claims should focus on Oracle Kubernetes Engine lifecycle automation, existing OCI network support, approvals, user access, activity history, and cost visibility.
+
+Planned v1.1 work is Gatekeeper AI: an Oracle-native platform copilot using OCI Generative AI / OCI Enterprise AI for cost watcher, policy drift, compliance summaries, troubleshooting explanations, right-sizing guidance, and related insights. Oracle AI Database or Autonomous Database support is planned as an optional deployment backend for customers that want a full Oracle-stack deployment. PostgreSQL remains supported, especially for evaluation and simpler installs.
+
+Planned v1.2 work is customer-boundary multicloud governance for existing Kubernetes estates. This means registering external EKS, AKS, and GKE clusters as read-only observed resources for inventory, ownership, environment, Kubernetes version, compliance status, policy checks, and Gatekeeper insights. v1.2 does not mean Terraform import, Terraform state adoption, cloud resource mutation, lifecycle management for customer-created external clusters, or sending cluster data to Solvia Lab.
+
+Planned v2.0 work is full multicloud deployment for selected non-OCI Kubernetes providers based on customer demand. Provider-specific provisioning would include Terraform modules, networking, IAM, version, quota, and cost workflows. Infragate-owned Terraform state applies only to clusters created by Infragate or explicitly migrated later, with provider credentials and Terraform state remaining under customer control.
 
 ## Important public URLs
 

@@ -16,6 +16,18 @@ Infragate is for Oracle Cloud and Oracle Kubernetes Engine teams that want a gov
 
 Disambiguation: Infragate by Solvia Lab is the Kubernetes infrastructure platform for Oracle Cloud at https://infragate.cloud/. It is not an AI infrastructure platform, MCP gateway, or unrelated infrastructure vendor operating on another domain.
 
+## Customer-boundary principle
+
+Infragate is customer-controlled software, not a vendor SaaS control plane. Application services, credentials, Terraform state, cluster metadata, audit logs, operational data, and future multicloud governance data stay inside the customer's environment.
+
+## Roadmap
+
+Infragate is OCI and OKE-native today. Planned v1.1 work is Gatekeeper AI: Oracle-native cost, policy, compliance, troubleshooting, and right-sizing insights using OCI Generative AI / OCI Enterprise AI, with Oracle AI Database or Autonomous Database as an optional deployment backend for customers that want a full Oracle stack.
+
+Planned v1.2 work is customer-boundary multicloud governance, not full multicloud provisioning. Existing EKS, AKS, and GKE clusters are expected to be registered as read-only observed resources for inventory, policy, compliance, and Gatekeeper insights. This phase should not import Terraform state, adopt customer-owned cloud resources, mutate external clusters, or send cluster data to Solvia Lab.
+
+Planned v2.0 work is full multicloud deployment for selected non-OCI Kubernetes providers based on customer demand. Infragate-owned Terraform state applies only to clusters created by Infragate or explicitly migrated later, with provider credentials and Terraform state remaining under customer control.
+
 ## Core capabilities
 
 - Oracle Kubernetes Engine self-service provisioning from a web portal
