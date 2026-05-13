@@ -550,6 +550,10 @@
         <input type="email" id="support-email" name="email" required placeholder="john@acme.com">
       </div>
       <div>
+        <label for="support-phone">Phone Number <span class="text-red-400">*</span></label>
+        <input type="tel" id="support-phone" name="phone" required placeholder="+421 900 123 456">
+      </div>
+      <div>
         <label for="support-subject">Subject <span class="text-red-400">*</span></label>
         <input type="text" id="support-subject" name="subject" required placeholder="Deployment issue, feature request, etc.">
       </div>
@@ -1245,6 +1249,7 @@
     var formData = new FormData();
     formData.append('name', form.name.value);
     formData.append('email', form.email.value);
+    formData.append('phone', form.phone.value);
     formData.append('subject', form.subject.value);
     formData.append('message', form.message.value);
     formData.append('_subject', 'Infragate Docs — ' + form.subject.value);
